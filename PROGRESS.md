@@ -9,13 +9,13 @@ wiki, only that it exists.
 
 🟢 added · 🔴 not added
 
-Skills **20/23** · Bosses **21/169** · Raids **0/4** · Minigames **0/51**
+Skills **21/23** · Bosses **21/169** · Raids **0/4** · Minigames **0/51**
 
 These counts only cover skills, bosses, raids and minigames. Interfaces, areas,
 quests, drops and travel are real work that no category above points at, so check
 the module table at the bottom before reading a 0 as "nothing exists".
 
-### Skills <sup>20/23</sup>
+### Skills <sup>21/23</sup>
 
 | | Feature | Status | |
 |---|---|---|---|
@@ -32,13 +32,13 @@ the module table at the bottom before reading a 0 as "nothing exists".
 | 🟢 | <img src="https://oldschool.runescape.wiki/images/Smithing_icon.png?d26c5" height="20" alt=""> [Smithing](content/skills/smithing) | 2,087 loc | [wiki](https://oldschool.runescape.wiki/w/Smithing) |
 | 🟢 | <img src="https://oldschool.runescape.wiki/images/Woodcutting_icon.png?6ead4" height="20" alt=""> [Woodcutting](content/skills/woodcutting) | 409 loc | [wiki](https://oldschool.runescape.wiki/w/Woodcutting) |
 | 🟢 | <img src="https://oldschool.runescape.wiki/images/Firemaking_icon.png?45ea0" height="20" alt=""> [Firemaking](content/skills/firemaking) | 589 loc | [wiki](https://oldschool.runescape.wiki/w/Firemaking) |
-| 🟢 | <img src="https://oldschool.runescape.wiki/images/Cooking_icon.png?a0156" height="20" alt=""> [Cooking](content/skills/cooking) | 1,362 loc | [wiki](https://oldschool.runescape.wiki/w/Cooking) |
+| 🟢 | <img src="https://oldschool.runescape.wiki/images/Cooking_icon.png?a0156" height="20" alt=""> [Cooking](content/skills/cooking) | 1,372 loc | [wiki](https://oldschool.runescape.wiki/w/Cooking) |
 | 🟢 | <img src="https://oldschool.runescape.wiki/images/Herblore_icon.png?ffa9e" height="20" alt=""> [Herblore](content/skills/herblore) | 1,246 loc | [wiki](https://oldschool.runescape.wiki/w/Herblore) |
 | 🟢 | <img src="https://oldschool.runescape.wiki/images/Fishing_icon.png?15a98" height="20" alt=""> [Fishing](content/skills/fishing) | 1,608 loc | [wiki](https://oldschool.runescape.wiki/w/Fishing) |
 | 🔴 | <img src="https://oldschool.runescape.wiki/images/Agility_icon.png?389e0" height="20" alt=""> Agility | nothing yet | [wiki](https://oldschool.runescape.wiki/w/Agility) |
 | 🟢 | <img src="https://oldschool.runescape.wiki/images/Thieving_icon.png?973fe" height="20" alt=""> [Thieving](content/skills/thieving) | 406 loc | [wiki](https://oldschool.runescape.wiki/w/Thieving) |
 | 🟢 | <img src="https://oldschool.runescape.wiki/images/Crafting_icon.png?a1f71" height="20" alt=""> [Crafting](content/skills/crafting) | 6,383 loc | [wiki](https://oldschool.runescape.wiki/w/Crafting) |
-| 🔴 | <img src="https://oldschool.runescape.wiki/images/Fletching_icon.png?15cda" height="20" alt=""> Fletching | nothing yet | [wiki](https://oldschool.runescape.wiki/w/Fletching) |
+| 🟢 | <img src="https://oldschool.runescape.wiki/images/Fletching_icon.png?15cda" height="20" alt=""> [Fletching](content/skills/fletching) | 367 loc | [wiki](https://oldschool.runescape.wiki/w/Fletching) |
 | 🟢 | <img src="https://oldschool.runescape.wiki/images/Construction_icon.png?f9bf7" height="20" alt=""> Construction | no module, code in content/areas/city | [wiki](https://oldschool.runescape.wiki/w/Construction) |
 | 🟢 | <img src="https://oldschool.runescape.wiki/images/Farming_icon.png?558fa" height="20" alt=""> Farming | no module, code in content/areas/city | [wiki](https://oldschool.runescape.wiki/w/Farming) |
 | 🔴 | <img src="https://oldschool.runescape.wiki/images/Hunter_icon.png?8762f" height="20" alt=""> Hunter | nothing yet | [wiki](https://oldschool.runescape.wiki/w/Hunter) |
@@ -145,21 +145,6 @@ here so it at least shows up. Nothing is ticked until someone claims it.
 </details>
 
 <details>
-<summary>🔴 <b>Fletching</b> — 9 sub-features</summary>
-
-- [ ] Materials used
-- [ ] General
-- [ ] Making weapons
-- [ ] Making projectiles
-- [ ] Making the items
-- [ ] Weapons
-- [ ] Shields
-- [ ] Projectiles
-- [ ] Training
-
-</details>
-
-<details>
 <summary>🔴 <b>Hunter</b> — 31 sub-features</summary>
 
 - [ ] Hunting techniques
@@ -202,32 +187,34 @@ Found the same way `settings.gradle.kts` finds them: any dir with a `build.gradl
 
 | Module | Files | Lines | Tests | TODO | Last touched |
 |---|---:|---:|---:|---:|---|
-| `areas/city/ardougne` | 1 | 139 | 0 | 0 | 2026-09-25 |
+| `areas/city/ardougne` | 1 | 139 | 0 | 0 | 2026-09-26 |
 | `areas/city/draynor` | 17 | 3,777 | 4 | 0 | 2026-09-28 |
-| `areas/city/draynor/pack` | 1 | 6 | 0 | 0 | 2026-09-23 |
-| `areas/city/falador` | 7 | 1,354 | 0 | 0 | 2026-09-24 |
-| `areas/city/falador/pack` | 1 | 6 | 0 | 0 | 2026-09-22 |
+| `areas/city/draynor/pack` | 1 | 6 | 0 | 0 | 2026-09-26 |
+| `areas/city/falador` | 7 | 1,354 | 0 | 0 | 2026-09-26 |
+| `areas/city/falador/pack` | 1 | 6 | 0 | 0 | 2026-09-26 |
 | `areas/city/lumbridge` | 26 | 6,229 | 0 | 3 | 2026-09-26 |
-| `areas/city/lumbridge/pack` | 1 | 6 | 0 | 0 | 2026-09-23 |
-| `areas/city/port-sarim` | 13 | 1,971 | 0 | 0 | 2026-09-22 |
-| `areas/city/port-sarim/pack` | 1 | 6 | 0 | 0 | 2026-09-22 |
-| `areas/city/prifddinas` | 1 | 82 | 0 | 0 | 2026-08-18 |
-| `areas/city/rimmington` | 6 | 773 | 0 | 0 | 2026-09-23 |
-| `areas/city/rimmington/pack` | 1 | 6 | 0 | 0 | 2026-09-22 |
-| `areas/city/taverley` | 1 | 77 | 0 | 0 | 2026-06-25 |
-| `areas/city/varrock` | 9 | 746 | 0 | 1 | 2026-09-25 |
-| `areas/godwars` | 2 | 154 | 0 | 0 | 2026-08-19 |
-| `areas/misc/dog_shelter` | 2 | 151 | 0 | 0 | 2026-09-25 |
-| `areas/misc/dwarven-mine` | 3 | 621 | 0 | 0 | 2026-09-17 |
-| `areas/misc/mining-guild` | 8 | 714 | 0 | 0 | 2026-09-17 |
-| `areas/misc/motherlode-mine` | 13 | 1,402 | 0 | 0 | 2026-09-17 |
-| `areas/misc/motherlode-mine/pack` | 1 | 6 | 0 | 0 | 2026-09-17 |
-| `areas/misc/multiways` | 2 | 36 | 0 | 0 | 2026-05-03 |
-| `areas/misc/ver_sinhaza` | 1 | 139 | 0 | 0 | 2026-09-25 |
-| `areas/misc/wizards_tower` | 4 | 1,123 | 0 | 0 | 2026-09-23 |
-| `areas/misc/wizards_tower/pack` | 1 | 6 | 0 | 0 | 2026-09-23 |
+| `areas/city/lumbridge/pack` | 1 | 6 | 0 | 0 | 2026-09-26 |
+| `areas/city/port-sarim` | 13 | 1,971 | 0 | 0 | 2026-09-26 |
+| `areas/city/port-sarim/pack` | 1 | 6 | 0 | 0 | 2026-09-26 |
+| `areas/city/prifddinas` | 1 | 82 | 0 | 0 | 2026-09-26 |
+| `areas/city/rimmington` | 6 | 773 | 0 | 0 | 2026-09-26 |
+| `areas/city/rimmington/pack` | 1 | 6 | 0 | 0 | 2026-09-26 |
+| `areas/city/taverley` | 1 | 77 | 0 | 0 | 2026-09-26 |
+| `areas/city/varrock` | 9 | 746 | 0 | 1 | 2026-09-26 |
+| `areas/godwars` | 2 | 154 | 0 | 0 | 2026-09-26 |
+| `areas/misc/dog_shelter` | 2 | 151 | 0 | 0 | 2026-09-26 |
+| `areas/misc/dwarven-mine` | 3 | 621 | 0 | 0 | 2026-09-26 |
+| `areas/misc/mining-guild` | 8 | 714 | 0 | 0 | 2026-09-26 |
+| `areas/misc/motherlode-mine` | 13 | 1,402 | 0 | 0 | 2026-09-26 |
+| `areas/misc/motherlode-mine/pack` | 1 | 6 | 0 | 0 | 2026-09-26 |
+| `areas/misc/multiways` | 2 | 36 | 0 | 0 | 2026-09-26 |
+| `areas/misc/stronghold_of_security` | 7 | 1,437 | 2 | 0 | 2026-10-06 |
+| `areas/misc/stronghold_of_security/pack` | 2 | 134 | 0 | 0 | 2026-10-06 |
+| `areas/misc/ver_sinhaza` | 1 | 139 | 0 | 0 | 2026-09-26 |
+| `areas/misc/wizards_tower` | 4 | 1,123 | 0 | 0 | 2026-09-26 |
+| `areas/misc/wizards_tower/pack` | 1 | 6 | 0 | 0 | 2026-09-26 |
 | `areas/wilderness` | 19 | 1,397 | 0 | 0 | 2026-10-04 |
-| `areas/zeah` | 3 | 234 | 0 | 0 | 2026-08-18 |
+| `areas/zeah` | 3 | 234 | 0 | 0 | 2026-09-26 |
 | `bosses/amoxliatl` | 2 | 387 | 0 | 0 | 2026-10-01 |
 | `bosses/barrows` | 15 | 1,564 | 1 | 0 | 2026-09-30 |
 | `bosses/callisto` | 2 | 568 | 0 | 0 | 2026-09-30 |
@@ -248,69 +235,71 @@ Found the same way `settings.gradle.kts` finds them: any dir with a `build.gradl
 | `bosses/whisperer` | 5 | 1,853 | 0 | 0 | 2026-09-30 |
 | `bosses/zilyana` | 2 | 164 | 0 | 0 | 2026-09-30 |
 | `drops` | 259 | 14,389 | 0 | 0 | 2026-10-05 |
-| `events/shooting-stars` | 9 | 1,261 | 0 | 0 | 2026-08-30 |
-| `events/shooting-stars/pack` | 2 | 440 | 0 | 0 | 2026-08-21 |
-| `generic/generic-locs` | 25 | 1,382 | 0 | 1 | 2026-09-23 |
-| `generic/generic-npcs` | 7 | 1,183 | 0 | 2 | 2026-09-23 |
-| `generic/generic-npcs/pack` | 1 | 6 | 0 | 0 | 2026-09-23 |
-| `generic/killcount` | 1 | 32 | 0 | 0 | 2026-09-12 |
-| `interfaces/bank` | 15 | 2,313 | 3 | 1 | 2026-08-19 |
-| `interfaces/collection-log` | 4 | 543 | 0 | 0 | 2026-08-18 |
-| `interfaces/combat-tab` | 1 | 613 | 1 | 0 | 2026-06-21 |
-| `interfaces/deposit-box` | 6 | 459 | 0 | 1 | 2026-08-08 |
-| `interfaces/emotes` | 2 | 635 | 2 | 0 | 2026-05-03 |
-| `interfaces/equipment` | 3 | 682 | 0 | 0 | 2026-09-25 |
-| `interfaces/fade-overlay` | 1 | 20 | 0 | 0 | 2026-05-03 |
-| `interfaces/gameframe` | 6 | 498 | 0 | 1 | 2026-08-18 |
-| `interfaces/journal-tab` | 4 | 265 | 0 | 0 | 2026-08-18 |
-| `interfaces/logout-tab` | 1 | 30 | 0 | 0 | 2026-05-03 |
-| `interfaces/menu` | 1 | 23 | 0 | 1 | 2026-05-03 |
-| `interfaces/omnishop` | 2 | 266 | 0 | 0 | 2026-09-23 |
-| `interfaces/prayer-tab` | 10 | 771 | 0 | 0 | 2026-09-12 |
+| `events/raging-echoes-league` | 2 | 49 | 0 | 0 | 2026-10-06 |
+| `events/shooting-stars` | 9 | 1,261 | 0 | 0 | 2026-09-26 |
+| `events/shooting-stars/pack` | 2 | 440 | 0 | 0 | 2026-09-26 |
+| `generic/generic-locs` | 25 | 1,382 | 0 | 1 | 2026-09-26 |
+| `generic/generic-npcs` | 7 | 1,183 | 0 | 2 | 2026-09-26 |
+| `generic/generic-npcs/pack` | 1 | 6 | 0 | 0 | 2026-09-26 |
+| `generic/killcount` | 1 | 32 | 0 | 0 | 2026-09-26 |
+| `interfaces/bank` | 15 | 2,313 | 3 | 1 | 2026-09-26 |
+| `interfaces/collection-log` | 4 | 543 | 0 | 0 | 2026-09-26 |
+| `interfaces/combat-tab` | 1 | 613 | 1 | 0 | 2026-09-26 |
+| `interfaces/deposit-box` | 6 | 459 | 0 | 1 | 2026-09-26 |
+| `interfaces/emotes` | 2 | 634 | 2 | 0 | 2026-10-05 |
+| `interfaces/equipment` | 3 | 682 | 0 | 0 | 2026-09-26 |
+| `interfaces/fade-overlay` | 1 | 20 | 0 | 0 | 2026-09-26 |
+| `interfaces/gameframe` | 6 | 498 | 0 | 1 | 2026-09-26 |
+| `interfaces/journal-tab` | 4 | 265 | 0 | 0 | 2026-09-26 |
+| `interfaces/logout-tab` | 1 | 30 | 0 | 0 | 2026-09-26 |
+| `interfaces/menu` | 1 | 23 | 0 | 1 | 2026-09-26 |
+| `interfaces/omnishop` | 2 | 266 | 0 | 0 | 2026-09-26 |
+| `interfaces/prayer-tab` | 10 | 771 | 0 | 0 | 2026-09-26 |
 | `interfaces/settings` | 10 | 1,131 | 0 | 0 | 2026-09-28 |
-| `interfaces/skill-guides` | 1 | 114 | 0 | 0 | 2026-07-04 |
-| `interfaces/spellbook` | 1 | 45 | 0 | 0 | 2026-06-18 |
-| `interfaces/worldmap` | 1 | 104 | 0 | 0 | 2026-07-04 |
+| `interfaces/skill-guides` | 1 | 114 | 0 | 0 | 2026-09-26 |
+| `interfaces/spellbook` | 1 | 45 | 0 | 0 | 2026-09-26 |
+| `interfaces/worldmap` | 1 | 104 | 0 | 0 | 2026-09-26 |
 | `interfaces/xp-drops` | 1 | 44 | 0 | 0 | 2026-09-28 |
-| `other/commands` | 4 | 1,459 | 0 | 0 | 2026-09-29 |
-| `other/consumables` | 38 | 8,687 | 0 | 0 | 2026-08-04 |
-| `other/dave/pack` | 1 | 6 | 0 | 0 | 2026-09-23 |
-| `other/discord` | 2 | 80 | 0 | 0 | 2026-07-01 |
-| `other/ironman` | 5 | 352 | 0 | 0 | 2026-07-19 |
-| `other/login` | 1 | 183 | 0 | 0 | 2026-07-14 |
-| `other/mapclock` | 1 | 49 | 0 | 0 | 2026-08-18 |
-| `other/pets` | 100 | 7,838 | 0 | 0 | 2026-09-25 |
-| `other/pets/pack` | 7 | 1,292 | 0 | 0 | 2026-09-25 |
-| `other/sandstorm` | 2 | 364 | 0 | 0 | 2026-08-18 |
-| `other/spawn` | 1 | 333 | 0 | 0 | 2026-09-23 |
-| `other/spawn/pack` | 1 | 6 | 0 | 0 | 2026-09-23 |
+| `other/commands` | 5 | 1,566 | 0 | 0 | 2026-10-06 |
+| `other/consumables` | 38 | 8,687 | 0 | 0 | 2026-10-05 |
+| `other/dave/pack` | 1 | 6 | 0 | 0 | 2026-09-26 |
+| `other/discord` | 2 | 80 | 0 | 0 | 2026-09-26 |
+| `other/ironman` | 5 | 352 | 0 | 0 | 2026-09-26 |
+| `other/login` | 1 | 183 | 0 | 0 | 2026-09-26 |
+| `other/mapclock` | 1 | 49 | 0 | 0 | 2026-09-26 |
+| `other/pets` | 100 | 7,838 | 0 | 0 | 2026-09-26 |
+| `other/pets/pack` | 7 | 1,292 | 0 | 0 | 2026-09-26 |
+| `other/sandstorm` | 2 | 364 | 0 | 0 | 2026-09-26 |
+| `other/spawn` | 1 | 333 | 0 | 0 | 2026-09-26 |
+| `other/spawn/pack` | 1 | 6 | 0 | 0 | 2026-09-26 |
 | `other/special-attacks` | 5 | 629 | 0 | 0 | 2026-10-05 |
-| `other/special-weapons` | 11 | 1,111 | 0 | 1 | 2026-09-14 |
-| `other/windmill` | 2 | 133 | 0 | 0 | 2026-09-23 |
-| `other/windmill/pack` | 1 | 6 | 0 | 0 | 2026-09-23 |
-| `quest` | 44 | 8,461 | 6 | 0 | 2026-09-29 |
-| `quest/pack` | 1 | 6 | 0 | 0 | 2026-09-29 |
-| `skills/cooking` | 12 | 1,362 | 0 | 0 | 2026-09-22 |
-| `skills/crafting` | 30 | 3,684 | 0 | 0 | 2026-09-23 |
-| `skills/crafting/pack` | 2 | 2,699 | 0 | 0 | 2026-09-22 |
-| `skills/firemaking` | 6 | 589 | 0 | 0 | 2026-08-08 |
-| `skills/fishing` | 13 | 1,402 | 0 | 0 | 2026-09-25 |
-| `skills/fishing/pack` | 3 | 206 | 0 | 0 | 2026-09-25 |
+| `other/special-weapons` | 11 | 1,111 | 0 | 1 | 2026-09-26 |
+| `other/windmill` | 2 | 133 | 0 | 0 | 2026-09-26 |
+| `other/windmill/pack` | 1 | 6 | 0 | 0 | 2026-09-26 |
+| `quest` | 44 | 8,490 | 7 | 0 | 2026-10-06 |
+| `quest/pack` | 1 | 6 | 0 | 0 | 2026-10-06 |
+| `skills/cooking` | 12 | 1,372 | 0 | 0 | 2026-10-06 |
+| `skills/crafting` | 30 | 3,684 | 0 | 0 | 2026-09-26 |
+| `skills/crafting/pack` | 2 | 2,699 | 0 | 0 | 2026-09-26 |
+| `skills/firemaking` | 6 | 589 | 0 | 0 | 2026-09-26 |
+| `skills/fishing` | 13 | 1,402 | 0 | 0 | 2026-09-26 |
+| `skills/fishing/pack` | 3 | 206 | 0 | 0 | 2026-09-26 |
+| `skills/fletching` | 2 | 367 | 1 | 0 | — |
 | `skills/herblore` | 11 | 1,246 | 0 | 0 | 2026-10-05 |
-| `skills/magic/alchemy` | 1 | 253 | 0 | 0 | 2026-06-21 |
+| `skills/magic/alchemy` | 1 | 253 | 0 | 0 | 2026-09-26 |
 | `skills/magic/arceuus-spells` | 14 | 1,387 | 1 | 1 | 2026-10-04 |
 | `skills/magic/spell-attacks` | 8 | 1,505 | 3 | 0 | 2026-10-04 |
 | `skills/magic/spell-teleports` | 1 | 382 | 0 | 0 | 2026-10-04 |
 | `skills/magic/spellbook-altars` | 1 | 37 | 0 | 0 | 2026-09-29 |
 | `skills/mining` | 11 | 1,050 | 0 | 0 | 2026-09-29 |
 | `skills/prayer` | 29 | 2,601 | 0 | 0 | 2026-10-05 |
-| `skills/runecrafting` | 24 | 2,565 | 0 | 0 | 2026-09-22 |
+| `skills/runecrafting` | 24 | 2,565 | 0 | 0 | 2026-09-26 |
 | `skills/slayer` | 45 | 5,502 | 0 | 0 | 2026-10-05 |
 | `skills/smithing` | 15 | 2,087 | 0 | 0 | 2026-10-05 |
 | `skills/thieving` | 2 | 406 | 0 | 0 | 2026-10-04 |
-| `skills/utils` | 2 | 316 | 0 | 0 | 2026-05-10 |
-| `skills/woodcutting` | 5 | 409 | 2 | 2 | 2026-07-22 |
-| `travel/canoe` | 6 | 1,122 | 1 | 2 | 2026-07-22 |
+| `skills/utils` | 2 | 316 | 0 | 0 | 2026-09-26 |
+| `skills/woodcutting` | 5 | 409 | 2 | 2 | 2026-09-26 |
+| `travel/canoe` | 6 | 1,122 | 1 | 2 | 2026-09-26 |
 
 ---
 
