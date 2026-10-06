@@ -19,37 +19,34 @@ import org.rsmod.plugin.scripts.ScriptContext
 
 class FletchingScript : PluginScript() {
     override fun ScriptContext.startup() {
-        for ((log, recipes) in FletchingRecipes.logCutting) {
-            onOpHeldU(FletchingRecipes.KNIFE, log) {
-                chooseAndFletch(recipes, SkillingActionType.MAKE, "make")
-            }
-        }
-        for (recipe in FletchingRecipes.bowStringing) {
-            onOpHeldU(FletchingRecipes.BOW_STRING, recipe.inputs.first().obj) {
-                chooseAndFletch(listOf(recipe), SkillingActionType.STRING, "string")
-            }
-        }
-        onOpHeldU(FletchingRecipes.ARROW_SHAFT, FletchingRecipes.FEATHER) {
-            chooseAndFletch(listOf(FletchingRecipes.headlessArrows), SkillingActionType.MAKE_SETS, "make")
-        }
-        for (recipe in FletchingRecipes.arrows) {
-            onOpHeldU(FletchingRecipes.HEADLESS_ARROW, recipe.inputs.last().obj) {
-                chooseAndFletch(listOf(recipe), SkillingActionType.MAKE_SETS, "make")
-            }
+        val byTrigger = FletchingRecipes.all.groupBy { it.trigger }
+        for ((trigger, recipes) in byTrigger) {
+            onOpHeldU(trigger.first, trigger.second) { startFletching(recipes) }
         }
         onPlayerQueueWithArgs<FletchTask>(QUEUE) { fletchOnce(it.args) }
     }
 
-    private suspend fun ProtectedAccess.chooseAndFletch(
-        recipes: List<FletchRecipe>,
-        actionType: SkillingActionType,
-        verb: String,
-    ) {
+    private suspend fun ProtectedAccess.startFletching(recipes: List<FletchRecipe>) {
+        val single = recipes.singleOrNull()
+        if (single != null && single.isInstant) {
+            if (!hasLevel(single)) {
+                mesbox("You need a Fletching level of ${single.level} to make that.")
+                return
+            }
+            anim(single.anim)
+            fletchOnce(FletchTask(single, amount = 1))
+            return
+        }
+        chooseAndFletch(recipes)
+    }
+
+    private suspend fun ProtectedAccess.chooseAndFletch(recipes: List<FletchRecipe>) {
         val byOutput = recipes.associateBy { it.output }
+        val menu = recipes.first().menu
         val config =
             SkillMultiConfig(
-                actionType = actionType,
-                verb = verb,
+                actionType = menu,
+                verb = if (menu == SkillingActionType.STRING) "string" else "make",
                 entries = recipes.map { SkillMultiEntry(it.output) },
                 maxCountProvider = { inventory, entry ->
                     byOutput.getValue(entry.internal).maxActions(inventory::count)

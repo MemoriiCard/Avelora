@@ -38,7 +38,7 @@ the module table at the bottom before reading a 0 as "nothing exists".
 | 🔴 | <img src="https://oldschool.runescape.wiki/images/Agility_icon.png?389e0" height="20" alt=""> Agility | nothing yet | [wiki](https://oldschool.runescape.wiki/w/Agility) |
 | 🟢 | <img src="https://oldschool.runescape.wiki/images/Thieving_icon.png?973fe" height="20" alt=""> [Thieving](content/skills/thieving) | 406 loc | [wiki](https://oldschool.runescape.wiki/w/Thieving) |
 | 🟢 | <img src="https://oldschool.runescape.wiki/images/Crafting_icon.png?a1f71" height="20" alt=""> [Crafting](content/skills/crafting) | 6,383 loc | [wiki](https://oldschool.runescape.wiki/w/Crafting) |
-| 🟢 | <img src="https://oldschool.runescape.wiki/images/Fletching_icon.png?15cda" height="20" alt=""> [Fletching](content/skills/fletching) | 367 loc | [wiki](https://oldschool.runescape.wiki/w/Fletching) |
+| 🟢 | <img src="https://oldschool.runescape.wiki/images/Fletching_icon.png?15cda" height="20" alt=""> [Fletching](content/skills/fletching) | 621 loc | [wiki](https://oldschool.runescape.wiki/w/Fletching) |
 | 🟢 | <img src="https://oldschool.runescape.wiki/images/Construction_icon.png?f9bf7" height="20" alt=""> Construction | no module, code in content/areas/city | [wiki](https://oldschool.runescape.wiki/w/Construction) |
 | 🟢 | <img src="https://oldschool.runescape.wiki/images/Farming_icon.png?558fa" height="20" alt=""> Farming | no module, code in content/areas/city | [wiki](https://oldschool.runescape.wiki/w/Farming) |
 | 🔴 | <img src="https://oldschool.runescape.wiki/images/Hunter_icon.png?8762f" height="20" alt=""> Hunter | nothing yet | [wiki](https://oldschool.runescape.wiki/w/Hunter) |
@@ -284,7 +284,7 @@ Found the same way `settings.gradle.kts` finds them: any dir with a `build.gradl
 | `skills/firemaking` | 6 | 589 | 0 | 0 | 2026-09-26 |
 | `skills/fishing` | 13 | 1,402 | 0 | 0 | 2026-09-26 |
 | `skills/fishing/pack` | 3 | 206 | 0 | 0 | 2026-09-26 |
-| `skills/fletching` | 2 | 367 | 1 | 0 | — |
+| `skills/fletching` | 4 | 621 | 1 | 0 | 2026-10-06 |
 | `skills/herblore` | 11 | 1,246 | 0 | 0 | 2026-10-05 |
 | `skills/magic/alchemy` | 1 | 253 | 0 | 0 | 2026-09-26 |
 | `skills/magic/arceuus-spells` | 14 | 1,387 | 1 | 1 | 2026-10-04 |

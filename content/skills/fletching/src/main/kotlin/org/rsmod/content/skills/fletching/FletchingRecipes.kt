@@ -1,5 +1,7 @@
 package org.rsmod.content.skills.fletching
 
+import org.rsmod.content.skills.SkillingActionType
+
 data class FletchInput(val obj: String, val count: Int = 1)
 
 /**
@@ -8,6 +10,9 @@ data class FletchInput(val obj: String, val count: Int = 1)
  * Set-based recipes ([perSet] > 0, e.g. arrows) instead consume up to [perSet] of each input per
  * action, yield the same number of outputs, and pay [xp] for every item made. Everything else pays
  * [xp] once per action.
+ *
+ * A [ticks] of 0 marks a one-click recipe (bolts, darts, javelins): no Make-X menu, each click
+ * makes one set straight away, as in OSRS.
  */
 data class FletchRecipe(
     val output: String,
@@ -21,10 +26,23 @@ data class FletchRecipe(
     val anim: String,
     val sound: String? = null,
     val tool: String? = null,
+    val menu: SkillingActionType = if (perSet > 0) SkillingActionType.MAKE_SETS else SkillingActionType.MAKE,
     val message: String,
 ) {
     val isSet: Boolean
         get() = perSet > 0
+
+    val isInstant: Boolean
+        get() = ticks == 0
+
+    /** The two objs used on each other to start this recipe: the tool and sole input, or both inputs. */
+    val trigger: Pair<String, String>
+        get() =
+            if (inputs.size == 1) {
+                checkNotNull(tool) { "Single-input recipe $output needs a tool" } to inputs.single().obj
+            } else {
+                inputs[0].obj to inputs[1].obj
+            }
 }
 
 object FletchingRecipes {
@@ -164,6 +182,7 @@ object FletchingRecipes {
             ticks = 2,
             anim = anim,
             sound = "synth.stringing",
+            menu = SkillingActionType.STRING,
             message = "You add a string to the bow.",
         )
 
@@ -220,7 +239,9 @@ object FletchingRecipes {
         )
 
     val all: List<FletchRecipe>
-        get() = logCutting.values.flatten() + bowStringing + headlessArrows + arrows
+        get() =
+            logCutting.values.flatten() + bowStringing + headlessArrows + arrows +
+                AmmoRecipes.all + CrossbowRecipes.all
 
     /** How many actions the inventory can afford, given a per-input [count] function. */
     fun FletchRecipe.maxActions(count: (String) -> Int): Int =

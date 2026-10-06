@@ -58,4 +58,34 @@ class FletchingRecipesTest {
         val oak = FletchingRecipes.logCutting.getValue("obj.oak_logs").single { it.output == "obj.oak_shield" }
         assertEquals(2, oak.maxActions { if (it == "obj.oak_logs") 5 else 0 })
     }
+
+    @Test
+    fun `no two recipe groups share a pair of items in either order`() {
+        val triggers = FletchingRecipes.all.map { it.trigger }.distinct()
+        val unordered = triggers.map { setOf(it.first, it.second) }
+        assertEquals(unordered.size, unordered.distinct().size)
+    }
+
+    @Test
+    fun `bolts darts and javelins are one-click sets`() {
+        val ammo = AmmoRecipes.bolts + AmmoRecipes.darts + AmmoRecipes.javelins
+        for (recipe in ammo) {
+            assertEquals(true, recipe.isInstant, recipe.output)
+            assertEquals(true, recipe.isSet, recipe.output)
+        }
+        val dragonDart = AmmoRecipes.darts.single { it.output == "obj.dragon_dart" }
+        assertEquals(95, dragonDart.level)
+        assertEquals(25.0, dragonDart.xp)
+    }
+
+    @Test
+    fun `crossbows need a hammer for limbs and match the wiki`() {
+        val rune = CrossbowRecipes.limbs.single { it.output == "obj.xbows_crossbow_unstrung_runite" }
+        assertEquals("obj.hammer", rune.tool)
+        assertEquals(69, rune.level)
+        assertEquals(100.0, rune.xp)
+        val dragon = CrossbowRecipes.stringing.single { it.output == "obj.xbows_crossbow_dragon" }
+        assertEquals(78, dragon.level)
+        assertEquals(70.0, dragon.xp)
+    }
 }
