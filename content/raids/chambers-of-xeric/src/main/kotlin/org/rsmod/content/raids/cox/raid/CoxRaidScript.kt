@@ -107,6 +107,15 @@ constructor(private val parties: CoxParties, private val raids: CoxRaids) : Plug
             return
         }
         val destination = acrossLoc(loc, player.coords)
+        val here = raid.roomAt(player.coords)
+        val there = raid.roomAt(destination)
+        if (here != null && there != null && raid.isForward(here, there)) {
+            val controller = raid.controllerOf(here)
+            if (controller != null && controller.blocksExit && !controller.cleared) {
+                mes("The way ahead is blocked until this room is cleared.")
+                return
+            }
+        }
         telejump(destination)
         raid.floorIndexAt(destination)?.let { raids.reachedFloor(raid, it) }
     }
