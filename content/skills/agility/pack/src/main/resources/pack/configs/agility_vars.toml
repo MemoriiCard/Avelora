@@ -1,0 +1,49 @@
+[[varp]]
+isServerOnly = true
+id = "varp.agility_course_state"
+scope = "Perm"
+transmit = "Never"
+
+[[varbit]]
+isServerOnly = true
+id = "varbit.agility_course_progress"
+varp = "varp.agility_course_state"
+startBit = 0
+endBit = 15
+
+[[varp]]
+isServerOnly = true
+id = "varp.agility_mark_cooldown"
+scope = "Perm"
+transmit = "Never"
+
+[[varp]]
+isServerOnly = true
+id = "varp.agility_laps_gnome"
+scope = "Perm"
+transmit = "Never"
+
+[[varbit]]
+isServerOnly = true
+id = "varbit.agility_course_id"
+varp = "varp.agility_course_state"
+startBit = 16
+endBit = 23
+
+[[varp]]
+isServerOnly = true
+id = "varp.agility_laps_draynor"
+scope = "Perm"
+transmit = "Never"
+
+[[varp]]
+isServerOnly = true
+id = "varp.agility_laps_alkharid"
+scope = "Perm"
+transmit = "Never"
+
+[[varp]]
+isServerOnly = true
+id = "varp.agility_laps_varrock"
+scope = "Perm"
+transmit = "Never"

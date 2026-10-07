@@ -1,0 +1,11 @@
+[gamevals.varp]
+agility_course_state = 64300
+agility_mark_cooldown = 64301
+agility_laps_gnome = 64302
+agility_laps_draynor = 64303
+agility_laps_alkharid = 64304
+agility_laps_varrock = 64305
+
+[gamevals.varbit]
+agility_course_progress = 64300
+agility_course_id = 64301
