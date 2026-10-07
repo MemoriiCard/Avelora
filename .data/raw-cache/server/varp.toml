@@ -863,3 +863,33 @@ isServerOnly = true
 id = "varp.dom_loot_claimed"
 scope = "Temp"
 transmit = "Never"
+
+[[varp]]
+isServerOnly = true
+id = "varp.cox_viewing_party"
+scope = "Temp"
+transmit = "Never"
+
+[[varp]]
+id = "varp.raids_temp_transmit1"
+scope = "Temp"
+
+[[varp]]
+id = "varp.raids_temp_transmit2"
+scope = "Temp"
+
+[[varp]]
+id = "varp.raids_temp_transmit3"
+scope = "Temp"
+
+[[varp]]
+id = "varp.raids_temp_transmit4"
+scope = "Temp"
+
+[[varp]]
+id = "varp.raids_party_groupholder"
+scope = "Temp"
+
+[[varp]]
+id = "varp.raids_playerscore"
+scope = "Temp"
