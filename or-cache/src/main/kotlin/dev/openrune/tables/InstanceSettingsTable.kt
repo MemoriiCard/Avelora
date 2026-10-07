@@ -274,6 +274,23 @@ object InstanceSettingsTable {
             columnRSCM(EXIT_OBJECT, "loc.dom_entrance_exit")
         }
 
+        row("dbrow.instance_vorkath") {
+            column(KEY, "vorkath")
+            columnCoord(EXIT_COORD, CoordGrid(2272, 4052, 0))
+            columnCoord(ENTER_COORD, CoordGrid(2272, 4054, 0))
+            column(FEE, 0)
+            column(MAX_PLAYERS, 1)
+            column(TIME_LIMIT_MINUTES, 0)
+            column(GRACE_MINUTES, 1)
+            columnRSCM(BOSS_NPC, "npc.vorkath")
+            column(BOSS_NAME, "Vorkath")
+            column(RECOMMENDED_COMBAT, 100, 126)
+            column(TEAM_SIZE, 1)
+            column(LOOT_MULTIPLIER, "x1.0")
+            column(DESCRIPTION, "The undead dragon sleeping in Ungael's crater.")
+            columnRSCM(ENTER_OBJECT, "loc.ungael_crater_entrance")
+        }
+
         row("dbrow.instance_leviathan") {
             column(KEY, "leviathan")
             columnCoord(EXIT_COORD, CoordGrid(2064, 6436, 0))
