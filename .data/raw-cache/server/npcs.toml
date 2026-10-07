@@ -16792,3 +16792,15 @@ id = "npc.yama_voidflare"
 inherit = "npc.yama_voidflare"
 [npc.params]
 "param.demon"=1
+
+[[npc]]
+id = "npc.crazy_archaeologist"
+inherit = "npc.crazy_archaeologist"
+attackRange = 8
+respawnRate = 15
+[npc.params]
+"param.attack_anim"="seq.book_chuck"
+"param.defend_anim"="seq.human_unarmedblock"
+"param.death_anim"="seq.human_death"
+"param.killcount_varp"="varp.total_crazyarchaeologist_kills"
+"param.boss_hp_bar_mode"=1
