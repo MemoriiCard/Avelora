@@ -274,6 +274,24 @@ object InstanceSettingsTable {
             columnRSCM(EXIT_OBJECT, "loc.dom_entrance_exit")
         }
 
+        row("dbrow.instance_zulrah") {
+            column(KEY, "zulrah")
+            columnCoord(EXIT_COORD, CoordGrid(2213, 3056, 0))
+            columnCoord(ENTER_COORD, CoordGrid(2268, 3069, 0))
+            column(FEE, 0)
+            column(MAX_PLAYERS, 1)
+            column(TIME_LIMIT_MINUTES, 0)
+            column(GRACE_MINUTES, 1)
+            columnRSCM(BOSS_NPC, "npc.snakeboss_boss_ranged")
+            column(BOSS_NAME, "Zulrah")
+            column(RECOMMENDED_COMBAT, 90, 126)
+            column(TEAM_SIZE, 1)
+            column(LOOT_MULTIPLIER, "x1.0")
+            column(DESCRIPTION, "The serpent of Zul-Andra, shifting between three forms.")
+            columnRSCM(ENTER_OBJECT, "loc.snakeboss_boat_1op")
+            columnRSCM(EXIT_OBJECT, "loc.snakeboss_exit")
+        }
+
         row("dbrow.instance_leviathan") {
             column(KEY, "leviathan")
             columnCoord(EXIT_COORD, CoordGrid(2064, 6436, 0))
