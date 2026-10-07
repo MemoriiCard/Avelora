@@ -16601,6 +16601,9 @@ id = "npc.nex_prison_blood_reaver_boss"
 inherit = "npc.nex_prison_blood_reaver_boss"
 [npc.params]
 "param.demon"=1
+"param.attack_anim"="seq.blood_reaver_attack"
+"param.defend_anim"="seq.blood_reaver_defend"
+"param.death_anim"="seq.blood_reaver_death"
 
 [[npc]]
 id = "npc.arena_bouncer"
@@ -16792,3 +16795,59 @@ id = "npc.yama_voidflare"
 inherit = "npc.yama_voidflare"
 [npc.params]
 "param.demon"=1
+
+[[npc]]
+id = "npc.nex"
+inherit = "npc.nex"
+attackRange = 10
+maxRange = 30
+[npc.params]
+"param.attack_anim"="seq.nex_attack"
+"param.defend_anim"="seq.nex_defend"
+"param.death_anim"="seq.nex_death"
+"param.killcount_varp"="varp.total_nex_kills"
+"param.boss_hp_bar_mode"=1
+
+[[npc]]
+id = "npc.nex_soulsplit"
+inherit = "npc.nex_soulsplit"
+attackRange = 10
+maxRange = 30
+[npc.params]
+"param.attack_anim"="seq.nex_attack"
+"param.defend_anim"="seq.nex_defend"
+"param.death_anim"="seq.nex_death"
+"param.killcount_varp"="varp.total_nex_kills"
+"param.boss_hp_bar_mode"=1
+
+[[npc]]
+id = "npc.nex_smokemage"
+inherit = "npc.nex_smokemage"
+attackRange = 10
+maxRange = 30
+[npc.params]
+"param.attack_anim"="seq.human_casting"
+
+[[npc]]
+id = "npc.nex_shadowmage"
+inherit = "npc.nex_shadowmage"
+attackRange = 10
+maxRange = 30
+[npc.params]
+"param.attack_anim"="seq.human_casting"
+
+[[npc]]
+id = "npc.nex_bloodmage"
+inherit = "npc.nex_bloodmage"
+attackRange = 10
+maxRange = 30
+[npc.params]
+"param.attack_anim"="seq.human_casting"
+
+[[npc]]
+id = "npc.nex_icemage"
+inherit = "npc.nex_icemage"
+attackRange = 10
+maxRange = 30
+[npc.params]
+"param.attack_anim"="seq.human_casting"
