@@ -13194,6 +13194,8 @@ inherit = "npc.nightmare_parasite"
 [npc.params]
 "param.elemental_weakness_type"=3
 "param.elemental_weakness_percent"=50
+"param.attack_anim"="seq.nightmare_parasite_attack_magic"
+"param.death_anim"="seq.nightmare_parasite_death"
 
 [[npc]]
 id = "npc.nightmare_parasite_weak"
@@ -16792,3 +16794,145 @@ id = "npc.yama_voidflare"
 inherit = "npc.yama_voidflare"
 [npc.params]
 "param.demon"=1
+
+[[npc]]
+id = "npc.nightmare_initial"
+inherit = "npc.nightmare_initial"
+attackRange = 10
+maxRange = 30
+[npc.params]
+"param.attack_anim"="seq.nightmare_attack_melee"
+"param.death_anim"="seq.nightmare_death"
+"param.killcount_varp"="varp.total_nightmare_kills"
+"param.boss_hp_bar_mode"=1
+
+[[npc]]
+id = "npc.nightmare_phase_01"
+inherit = "npc.nightmare_phase_01"
+attackRange = 10
+maxRange = 30
+[npc.params]
+"param.attack_anim"="seq.nightmare_attack_melee"
+"param.death_anim"="seq.nightmare_death"
+"param.killcount_varp"="varp.total_nightmare_kills"
+"param.boss_hp_bar_mode"=1
+
+[[npc]]
+id = "npc.nightmare_phase_02"
+inherit = "npc.nightmare_phase_02"
+attackRange = 10
+maxRange = 30
+[npc.params]
+"param.attack_anim"="seq.nightmare_attack_melee"
+"param.death_anim"="seq.nightmare_death"
+"param.killcount_varp"="varp.total_nightmare_kills"
+"param.boss_hp_bar_mode"=1
+
+[[npc]]
+id = "npc.nightmare_phase_03"
+inherit = "npc.nightmare_phase_03"
+attackRange = 10
+maxRange = 30
+[npc.params]
+"param.attack_anim"="seq.nightmare_attack_melee"
+"param.death_anim"="seq.nightmare_death"
+"param.killcount_varp"="varp.total_nightmare_kills"
+"param.boss_hp_bar_mode"=1
+
+[[npc]]
+id = "npc.nightmare_weak_phase_01"
+inherit = "npc.nightmare_weak_phase_01"
+attackRange = 10
+maxRange = 30
+[npc.params]
+"param.attack_anim"="seq.nightmare_attack_melee"
+"param.death_anim"="seq.nightmare_death"
+"param.killcount_varp"="varp.total_nightmare_kills"
+"param.boss_hp_bar_mode"=1
+
+[[npc]]
+id = "npc.nightmare_weak_phase_02"
+inherit = "npc.nightmare_weak_phase_02"
+attackRange = 10
+maxRange = 30
+[npc.params]
+"param.attack_anim"="seq.nightmare_attack_melee"
+"param.death_anim"="seq.nightmare_death"
+"param.killcount_varp"="varp.total_nightmare_kills"
+"param.boss_hp_bar_mode"=1
+
+[[npc]]
+id = "npc.nightmare_weak_phase_03"
+inherit = "npc.nightmare_weak_phase_03"
+attackRange = 10
+maxRange = 30
+[npc.params]
+"param.attack_anim"="seq.nightmare_attack_melee"
+"param.death_anim"="seq.nightmare_death"
+"param.killcount_varp"="varp.total_nightmare_kills"
+"param.boss_hp_bar_mode"=1
+
+[[npc]]
+id = "npc.nightmare_blast"
+inherit = "npc.nightmare_blast"
+attackRange = 10
+maxRange = 30
+[npc.params]
+"param.attack_anim"="seq.nightmare_attack_melee"
+"param.death_anim"="seq.nightmare_death"
+"param.killcount_varp"="varp.total_nightmare_kills"
+"param.boss_hp_bar_mode"=1
+
+[[npc]]
+id = "npc.nightmare_husk_magic"
+inherit = "npc.nightmare_husk_magic"
+attackRange = 8
+maxRange = 15
+[npc.params]
+"param.attack_anim"="seq.husk_magic_attack"
+"param.death_anim"="seq.husk_death"
+
+[[npc]]
+id = "npc.nightmare_husk_ranged"
+inherit = "npc.nightmare_husk_ranged"
+attackRange = 8
+maxRange = 15
+[npc.params]
+"param.attack_anim"="seq.husk_ranged_attack"
+"param.death_anim"="seq.husk_death"
+
+[[npc]]
+id = "npc.nightmare_sleepwalker_1"
+inherit = "npc.nightmare_sleepwalker_1"
+[npc.params]
+"param.death_anim"="seq.sleepwalker_death"
+
+[[npc]]
+id = "npc.nightmare_sleepwalker_2"
+inherit = "npc.nightmare_sleepwalker_2"
+[npc.params]
+"param.death_anim"="seq.sleepwalker_death"
+
+[[npc]]
+id = "npc.nightmare_sleepwalker_3"
+inherit = "npc.nightmare_sleepwalker_3"
+[npc.params]
+"param.death_anim"="seq.sleepwalker_death"
+
+[[npc]]
+id = "npc.nightmare_sleepwalker_4"
+inherit = "npc.nightmare_sleepwalker_4"
+[npc.params]
+"param.death_anim"="seq.sleepwalker_death"
+
+[[npc]]
+id = "npc.nightmare_sleepwalker_5"
+inherit = "npc.nightmare_sleepwalker_5"
+[npc.params]
+"param.death_anim"="seq.sleepwalker_death"
+
+[[npc]]
+id = "npc.nightmare_sleepwalker_6"
+inherit = "npc.nightmare_sleepwalker_6"
+[npc.params]
+"param.death_anim"="seq.sleepwalker_death"
