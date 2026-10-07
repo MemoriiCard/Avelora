@@ -12,6 +12,7 @@ import dtx.core.flatten
 import jakarta.inject.Inject
 import kotlin.math.abs
 import kotlin.random.Random
+import org.rsmod.api.dig.DigSites
 import org.rsmod.api.droptable.DropTableRegistry
 import org.rsmod.api.droptable.rollCount
 import org.rsmod.api.invtx.invAdd
@@ -58,6 +59,7 @@ constructor(
     private val spawner: BarrowsNpcSpawner,
     private val doors: BarrowsDoors,
     private val dropRegistry: DropTableRegistry,
+    private val digSites: DigSites,
 ) : PluginScript() {
     private val puzzles = mutableMapOf<Int, BarrowsPuzzle>()
 
@@ -161,6 +163,11 @@ constructor(
     private fun ProtectedAccess.finishDig(mound: BarrowsBrother?) {
         resetAnim()
         if (mound == null) {
+            val site = digSites.find(player.coords)
+            if (site != null) {
+                site()
+                return
+            }
             mes("You dig a hole in the ground... but find nothing.")
             return
         }
