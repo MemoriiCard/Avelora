@@ -35,7 +35,7 @@ the module table at the bottom before reading a 0 as "nothing exists".
 | 🟢 | <img src="https://oldschool.runescape.wiki/images/Cooking_icon.png?a0156" height="20" alt=""> [Cooking](content/skills/cooking) | 1,372 loc | [wiki](https://oldschool.runescape.wiki/w/Cooking) |
 | 🟢 | <img src="https://oldschool.runescape.wiki/images/Herblore_icon.png?ffa9e" height="20" alt=""> [Herblore](content/skills/herblore) | 1,246 loc | [wiki](https://oldschool.runescape.wiki/w/Herblore) |
 | 🟢 | <img src="https://oldschool.runescape.wiki/images/Fishing_icon.png?15a98" height="20" alt=""> [Fishing](content/skills/fishing) | 1,608 loc | [wiki](https://oldschool.runescape.wiki/w/Fishing) |
-| 🟢 | <img src="https://oldschool.runescape.wiki/images/Agility_icon.png?389e0" height="20" alt=""> [Agility](content/skills/agility) | 422 loc | [wiki](https://oldschool.runescape.wiki/w/Agility) |
+| 🟢 | <img src="https://oldschool.runescape.wiki/images/Agility_icon.png?389e0" height="20" alt=""> [Agility](content/skills/agility) | 665 loc | [wiki](https://oldschool.runescape.wiki/w/Agility) |
 | 🟢 | <img src="https://oldschool.runescape.wiki/images/Thieving_icon.png?973fe" height="20" alt=""> [Thieving](content/skills/thieving) | 406 loc | [wiki](https://oldschool.runescape.wiki/w/Thieving) |
 | 🟢 | <img src="https://oldschool.runescape.wiki/images/Crafting_icon.png?a1f71" height="20" alt=""> [Crafting](content/skills/crafting) | 6,383 loc | [wiki](https://oldschool.runescape.wiki/w/Crafting) |
 | 🔴 | <img src="https://oldschool.runescape.wiki/images/Fletching_icon.png?15cda" height="20" alt=""> Fletching | nothing yet | [wiki](https://oldschool.runescape.wiki/w/Fletching) |
@@ -257,8 +257,8 @@ Found the same way `settings.gradle.kts` finds them: any dir with a `build.gradl
 | `other/windmill/pack` | 1 | 6 | 0 | 0 | 2026-09-26 |
 | `quest` | 44 | 8,490 | 7 | 0 | 2026-10-06 |
 | `quest/pack` | 1 | 6 | 0 | 0 | 2026-10-06 |
-| `skills/agility` | 7 | 416 | 1 | 0 | — |
-| `skills/agility/pack` | 1 | 6 | 0 | 0 | — |
+| `skills/agility` | 9 | 659 | 1 | 0 | 2026-10-06 |
+| `skills/agility/pack` | 1 | 6 | 0 | 0 | 2026-10-06 |
 | `skills/cooking` | 12 | 1,372 | 0 | 0 | 2026-10-06 |
 | `skills/crafting` | 30 | 3,684 | 0 | 0 | 2026-09-26 |
 | `skills/crafting/pack` | 2 | 2,699 | 0 | 0 | 2026-09-26 |

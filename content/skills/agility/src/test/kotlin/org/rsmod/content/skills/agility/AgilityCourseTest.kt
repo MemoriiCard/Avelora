@@ -10,7 +10,9 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import org.rsmod.content.skills.agility.courses.AlKharidRooftopCourse
 import org.rsmod.content.skills.agility.courses.GnomeStrongholdCourse
+import org.rsmod.content.skills.agility.courses.VarrockRooftopCourse
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class AgilityCourseTest {
@@ -50,6 +52,14 @@ class AgilityCourseTest {
         val draynor = AgilityCourses.all.single { it.name.startsWith("Draynor") }
         assertEquals(120.0, draynor.obstacles.sumOf { it.xp } + draynor.bonusXp)
         assertEquals(AgilityCourses.all.size, AgilityCourses.all.map { it.id }.distinct().size)
+    }
+
+    @Test
+    fun `al kharid and varrock laps pay the wiki totals`() {
+        val alKharid = AlKharidRooftopCourse.course
+        val varrock = VarrockRooftopCourse.course
+        assertEquals(216.0, alKharid.obstacles.sumOf { it.xp } + alKharid.bonusXp, 0.001)
+        assertEquals(269.7, varrock.obstacles.sumOf { it.xp } + varrock.bonusXp, 0.001)
     }
 
     @Test

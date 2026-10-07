@@ -35,3 +35,15 @@ isServerOnly = true
 id = "varp.agility_laps_draynor"
 scope = "Perm"
 transmit = "Never"
+
+[[varp]]
+isServerOnly = true
+id = "varp.agility_laps_alkharid"
+scope = "Perm"
+transmit = "Never"
+
+[[varp]]
+isServerOnly = true
+id = "varp.agility_laps_varrock"
+scope = "Perm"
+transmit = "Never"

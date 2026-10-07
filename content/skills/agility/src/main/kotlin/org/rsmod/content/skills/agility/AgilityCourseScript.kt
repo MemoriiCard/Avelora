@@ -33,8 +33,9 @@ class AgilityCourseScript @Inject constructor(private val objRepo: ObjRepository
         obstacle: Obstacle,
         loc: BoundLocInfo,
     ) {
-        if (player.agilityLvl < obstacle.level) {
-            mes("You need an Agility level of ${obstacle.level} to attempt this.")
+        val required = maxOf(course.level, obstacle.level)
+        if (player.agilityLvl < required) {
+            mes("You need an Agility level of $required to attempt this.")
             return
         }
         if (!obstacle.traverse(this, loc)) {
