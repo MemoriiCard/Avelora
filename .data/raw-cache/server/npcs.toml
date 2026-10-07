@@ -11604,6 +11604,9 @@ inherit = "npc.vetion_hellhound_jnr"
 [npc.params]
 "param.elemental_weakness_type"=2
 "param.elemental_weakness_percent"=35
+"param.attack_anim"="seq.dog_update_skeleton_hellhound_attack"
+"param.defend_anim"="seq.dog_update_skeleton_hellhound_defend"
+"param.death_anim"="seq.wbr_vention_hellhound_death"
 
 [[npc]]
 id = "npc.scorpia"
@@ -14315,6 +14318,9 @@ inherit = "npc.vetion_hellhound_jnr_singles"
 [npc.params]
 "param.elemental_weakness_type"=2
 "param.elemental_weakness_percent"=35
+"param.attack_anim"="seq.dog_update_skeleton_hellhound_attack"
+"param.defend_anim"="seq.dog_update_skeleton_hellhound_defend"
+"param.death_anim"="seq.wbr_vention_hellhound_death"
 
 [[npc]]
 id = "npc.osb10_toa_warden_tumeken_phase1_cutscene"
@@ -16792,3 +16798,75 @@ id = "npc.yama_voidflare"
 inherit = "npc.yama_voidflare"
 [npc.params]
 "param.demon"=1
+
+[[npc]]
+id = "npc.vetion"
+inherit = "npc.vetion"
+huntMode = 1
+huntRange = 30
+maxRange = 30
+respawnRate = 15
+[npc.params]
+"param.attack_anim"="seq.npc_vetion_attack_magic_01"
+"param.defend_anim"="seq.npc_vetion_defend_shield_01"
+"param.death_anim"="seq.npc_vetion_death_01"
+"param.killcount_varp"="varp.total_vetion_kills"
+"param.boss_hp_bar_mode"=1
+
+[[npc]]
+id = "npc.vetion_2"
+inherit = "npc.vetion_2"
+huntMode = 1
+huntRange = 30
+maxRange = 30
+respawnRate = 15
+[npc.params]
+"param.attack_anim"="seq.npc_vetion_attack_magic_02"
+"param.defend_anim"="seq.npc_vetion_defend_shield_02"
+"param.death_anim"="seq.npc_vetion_death_02"
+"param.killcount_varp"="varp.total_vetion_kills"
+"param.boss_hp_bar_mode"=1
+
+[[npc]]
+id = "npc.vetion_single"
+inherit = "npc.vetion_single"
+huntMode = 1
+huntRange = 30
+maxRange = 30
+respawnRate = 15
+[npc.params]
+"param.attack_anim"="seq.npc_vetion_attack_magic_01"
+"param.defend_anim"="seq.npc_vetion_defend_shield_01"
+"param.death_anim"="seq.npc_vetion_death_01"
+"param.killcount_varp"="varp.total_calvarion_kills"
+"param.boss_hp_bar_mode"=1
+
+[[npc]]
+id = "npc.vetion_2_single"
+inherit = "npc.vetion_2_single"
+huntMode = 1
+huntRange = 30
+maxRange = 30
+respawnRate = 15
+[npc.params]
+"param.attack_anim"="seq.npc_vetion_attack_magic_02"
+"param.defend_anim"="seq.npc_vetion_defend_shield_02"
+"param.death_anim"="seq.npc_vetion_death_02"
+"param.killcount_varp"="varp.total_calvarion_kills"
+"param.boss_hp_bar_mode"=1
+
+[[npc]]
+id = "npc.vetion_hellhound_snr"
+inherit = "npc.vetion_hellhound_snr"
+[npc.params]
+"param.attack_anim"="seq.dog_update_skeleton_hellhound_attack"
+"param.defend_anim"="seq.dog_update_skeleton_hellhound_defend"
+"param.death_anim"="seq.wbr_vention_hellhound_death"
+
+[[npc]]
+id = "npc.vetion_hellhound_snr_singles"
+inherit = "npc.vetion_hellhound_snr_singles"
+[npc.params]
+"param.attack_anim"="seq.dog_update_skeleton_hellhound_attack"
+"param.defend_anim"="seq.dog_update_skeleton_hellhound_defend"
+"param.death_anim"="seq.wbr_vention_hellhound_death"
