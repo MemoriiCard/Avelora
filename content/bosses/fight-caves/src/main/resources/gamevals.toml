@@ -1,0 +1,6 @@
+[gamevals.dbrow]
+instance_fight_caves = 63227
+
+[gamevals.varp]
+fight_cave_wave = 65410
+fight_cave_rotation = 65411

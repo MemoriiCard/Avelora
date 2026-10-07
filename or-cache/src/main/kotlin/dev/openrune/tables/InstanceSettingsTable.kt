@@ -274,6 +274,24 @@ object InstanceSettingsTable {
             columnRSCM(EXIT_OBJECT, "loc.dom_entrance_exit")
         }
 
+        row("dbrow.instance_fight_caves") {
+            column(KEY, "fight_caves")
+            columnCoord(EXIT_COORD, CoordGrid(2438, 5168, 0))
+            columnCoord(ENTER_COORD, CoordGrid(2413, 5117, 0))
+            column(FEE, 0)
+            column(MAX_PLAYERS, 1)
+            column(TIME_LIMIT_MINUTES, 0)
+            column(GRACE_MINUTES, 1)
+            columnRSCM(BOSS_NPC, "npc.tzhaar_fightcave_swarm_boss")
+            column(BOSS_NAME, "TzHaar Fight Cave")
+            column(RECOMMENDED_COMBAT, 70, 126)
+            column(TEAM_SIZE, 1)
+            column(LOOT_MULTIPLIER, "x1.0")
+            column(DESCRIPTION, "Sixty-three waves of TzHaar, ending with TzTok-Jad.")
+            columnRSCM(ENTER_OBJECT, "loc.tzhaar_fightcave_wall_entrance")
+            columnRSCM(EXIT_OBJECT, "loc.tzhaar_fightcave_wall_exit")
+        }
+
         row("dbrow.instance_leviathan") {
             column(KEY, "leviathan")
             columnCoord(EXIT_COORD, CoordGrid(2064, 6436, 0))
