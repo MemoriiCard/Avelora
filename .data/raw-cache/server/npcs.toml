@@ -6462,6 +6462,15 @@ inherit = "npc.corp_beast"
 [npc.params]
 "param.elemental_weakness_type"=2
 "param.elemental_weakness_percent"=10
+"param.attack_anim"="seq.corpbeast_swiping_attack"
+"param.defend_anim"="seq.corpbeast_defend"
+"param.death_anim"="seq.corpbeast_death"
+
+[[npc]]
+id = "npc.dark_core"
+inherit = "npc.dark_core"
+[npc.params]
+"param.death_anim"="seq.darkcore_idle"
 
 [[npc]]
 id = "npc.slayer_basilisk_baby"
