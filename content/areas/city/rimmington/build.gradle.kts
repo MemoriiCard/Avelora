@@ -3,5 +3,6 @@ plugins {
 }
 
 dependencies {
+    implementation(projects.api.invtx)
     implementation(projects.api.pluginCommons)
 }

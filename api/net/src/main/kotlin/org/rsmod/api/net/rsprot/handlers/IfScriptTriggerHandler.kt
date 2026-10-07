@@ -26,6 +26,16 @@ constructor(
     @OptIn(InternalApi::class)
     override fun handle(player: Player, message: IfScriptTrigger) {
         val componentType = ServerCacheManager.fromComponent(message.asComponent.packed)
+        val interfaceType = ServerCacheManager.fromInterface(message.asComponent.packed)
+        val isModal = player.ui.containsModal(interfaceType)
+        val isOpen =
+            isModal ||
+                player.ui.containsOverlay(interfaceType) ||
+                player.ui.containsTopLevel(interfaceType)
+        if (!isOpen || (isModal && player.isModalButtonProtected)) {
+            logger.debug { "[BLOCKED] IfScriptTrigger: $message" }
+            return
+        }
 
         val parameterTypes = IfScriptParameterRegistry[componentType.packed]
         val args =
