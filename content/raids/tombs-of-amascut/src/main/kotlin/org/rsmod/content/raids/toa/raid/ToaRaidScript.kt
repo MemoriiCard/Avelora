@@ -8,7 +8,9 @@ import org.rsmod.api.script.onOpLoc2
 import org.rsmod.api.script.onOpNpc1
 import org.rsmod.content.raids.toa.layout.ToaPath
 import org.rsmod.content.raids.toa.layout.ToaRoom
+import org.rsmod.content.raids.toa.puzzle.ApmekenPuzzleRoom
 import org.rsmod.content.raids.toa.puzzle.CrondisPuzzleRoom
+import org.rsmod.content.raids.toa.puzzle.HetPuzzleRoom
 import org.rsmod.game.entity.Npc
 import org.rsmod.plugin.scripts.PluginScript
 import org.rsmod.plugin.scripts.ScriptContext
@@ -19,7 +21,6 @@ class ToaRaidScript @Inject constructor(private val raids: ToaRaids) : PluginScr
             onOpLoc1(path.door) { enterPath(path) }
             onOpLoc2(path.door) { enterPath(path) }
         }
-        for (door in PENDING_DOORS) onOpLoc1(door) { pending() }
         onOpLoc1("loc.toa_nexus_wardens_door") { wardens() }
         for (continueLoc in CONTINUES) {
             onOpLoc1(continueLoc) { continuePath() }
@@ -27,6 +28,16 @@ class ToaRaidScript @Inject constructor(private val raids: ToaRaids) : PluginScr
         }
         for (exit in EXITS) onOpLoc1(exit) { leaveToNexus() }
         onOpLoc1("loc.toa_crondis_water_source") { fillContainer() }
+        onOpLoc1("loc.toa_het_statue_parent") { (raids.containing(player)?.controller as? HetPuzzleRoom)?.takePickaxe(player) }
+        onOpLoc2("loc.toa_het_statue_parent") { (raids.containing(player)?.controller as? HetPuzzleRoom)?.depositPickaxe(player) }
+        onOpNpc1("npc.toa_het_goal") { (raids.containing(player)?.controller as? HetPuzzleRoom)?.destroy(player) }
+        onOpNpc1("npc.toa_het_goal_vulnerable") { (raids.containing(player)?.controller as? HetPuzzleRoom)?.destroy(player) }
+        for (hammer in listOf("loc.toa_path_apmeken_hammers", "loc.toa_path_apmeken_potions")) {
+            onOpLoc1(hammer) { (raids.containing(player)?.controller as? ApmekenPuzzleRoom)?.takeHammer(player) }
+        }
+        onOpLoc1("loc.toa_path_apmeken_pillar") {
+            (raids.containing(player)?.controller as? ApmekenPuzzleRoom)?.repair(player, it.loc.coords)
+        }
         for (index in 0 until 4) {
             onOpNpc1("npc.toa_crondis_tree_${index + 1}") { waterTree(it.npc) }
         }
@@ -36,11 +47,6 @@ class ToaRaidScript @Inject constructor(private val raids: ToaRaids) : PluginScr
         val raid = raids.containing(player) ?: return
         if (raid.room != ToaRoom.Nexus) return
         raids.enterPath(raid, path)
-    }
-
-    private fun ProtectedAccess.pending() {
-        if (raids.containing(player) == null) return
-        mes("This path has not been opened yet.")
     }
 
     private fun ProtectedAccess.wardens() {
@@ -78,8 +84,7 @@ class ToaRaidScript @Inject constructor(private val raids: ToaRaids) : PluginScr
     }
 
     private companion object {
-        val PENDING_DOORS = listOf("loc.toa_nexus_het_door", "loc.toa_nexus_apmeken_door")
-        val CONTINUES = listOf("loc.toa_path_crondis_continue", "loc.toa_scabaras_continue")
-        val EXITS = listOf("loc.toa_zebak_exit", "loc.toa_entrance_kephri_main", "loc.toa_crondis_exit", "loc.toa_door_exit")
+        val CONTINUES = listOf("loc.toa_path_crondis_continue", "loc.toa_scabaras_continue", "loc.toa_door_continue", "loc.toa_path_apmeken_continue")
+        val EXITS = listOf("loc.toa_zebak_exit", "loc.toa_entrance_kephri_main", "loc.toa_crondis_exit", "loc.toa_door_exit", "loc.toa_entrance_akkha01", "loc.toa_entrance_baba02")
     }
 }
