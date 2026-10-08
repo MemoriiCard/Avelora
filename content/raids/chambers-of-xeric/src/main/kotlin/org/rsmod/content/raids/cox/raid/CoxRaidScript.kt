@@ -111,7 +111,12 @@ constructor(private val parties: CoxParties, private val raids: CoxRaids) : Plug
         val there = raid.roomAt(destination)
         if (here != null && there != null && raid.isForward(here, there)) {
             val controller = raid.controllerOf(here)
-            if (controller != null && controller.blocksExit && !controller.cleared) {
+            if (
+                controller != null &&
+                    controller.blocksExit &&
+                    !controller.cleared &&
+                    !controller.tryUnblock(player)
+            ) {
                 mes("The way ahead is blocked until this room is cleared.")
                 return
             }

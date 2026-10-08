@@ -9,7 +9,7 @@ import org.junit.jupiter.api.parallel.ResourceLock
 @ResourceLock("server-cache")
 class CoxRoomGamevalTest {
     @Test
-    fun `every symbol the combat rooms use resolves`() {
+    fun `every symbol the rooms use resolves`() {
         val cache = ServerCacheManager.init(240)
         try {
             for ((type, names) in SYMBOLS) {
@@ -29,10 +29,29 @@ class CoxRoomGamevalTest {
                     ),
                 RSCMType.LOC to
                     listOf(
+                        "loc.raids_icedemon_axe",
+                        "loc.raids_icedemon_brazier_lit",
+                        "loc.raids_icedemon_brazier_unlit",
+                        "loc.raids_icedemon_tinderbox",
+                        "loc.raids_lasercrabs_hammer",
+                        "loc.raids_lasercrabs_smallcrystal_black",
+                        "loc.raids_lasercrabs_smallcrystal_cyan",
+                        "loc.raids_lasercrabs_smallcrystal_magenta",
+                        "loc.raids_lasercrabs_smallcrystal_white",
+                        "loc.raids_lasercrabs_smallcrystal_yellow",
+                        "loc.raids_lasercrabs_xeric_relief",
                         "loc.raids_meat_tree_full",
+                        "loc.raids_thievingchest_closed",
+                        "loc.raids_thievingchest_foodtrough_empty",
+                        "loc.raids_thievingchest_foodtrough_full",
+                        "loc.raids_thievingchest_open",
+                        "loc.raids_tightrope_end",
+                        "loc.raids_tightrope_keystone_loc",
                         "loc.raids_vespula_herb",
                         "loc.raids_vespula_herb_empty",
                         "loc.raids_vespula_portal",
+                        "loc.raids_woodsource_roots",
+                        "loc.raids_woodsource_roots_depleted",
                     ),
                 RSCMType.NPC to
                     listOf(
@@ -40,8 +59,21 @@ class CoxRoomGamevalTest {
                         "npc.raids_dogodile_junior",
                         "npc.raids_dogodile_meat_tree",
                         "npc.raids_dogodile_submerged",
+                        "npc.raids_icedemon_combat",
+                        "npc.raids_icedemon_noncombat",
+                        "npc.raids_icefiend",
+                        "npc.raids_lasercrabs_crab_blue",
+                        "npc.raids_lasercrabs_crab_green",
+                        "npc.raids_lasercrabs_crab_grey",
+                        "npc.raids_lasercrabs_crab_red",
+                        "npc.raids_lasercrabs_energy_blue",
+                        "npc.raids_lasercrabs_energy_green",
+                        "npc.raids_lasercrabs_energy_red",
+                        "npc.raids_lasercrabs_energy_white",
                         "npc.raids_lizardshaman_a",
                         "npc.raids_lizardshaman_b",
+                        "npc.raids_scavenger_beast_a",
+                        "npc.raids_scavenger_beast_b",
                         "npc.raids_skeletonmystic_a",
                         "npc.raids_skeletonmystic_b",
                         "npc.raids_skeletonmystic_c",
@@ -55,6 +87,10 @@ class CoxRoomGamevalTest {
                         "npc.raids_tekton_waiting",
                         "npc.raids_tekton_walking_enraged",
                         "npc.raids_tekton_walking_standard",
+                        "npc.raids_thievingchest_beast_active",
+                        "npc.raids_thievingchest_beast_sleeping",
+                        "npc.raids_tightrope_mage",
+                        "npc.raids_tightrope_ranger",
                         "npc.raids_vanguard_dormant",
                         "npc.raids_vanguard_magic",
                         "npc.raids_vanguard_melee",
@@ -76,7 +112,24 @@ class CoxRoomGamevalTest {
                     ),
                 RSCMType.OBJ to
                     listOf(
+                        "obj.bronze_axe",
+                        "obj.fishing_rod",
+                        "obj.hammer",
+                        "obj.hunting_butterfly_net",
+                        "obj.iron_axe",
+                        "obj.iron_pickaxe",
+                        "obj.lockpick",
+                        "obj.raids_bat6_raw",
+                        "obj.raids_cicely",
+                        "obj.raids_endarkened_juice",
+                        "obj.raids_fishingbait",
+                        "obj.raids_plank",
+                        "obj.raids_stinkhorn_mushroom",
+                        "obj.raids_thievingchest_grubs",
+                        "obj.raids_tightrope_keystone",
                         "obj.raids_vespula_herb",
+                        "obj.raids_wood",
+                        "obj.tinderbox",
                     ),
                 RSCMType.PROJANIM to
                     listOf(
@@ -85,6 +138,7 @@ class CoxRoomGamevalTest {
                     ),
                 RSCMType.SEQ to
                     listOf(
+                        "seq.demon_casting",
                         "seq.dohgadyle_bark",
                         "seq.dohgadyle_bite",
                         "seq.dohgadyle_death",
@@ -92,12 +146,21 @@ class CoxRoomGamevalTest {
                         "seq.dohgadyle_emerge",
                         "seq.dohgadyle_lazor",
                         "seq.dohgadyle_slam",
+                        "seq.horror_crab_attack",
+                        "seq.human_bow",
+                        "seq.human_caststrike_staff",
+                        "seq.human_createfire",
+                        "seq.human_pickpocket",
                         "seq.human_pickupfloor",
                         "seq.human_staff_block",
                         "seq.human_staff_pound",
                         "seq.human_staff_pummel",
                         "seq.human_woodcutting_bronze_axe",
                         "seq.luxgrub_death",
+                        "seq.myq3_human_tightrope",
+                        "seq.pyrefiend_attack",
+                        "seq.raids_thievingchests_eat",
+                        "seq.raids_thievingchests_sleeping",
                         "seq.raids_vespular_portal_closing",
                         "seq.shay_lizard_warrior_attack_melee",
                         "seq.shay_lizard_warrior_attack_ranged",
@@ -106,6 +169,9 @@ class CoxRoomGamevalTest {
                         "seq.shayzien_lizard_boss_jump",
                         "seq.shayzien_lizard_boss_land",
                         "seq.shayzien_lizard_boss_minion_summon",
+                        "seq.skavid_attack",
+                        "seq.skavid_block",
+                        "seq.skavid_death",
                         "seq.skeleton_update_attack_weapon",
                         "seq.skeleton_update_death",
                         "seq.skeleton_update_defend",
@@ -147,12 +213,17 @@ class CoxRoomGamevalTest {
                     ),
                 RSCMType.SPOTANIM to
                     listOf(
+                        "spotanim.adamant_arrow_travel",
                         "spotanim.fireblast_impact",
                         "spotanim.fireblast_travel",
+                        "spotanim.ice_burst_impact",
+                        "spotanim.ice_burst_travel",
                         "spotanim.lizardman_spit",
                         "spotanim.lizardshaman_acid_splash",
                         "spotanim.lizardshaman_spawn_explode",
                         "spotanim.lizardshaman_spit_acid",
+                        "spotanim.raids_icedemon_iceball_hit",
+                        "spotanim.raids_icedemon_iceball_travel",
                         "spotanim.raids_vanguard_magic",
                         "spotanim.raids_vanguard_range_0",
                         "spotanim.raids_vasanistirio_magic_impact",
@@ -174,6 +245,7 @@ class CoxRoomGamevalTest {
                 RSCMType.VARBIT to
                     listOf(
                         "varbit.prayer_protectfrommagic",
+                        "varbit.prayer_protectfrommissiles",
                     ),
             )
     }
