@@ -758,5 +758,201 @@ object Cooking {
             column(COL_LOW, 38)
             column(COL_HIGH, 332)
         }
+        row("dbrow.cooking_raids_fish0") {
+            production {
+                input("obj.raids_fish0_raw")
+                statReq("stat.cooking", 1)
+                xp(20)
+                output("obj.raids_fish0_cooked")
+                category("Fish")
+            }
+            columnRSCM(COL_BURNT, "obj.raids_fish_burnt")
+            column(COL_STOP_BURN_FIRE, 21)
+            column(COL_STOP_BURN_RANGE, 21)
+            column(COL_LOW, 50)
+            column(COL_HIGH, 256)
+        }
+        row("dbrow.cooking_raids_bat0") {
+            production {
+                input("obj.raids_bat0_raw")
+                statReq("stat.cooking", 1)
+                xp(20)
+                output("obj.raids_bat0_cooked")
+                category("Fish")
+            }
+            columnRSCM(COL_BURNT, "obj.raids_bat_burnt")
+            column(COL_STOP_BURN_FIRE, 21)
+            column(COL_STOP_BURN_RANGE, 21)
+            column(COL_LOW, 50)
+            column(COL_HIGH, 256)
+        }
+        row("dbrow.cooking_raids_fish1") {
+            production {
+                input("obj.raids_fish1_raw")
+                statReq("stat.cooking", 15)
+                xp(40)
+                output("obj.raids_fish1_cooked")
+                category("Fish")
+            }
+            columnRSCM(COL_BURNT, "obj.raids_fish_burnt")
+            column(COL_STOP_BURN_FIRE, 35)
+            column(COL_STOP_BURN_RANGE, 35)
+            column(COL_LOW, 50)
+            column(COL_HIGH, 256)
+        }
+        row("dbrow.cooking_raids_bat1") {
+            production {
+                input("obj.raids_bat1_raw")
+                statReq("stat.cooking", 15)
+                xp(40)
+                output("obj.raids_bat1_cooked")
+                category("Fish")
+            }
+            columnRSCM(COL_BURNT, "obj.raids_bat_burnt")
+            column(COL_STOP_BURN_FIRE, 35)
+            column(COL_STOP_BURN_RANGE, 35)
+            column(COL_LOW, 50)
+            column(COL_HIGH, 256)
+        }
+        row("dbrow.cooking_raids_fish2") {
+            production {
+                input("obj.raids_fish2_raw")
+                statReq("stat.cooking", 30)
+                xp(60)
+                output("obj.raids_fish2_cooked")
+                category("Fish")
+            }
+            columnRSCM(COL_BURNT, "obj.raids_fish_burnt")
+            column(COL_STOP_BURN_FIRE, 50)
+            column(COL_STOP_BURN_RANGE, 50)
+            column(COL_LOW, 50)
+            column(COL_HIGH, 256)
+        }
+        row("dbrow.cooking_raids_bat2") {
+            production {
+                input("obj.raids_bat2_raw")
+                statReq("stat.cooking", 30)
+                xp(60)
+                output("obj.raids_bat2_cooked")
+                category("Fish")
+            }
+            columnRSCM(COL_BURNT, "obj.raids_bat_burnt")
+            column(COL_STOP_BURN_FIRE, 50)
+            column(COL_STOP_BURN_RANGE, 50)
+            column(COL_LOW, 50)
+            column(COL_HIGH, 256)
+        }
+        row("dbrow.cooking_raids_fish3") {
+            production {
+                input("obj.raids_fish3_raw")
+                statReq("stat.cooking", 45)
+                xp(80)
+                output("obj.raids_fish3_cooked")
+                category("Fish")
+            }
+            columnRSCM(COL_BURNT, "obj.raids_fish_burnt")
+            column(COL_STOP_BURN_FIRE, 65)
+            column(COL_STOP_BURN_RANGE, 65)
+            column(COL_LOW, 50)
+            column(COL_HIGH, 256)
+        }
+        row("dbrow.cooking_raids_bat3") {
+            production {
+                input("obj.raids_bat3_raw")
+                statReq("stat.cooking", 45)
+                xp(80)
+                output("obj.raids_bat3_cooked")
+                category("Fish")
+            }
+            columnRSCM(COL_BURNT, "obj.raids_bat_burnt")
+            column(COL_STOP_BURN_FIRE, 65)
+            column(COL_STOP_BURN_RANGE, 65)
+            column(COL_LOW, 50)
+            column(COL_HIGH, 256)
+        }
+        row("dbrow.cooking_raids_fish4") {
+            production {
+                input("obj.raids_fish4_raw")
+                statReq("stat.cooking", 60)
+                xp(100)
+                output("obj.raids_fish4_cooked")
+                category("Fish")
+            }
+            columnRSCM(COL_BURNT, "obj.raids_fish_burnt")
+            column(COL_STOP_BURN_FIRE, 80)
+            column(COL_STOP_BURN_RANGE, 80)
+            column(COL_LOW, 50)
+            column(COL_HIGH, 256)
+        }
+        row("dbrow.cooking_raids_bat4") {
+            production {
+                input("obj.raids_bat4_raw")
+                statReq("stat.cooking", 60)
+                xp(100)
+                output("obj.raids_bat4_cooked")
+                category("Fish")
+            }
+            columnRSCM(COL_BURNT, "obj.raids_bat_burnt")
+            column(COL_STOP_BURN_FIRE, 80)
+            column(COL_STOP_BURN_RANGE, 80)
+            column(COL_LOW, 50)
+            column(COL_HIGH, 256)
+        }
+        row("dbrow.cooking_raids_fish5") {
+            production {
+                input("obj.raids_fish5_raw")
+                statReq("stat.cooking", 75)
+                xp(120)
+                output("obj.raids_fish5_cooked")
+                category("Fish")
+            }
+            columnRSCM(COL_BURNT, "obj.raids_fish_burnt")
+            column(COL_STOP_BURN_FIRE, 95)
+            column(COL_STOP_BURN_RANGE, 95)
+            column(COL_LOW, 50)
+            column(COL_HIGH, 256)
+        }
+        row("dbrow.cooking_raids_bat5") {
+            production {
+                input("obj.raids_bat5_raw")
+                statReq("stat.cooking", 75)
+                xp(120)
+                output("obj.raids_bat5_cooked")
+                category("Fish")
+            }
+            columnRSCM(COL_BURNT, "obj.raids_bat_burnt")
+            column(COL_STOP_BURN_FIRE, 95)
+            column(COL_STOP_BURN_RANGE, 95)
+            column(COL_LOW, 50)
+            column(COL_HIGH, 256)
+        }
+        row("dbrow.cooking_raids_fish6") {
+            production {
+                input("obj.raids_fish6_raw")
+                statReq("stat.cooking", 90)
+                xp(140)
+                output("obj.raids_fish6_cooked")
+                category("Fish")
+            }
+            columnRSCM(COL_BURNT, "obj.raids_fish_burnt")
+            column(COL_STOP_BURN_FIRE, 110)
+            column(COL_STOP_BURN_RANGE, 110)
+            column(COL_LOW, 50)
+            column(COL_HIGH, 256)
+        }
+        row("dbrow.cooking_raids_bat6") {
+            production {
+                input("obj.raids_bat6_raw")
+                statReq("stat.cooking", 90)
+                xp(140)
+                output("obj.raids_bat6_cooked")
+                category("Fish")
+            }
+            columnRSCM(COL_BURNT, "obj.raids_bat_burnt")
+            column(COL_STOP_BURN_FIRE, 110)
+            column(COL_STOP_BURN_RANGE, 110)
+            column(COL_LOW, 50)
+            column(COL_HIGH, 256)
+        }
     }
 }

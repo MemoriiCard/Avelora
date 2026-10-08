@@ -2,6 +2,8 @@ package org.rsmod.content.raids.cox.raid
 
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
+import org.rsmod.api.invtx.invAdd
+import org.rsmod.api.invtx.invDel
 import org.rsmod.api.player.output.mes
 import org.rsmod.api.player.ui.ifCloseOverlay
 import org.rsmod.api.player.ui.ifOpenOverlay
@@ -22,12 +24,14 @@ import org.rsmod.content.raids.cox.party.raidsPlayerScore
 import org.rsmod.content.raids.cox.party.raidsTimer
 import org.rsmod.content.raids.cox.room.CoxRoomFactory
 import org.rsmod.content.raids.cox.room.CoxRoomServices
+import org.rsmod.content.raids.cox.storage.CoxItems
 import org.rsmod.events.EventBus
 import org.rsmod.game.MapClock
 import org.rsmod.game.entity.Player
 import org.rsmod.game.entity.PlayerList
 import org.rsmod.game.entity.util.PathingEntityCommon
 import org.rsmod.game.queue.WorldQueueList
+import org.rsmod.game.type.getInvObj
 import org.rsmod.map.CoordGrid
 import org.rsmod.routefinder.collision.CollisionFlagMap
 
@@ -91,6 +95,7 @@ constructor(
 
     fun exit(player: Player, raid: CoxRaid, message: String? = null) {
         raid.insiders.removeAll { it === player }
+        releaseItems(player, raid)
         player.raidsClientInDungeon = false
         player.raidsTimer = 0
         player.raidsClientPartyScore = 0
@@ -202,6 +207,18 @@ constructor(
         destroy(raid)
     }
 
+    /** Strips raid-only items and sends anything left in private storage to the player's bank. */
+    private fun releaseItems(player: Player, raid: CoxRaid) {
+        for (obj in player.inv.filterNotNull { true }.map { getInvObj(it).internalName }.distinct()) {
+            if (CoxItems.isRaidOnly(obj)) player.invDel(player.inv, obj, count = Int.MAX_VALUE, strict = false)
+        }
+        val bank = player.invMap.getOrPut("inv.bank")
+        for ((obj, count) in raid.storage.release(player)) {
+            if (CoxItems.isRaidOnly(obj)) continue
+            player.invAdd(bank, obj, count = count, strict = false)
+        }
+    }
+
     private fun openInterfaces(player: Player, raid: CoxRaid) {
         player.ifOpenOverlay(SIDE_PANEL, SIDE_PANEL_TARGET, eventBus)
         player.ifOpenOverlay(OVERLAY, OVERLAY_TARGET, eventBus)
@@ -281,6 +298,7 @@ constructor(
     private fun removeInsider(raid: CoxRaid, member: Player) {
         raid.insiders.removeAll { it === member }
         if (member.isOnline()) {
+            releaseItems(member, raid)
             member.raidsClientInDungeon = false
             member.raidsTimer = 0
             closeInterfaces(member)

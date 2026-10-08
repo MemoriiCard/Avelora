@@ -8,6 +8,7 @@ import org.rsmod.content.raids.cox.layout.CoxRoom
 import org.rsmod.content.raids.cox.party.CoxParty
 import org.rsmod.content.raids.cox.party.CoxScaling
 import org.rsmod.content.raids.cox.room.CoxRoomController
+import org.rsmod.content.raids.cox.storage.CoxStorage
 import org.rsmod.game.entity.Npc
 import org.rsmod.game.entity.Player
 import org.rsmod.game.region.Region
@@ -24,6 +25,10 @@ class CoxRaid(val party: CoxParty, val layout: CoxLayout, val region: Region) {
     internal var totalPoints: Int = 0
     internal var deepestFloor: Int = 0
     internal var emptyTicks: Int = 0
+    internal var foodUnits: Int = 0
+    internal val storage = CoxStorage()
+    internal val rakes = mutableMapOf<Player, Int>()
+    internal var potionUnits: Int = 0
     internal val rooms = mutableListOf<CoxRoomController>()
 
     val started: Boolean
