@@ -13,12 +13,41 @@ class TobGamevalTest {
         val cache = ServerCacheManager.init(240)
         try {
             for (name in LOCS) name.asRSCM(RSCMType.LOC)
+            for (name in NPCS) name.asRSCM(RSCMType.NPC)
+            for (name in SEQS) name.asRSCM(RSCMType.SEQ)
+            for (name in SPOTANIMS) name.asRSCM(RSCMType.SPOTANIM)
         } finally {
             cache.close()
         }
     }
 
     private companion object {
+        val NPCS =
+            listOf("", "_story", "_hard").flatMap { suffix ->
+                listOf("100", "70", "50", "30").map { "npc.tob_maiden_$it$suffix" } +
+                    listOf(
+                        "npc.maiden_elemental$suffix",
+                        "npc.maiden_blood_slug$suffix",
+                        "npc.tob_bloat$suffix",
+                    )
+            }
+
+        val SEQS =
+            listOf(
+                "seq.maiden_spawn",
+                "seq.maiden_attack_blood",
+                "seq.maiden_attack_special",
+                "seq.tob_bloat_walk",
+                "seq.tob_bloat_sleep",
+            )
+
+        val SPOTANIMS =
+            listOf(
+                "spotanim.maiden_blood_proj",
+                "spotanim.tob_bloat_blood_splat",
+                "spotanim.tob_bloat_flies_large",
+            )
+
         val LOCS =
             listOf(
                 "loc.tob_arena_barrier",
