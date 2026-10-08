@@ -3,9 +3,12 @@ package org.rsmod.content.raids.toa.raid
 import jakarta.inject.Inject
 import jakarta.inject.Singleton
 import org.rsmod.api.player.output.mes
+import org.rsmod.api.player.stat.statHeal
 import org.rsmod.api.registry.region.RegionRegistry
 import org.rsmod.api.repo.region.RegionRepository
 import org.rsmod.content.raids.toa.invocation.ToaInvocations
+import org.rsmod.content.raids.toa.layout.ToaPath
+import org.rsmod.content.raids.toa.layout.ToaRoom
 import org.rsmod.content.raids.toa.party.ToaParties
 import org.rsmod.content.raids.toa.party.ToaParty
 import org.rsmod.game.MapClock
@@ -27,6 +30,7 @@ constructor(
     private val players: PlayerList,
     private val clock: MapClock,
     private val collision: CollisionFlagMap,
+    private val factories: Set<ToaRoomFactory>,
 ) {
     private val raids = mutableMapOf<Int, ToaRaid>()
     private var ticking = false
@@ -70,13 +74,96 @@ constructor(
         if (message != null) player.mes(message)
     }
 
+    fun enterPath(raid: ToaRaid, path: ToaPath) {
+        if (raid.room != ToaRoom.Nexus) return
+        if (path in raid.clearedPaths) {
+            for (member in raid.insiders) member.mes("The ${path.label} path has already been cleared.")
+            return
+        }
+        raid.path = path
+        moveTo(raid, path.puzzle)
+        beginRoom(raid)
+    }
+
+    fun continuePath(raid: ToaRaid) {
+        val path = raid.path ?: return
+        if (raid.room != path.puzzle || !raid.roomCleared) return
+        raid.controller?.destroy()
+        raid.controller = null
+        moveTo(raid, path.boss)
+        worldQueues.add(BOSS_DELAY) {
+            if (raid.room == path.boss && !raid.engaged) beginRoom(raid)
+        }
+    }
+
+    fun clearRoom(raid: ToaRaid, room: ToaRoom) {
+        if (raid.room != room || raid.roomCleared) return
+        raid.roomCleared = true
+        for (player in raid.downed.toList()) revive(raid, player)
+        val path = raid.path ?: return
+        for (member in raid.insiders) member.mes("<col=ef1020>${room.label} has been cleared.</col>")
+        if (room == path.boss) {
+            raid.clearedPaths += path
+            worldQueues.add(RETURN_DELAY) { if (raid.room == path.boss) returnToNexus(raid) }
+        }
+    }
+
+    fun returnToNexus(raid: ToaRaid) {
+        raid.controller?.destroy()
+        raid.controller = null
+        raid.path = null
+        for (player in raid.downed.toList()) revive(raid, player)
+        moveTo(raid, ToaRoom.Nexus)
+        raid.engaged = false
+        raid.roomCleared = false
+        for (member in raid.insiders) {
+            member.mes("Paths cleared: ${raid.clearedPaths.size}/${ToaPath.entries.size}.")
+        }
+    }
+
+    private fun moveTo(raid: ToaRaid, room: ToaRoom) {
+        raid.room = room
+        raid.engaged = false
+        raid.roomCleared = false
+        for (member in raid.insiders.toList()) teleport(member, raid.arrival(room))
+    }
+
+    private fun beginRoom(raid: ToaRaid) {
+        val room = raid.room
+        raid.engaged = true
+        raid.roomCleared = false
+        val controller =
+            factories.firstNotNullOfOrNull { it.create(raid, room) { clearRoom(raid, room) } }
+        raid.controller = controller
+        if (controller == null) {
+            clearRoom(raid, room)
+            return
+        }
+        controller.begin()
+    }
+
+    private fun restartRoom(raid: ToaRaid) {
+        raid.controller?.destroy()
+        raid.controller = null
+        for (player in raid.downed.toList()) revive(raid, player)
+        for (member in raid.insiders.toList()) teleport(member, raid.arrival(raid.room))
+        beginRoom(raid)
+    }
+
+    private fun revive(raid: ToaRaid, player: Player) {
+        raid.downed.remove(player)
+        player.statHeal("stat.hitpoints", 0, 100)
+    }
+
     fun onDeath(raid: ToaRaid, player: Player) {
+        if (!raid.engaged || raid.roomCleared) return
         raid.downed += player
-        player.mes("<col=ff0000>You have fallen.</col>")
+        player.mes("<col=ff0000>You have fallen. Your team must finish the room.</col>")
         if (raid.alive.isNotEmpty()) return
         raid.downed.clear()
         if (raid.attemptsLeft == Int.MAX_VALUE) {
-            for (member in raid.insiders) member.mes("Your whole team has fallen. You regroup in the Nexus.")
+            for (member in raid.insiders) member.mes("Your whole team has fallen. The room resets.")
+            restartRoom(raid)
             return
         }
         raid.attemptsLeft--
@@ -84,6 +171,7 @@ constructor(
             for (member in raid.insiders) {
                 member.mes("Your whole team has fallen. Attempts remaining: ${raid.attemptsLeft}.")
             }
+            restartRoom(raid)
             return
         }
         for (member in raid.insiders.toList()) {
@@ -101,6 +189,8 @@ constructor(
     }
 
     private fun destroy(raid: ToaRaid) {
+        raid.controller?.destroy()
+        raid.controller = null
         raids.remove(raid.party.id)
         parties.disband(raid.party)
         regions.unprotect(raid.region)
@@ -130,6 +220,7 @@ constructor(
                 parties.leave(member)
             }
         }
+        raid.controller?.tick()
         checkTimeLimit(raid)
         if (raid.insiders.isEmpty()) {
             raid.emptyTicks++
@@ -163,5 +254,7 @@ constructor(
         val LOBBY_EXIT = CoordGrid(3295, 2788, 0)
         const val EMPTY_TICKS = 10
         const val TICKS_PER_MINUTE = 100
+        const val BOSS_DELAY = 8
+        const val RETURN_DELAY = 10
     }
 }
