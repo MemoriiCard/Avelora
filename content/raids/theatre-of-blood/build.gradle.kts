@@ -19,6 +19,7 @@ dependencies {
     implementation(projects.api.route)
     implementation(projects.content.interfaces.bank)
     implementation(projects.content.other.pets)
+    implementation(projects.content.raids.chambersOfXeric)
     implementation(projects.engine.map)
     implementation(projects.engine.routefinder)
     testImplementation(libs.fastutil)
