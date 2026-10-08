@@ -1,6 +1,7 @@
 package org.rsmod.content.raids.tob.raid
 
 import org.rsmod.api.repo.region.RegionTemplate
+import org.rsmod.content.raids.cox.reward.CoxItem
 import org.rsmod.content.raids.tob.layout.TobRoom
 import org.rsmod.content.raids.tob.party.TobMode
 import org.rsmod.content.raids.tob.party.TobParty
@@ -19,6 +20,8 @@ class TobRaid(val party: TobParty, val region: Region, val mode: TobMode) {
     internal var startedAt: Int = -1
     internal var emptyTicks: Int = 0
     internal var sizeAtStart: Int = 0
+    internal val rewards = mutableMapOf<Player, List<CoxItem>>()
+    internal val chests = mutableMapOf<CoordGrid, Player>()
 
     val southWest: CoordGrid
         get() = region.southWest

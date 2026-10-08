@@ -9,6 +9,7 @@ import org.rsmod.api.repo.region.RegionRepository
 import org.rsmod.content.raids.tob.layout.TobRoom
 import org.rsmod.content.raids.tob.party.TobParties
 import org.rsmod.content.raids.tob.party.TobParty
+import org.rsmod.content.raids.tob.reward.TobRewards
 import org.rsmod.game.MapClock
 import org.rsmod.game.entity.Player
 import org.rsmod.game.entity.PlayerList
@@ -29,6 +30,7 @@ constructor(
     private val clock: MapClock,
     private val collision: CollisionFlagMap,
     private val factories: Set<TobRoomFactory>,
+    private val rewards: TobRewards,
 ) {
     private val raids = mutableMapOf<Int, TobRaid>()
     private var ticking = false
@@ -65,6 +67,7 @@ constructor(
     }
 
     fun leave(player: Player, raid: TobRaid, message: String? = null) {
+        rewards.claimLeftover(player, raid)
         raid.insiders.removeAll { it === player }
         raid.downed.remove(player)
         parties.leave(player)
@@ -95,6 +98,7 @@ constructor(
             player.mes("<col=ef1020>${room.label} has been defeated.</col>")
         }
         if (room == TobRoom.Verzik) {
+            rewards.recordCompletion(raid)
             worldQueues.add(TREASURE_DELAY) { if (raid.room == TobRoom.Verzik) advance(raid) }
         }
     }
@@ -110,6 +114,7 @@ constructor(
         for (member in raid.insiders.toList()) {
             teleport(member, raid.arrival(next))
         }
+        if (next == TobRoom.Treasure) rewards.deal(raid)
         if (next == TobRoom.Verzik) {
             worldQueues.add(VERZIK_DELAY) { if (raid.room == TobRoom.Verzik) engage(raid) }
         }
@@ -170,6 +175,7 @@ constructor(
     private fun tick(raid: TobRaid) {
         for (member in raid.insiders.toList()) {
             if (!member.isOnline() || member.coords !in raid) {
+                rewards.claimLeftover(member, raid)
                 raid.insiders.removeAll { it === member }
                 raid.downed.remove(member)
                 parties.leave(member)
