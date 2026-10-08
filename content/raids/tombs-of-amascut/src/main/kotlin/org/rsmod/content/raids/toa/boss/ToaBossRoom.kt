@@ -48,9 +48,9 @@ abstract class ToaBossRoom(
     protected val teamSize: Int
         get() = raid.sizeAtStart.coerceIn(ToaScaling.MIN_PARTY, ToaScaling.MAX_PARTY)
 
-    protected fun scaledHp(base: Int): Int = ToaScaling.hitpoints(base, teamSize, level)
+    protected fun scaledHp(base: Int): Int = ToaScaling.hitpoints(base, teamSize, level, raid.clearedPaths.size)
 
-    protected fun scaledDamage(base: Int): Int = ToaScaling.damage(base, level)
+    protected fun scaledDamage(base: Int): Int = ToaScaling.damage(base, level, raid.clearedPaths.size)
 
     protected open fun onNpcKilled(npc: Npc, hero: Player) {}
 
