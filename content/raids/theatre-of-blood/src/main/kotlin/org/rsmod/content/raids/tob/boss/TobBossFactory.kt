@@ -12,6 +12,8 @@ import org.rsmod.content.raids.tob.raid.TobRaids
 import org.rsmod.content.raids.tob.raid.TobRoomController
 import org.rsmod.content.raids.tob.raid.TobRoomFactory
 import org.rsmod.content.raids.tob.sotetseg.SotetsegRoom
+import org.rsmod.content.raids.tob.verzik.VerzikRoom
+import org.rsmod.content.raids.tob.xarpus.XarpusRoom
 
 class TobBossFactory
 @Inject
@@ -23,6 +25,8 @@ constructor(private val services: CoxRoomServices, private val raids: Provider<T
             TobRoom.Bloat -> BloatRoom(raid, services, onCleared)
             TobRoom.Nylocas -> NylocasRoom(raid, services, { raids.get().wipe(raid) }, onCleared)
             TobRoom.Sotetseg -> SotetsegRoom(raid, services, onCleared)
+            TobRoom.Xarpus -> XarpusRoom(raid, services, onCleared)
+            TobRoom.Verzik -> VerzikRoom(raid, services, onCleared)
             else -> null
         }
 }

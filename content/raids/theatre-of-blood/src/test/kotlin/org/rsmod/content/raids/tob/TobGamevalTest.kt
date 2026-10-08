@@ -36,7 +36,15 @@ class TobGamevalTest {
                             "npc.nylocas_boss_$style$suffix",
                         )
                     } +
+                    (1..3).map { "npc.verzik_phase$it$suffix" } +
+                    NYLO.map { "npc.verzik_nylocas_$it$suffix" } +
                     listOf(
+                        "npc.verzik_pillar_npc",
+                        "npc.verzik_story_pillar_npc",
+                        "npc.verzik_hard_pillar_npc",
+                        "npc.verzik_web_npc$suffix",
+                        "npc.tob_verzik_phase2_armourednylocas$suffix",
+                        "npc.tob_xarpus_combat$suffix",
                         "npc.nylocas_boss_spawning$suffix",
                         "npc.tob_sotetseg_combat$suffix",
                         "npc.maiden_elemental$suffix",
@@ -64,6 +72,9 @@ class TobGamevalTest {
                 "spotanim.tob_sotetseg_sharedattack",
                 "spotanim.tob_sotetseg_sharedattack_impact",
                 "spotanim.tob_sotetseg_zap",
+                "spotanim.tob_xarpus_acidspit",
+                "spotanim.tob_xarpus_acidsplash",
+                "spotanim.tob_xarpus_exhumed_energyorb",
             )
 
         val LOCS =

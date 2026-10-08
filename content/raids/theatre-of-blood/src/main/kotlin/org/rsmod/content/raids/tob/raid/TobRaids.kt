@@ -94,6 +94,9 @@ constructor(
         for (player in raid.insiders) {
             player.mes("<col=ef1020>${room.label} has been defeated.</col>")
         }
+        if (room == TobRoom.Verzik) {
+            worldQueues.add(TREASURE_DELAY) { if (raid.room == TobRoom.Verzik) advance(raid) }
+        }
     }
 
     fun advance(raid: TobRaid) {
@@ -106,6 +109,9 @@ constructor(
         raid.roomCleared = !next.isFight
         for (member in raid.insiders.toList()) {
             teleport(member, raid.arrival(next))
+        }
+        if (next == TobRoom.Verzik) {
+            worldQueues.add(VERZIK_DELAY) { if (raid.room == TobRoom.Verzik) engage(raid) }
         }
     }
 
@@ -188,5 +194,7 @@ constructor(
     companion object {
         val LOBBY_EXIT = CoordGrid(3674, 3219, 0)
         const val EMPTY_TICKS = 10
+        const val VERZIK_DELAY = 8
+        const val TREASURE_DELAY = 10
     }
 }
