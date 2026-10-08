@@ -907,3 +907,9 @@ isServerOnly = true
 id = "varp.cox_cm_best_time"
 scope = "Perm"
 transmit = "Never"
+
+[[varp]]
+isServerOnly = true
+id = "varp.cox_level_scaling_off"
+scope = "Perm"
+transmit = "Never"

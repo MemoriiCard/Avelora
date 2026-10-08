@@ -111,7 +111,11 @@ abstract class CoxRoomController(
     }
 
     fun playersInRoom(): List<Player> =
-        raid.insiders.filter { it.hitpoints > 0 && raid.roomAt(it.coords) === room }
+        raid.insiders.filter { it.hitpoints > 0 && inside(it.coords) }
+
+    protected open fun inside(coords: CoordGrid): Boolean = raid.roomAt(coords) === room
+
+    open fun awardsPoints(npc: Npc): Boolean = true
 
     protected fun award(player: Player, amount: Int) {
         pointSink(player, amount)
@@ -207,7 +211,7 @@ abstract class CoxRoomController(
         for (dx in 0 until size) {
             for (dz in 0 until size) {
                 val tile = origin.translate(dx, dz)
-                if (raid.roomAt(tile) !== room) return false
+                if (!inside(tile)) return false
                 if (services.collision.isWalkBlocked(tile)) return false
             }
         }
