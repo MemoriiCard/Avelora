@@ -1,0 +1,72 @@
+package org.rsmod.content.raids.toa.invocation
+
+enum class ToaCategory(val label: String, val exclusive: Boolean) {
+    Attempts("Attempts", true),
+    TimeLimit("Time limit", true),
+    HelpfulSpirit("Helpful spirit", true),
+    Paths("Paths", false),
+    Restoration("Restoration", false),
+    Prayer("Prayer", false),
+    Kephri("Kephri", false),
+    Zebak("Zebak", false),
+    Akkha("Akkha", false),
+    Baba("Ba-Ba", false),
+    Wardens("Wardens", false),
+}
+
+enum class ToaInvocation(
+    val label: String,
+    val category: ToaCategory,
+    val level: Int,
+    val requires: ToaInvocation? = null,
+    val attempts: Int = 0,
+    val minutes: Int = 0,
+    val failPenalty: Int = 0,
+    val supplyPercent: Int = 100,
+) {
+    TryAgain("Try Again", ToaCategory.Attempts, 5, attempts = 10),
+    Persistence("Persistence", ToaCategory.Attempts, 10, attempts = 5),
+    SoftcoreRun("Softcore Run", ToaCategory.Attempts, 15, attempts = 3),
+    HardcoreRun("Hardcore Run", ToaCategory.Attempts, 25, attempts = 1),
+    WalkForIt("Walk for It", ToaCategory.TimeLimit, 10, minutes = 40, failPenalty = 20),
+    JogForIt("Jog for It", ToaCategory.TimeLimit, 15, minutes = 35, failPenalty = 30),
+    RunForIt("Run for It", ToaCategory.TimeLimit, 20, minutes = 30, failPenalty = 40),
+    SprintForIt("Sprint for It", ToaCategory.TimeLimit, 25, minutes = 25, failPenalty = 50),
+    NeedSomeHelp("Need Some Help?", ToaCategory.HelpfulSpirit, 15, supplyPercent = 66),
+    NeedLessHelp("Need Less Help?", ToaCategory.HelpfulSpirit, 25, supplyPercent = 33),
+    NoHelpNeeded("No Help Needed", ToaCategory.HelpfulSpirit, 40, supplyPercent = 10),
+    WalkThePath("Walk the Path", ToaCategory.Paths, 50),
+    OnADiet("On a Diet", ToaCategory.Restoration, 15),
+    Dehydration("Dehydration", ToaCategory.Restoration, 30),
+    OverlyDraining("Overly Draining", ToaCategory.Restoration, 15),
+    QuietPrayers("Quiet Prayers", ToaCategory.Prayer, 20),
+    DeadlyPrayers("Deadly Prayers", ToaCategory.Prayer, 20),
+    LivelyLarvae("Lively Larvae", ToaCategory.Kephri, 5),
+    MoreOverlords("More Overlords", ToaCategory.Kephri, 15),
+    BlowingMud("Blowing Mud", ToaCategory.Kephri, 10),
+    Medic("Medic!", ToaCategory.Kephri, 15),
+    AerialAssault("Aerial Assault", ToaCategory.Kephri, 10),
+    NotJustAHead("Not Just a Head", ToaCategory.Zebak, 15),
+    ArterialSpray("Arterial Spray", ToaCategory.Zebak, 10, requires = NotJustAHead),
+    BloodThinners("Blood Thinners", ToaCategory.Zebak, 5, requires = NotJustAHead),
+    UpsetStomach("Upset Stomach", ToaCategory.Zebak, 15),
+    DoubleTrouble("Double Trouble", ToaCategory.Akkha, 20),
+    KeepBack("Keep Back", ToaCategory.Akkha, 10),
+    StayVigilant("Stay Vigilant", ToaCategory.Akkha, 15),
+    FeelingSpecial("Feeling Special?", ToaCategory.Akkha, 20),
+    MindTheGap("Mind the Gap!", ToaCategory.Baba, 10),
+    GottaHaveFaith("Gotta Have Faith", ToaCategory.Baba, 10),
+    JungleJapes("Jungle Japes", ToaCategory.Baba, 5),
+    ShakingThingsUp("Shaking Things Up", ToaCategory.Baba, 10),
+    Boulderdash("Boulderdash", ToaCategory.Baba, 10),
+    AncientHaste("Ancient Haste", ToaCategory.Wardens, 10),
+    Acceleration("Acceleration", ToaCategory.Wardens, 10),
+    Penetration("Penetration", ToaCategory.Wardens, 10),
+    Overclocked("Overclocked", ToaCategory.Wardens, 10),
+    Overclocked2("Overclocked 2", ToaCategory.Wardens, 10, requires = Overclocked),
+    Insanity("Insanity", ToaCategory.Wardens, 50, requires = Overclocked2);
+
+    companion object {
+        fun of(category: ToaCategory): List<ToaInvocation> = entries.filter { it.category == category }
+    }
+}
