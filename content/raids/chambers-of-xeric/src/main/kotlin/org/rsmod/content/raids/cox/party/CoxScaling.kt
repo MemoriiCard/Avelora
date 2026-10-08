@@ -6,12 +6,16 @@ import org.rsmod.api.player.stat.baseMiningLvl
 
 /** Raid NPC scaling, matching the formulas the OSRS wiki's DPS calculator uses. */
 object CoxScaling {
+    private const val MAX_COMBAT = 126
+
     fun scaledPartySize(party: CoxParty): Int = maxOf(party.size, party.scaling).coerceIn(1, 100)
 
     fun snapshot(party: CoxParty): Snapshot =
         Snapshot(
             partySize = scaledPartySize(party),
-            highestCombat = party.members.maxOf { it.combatLevel },
+            highestCombat =
+                if (party.members.any { it.coxLevelScalingOff }) MAX_COMBAT
+                else party.members.maxOf { it.combatLevel },
             highestHitpoints = party.members.maxOf { it.baseHitpointsLvl },
             challengeMode = party.challengeMode,
             averageMining = party.members.map { it.baseMiningLvl }.average().toInt(),

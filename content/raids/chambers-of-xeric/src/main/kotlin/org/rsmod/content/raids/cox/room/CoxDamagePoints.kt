@@ -16,6 +16,7 @@ constructor(private val raids: CoxRaids, private val players: PlayerList) {
         val player = hit.resolvePlayerSource(players) ?: return
         val raid = raids.containing(player) ?: return
         val controller = raid.controllerOf(event.npc) ?: return
+        if (!controller.awardsPoints(event.npc)) return
         raids.addPoints(raid, player, hit.damage * (controller.pointsPerDamage + bonusPerDamage))
     }
 }
