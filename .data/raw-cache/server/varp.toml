@@ -893,3 +893,17 @@ scope = "Temp"
 [[varp]]
 id = "varp.raids_playerscore"
 scope = "Temp"
+
+
+[[varp]]
+isServerOnly = true
+id = "varp.cox_best_time"
+scope = "Perm"
+transmit = "Never"
+
+
+[[varp]]
+isServerOnly = true
+id = "varp.cox_cm_best_time"
+scope = "Perm"
+transmit = "Never"
