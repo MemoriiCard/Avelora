@@ -1,6 +1,7 @@
 package org.rsmod.content.raids.toa.raid
 
 import org.rsmod.api.repo.region.RegionTemplate
+import org.rsmod.content.raids.cox.reward.CoxItem
 import org.rsmod.content.raids.toa.invocation.ToaInvocation
 import org.rsmod.content.raids.toa.invocation.ToaInvocations
 import org.rsmod.content.raids.toa.layout.ToaPath
@@ -32,6 +33,15 @@ class ToaRaid(
     internal var controller: ToaRoomController? = null
     internal var levelPenalty: Int = 0
     internal var completed: Boolean = false
+    internal val points = mutableMapOf<Player, Int>()
+    internal val rewards = mutableMapOf<Player, List<CoxItem>>()
+    internal val chests = mutableMapOf<CoordGrid, Player>()
+
+    fun pointsOf(player: Player): Int = points[player] ?: 0
+
+    internal fun award(player: Player, amount: Int) {
+        points[player] = pointsOf(player) + amount
+    }
 
     val baseLevel: Int = ToaInvocations.raidLevel(invocations)
 
