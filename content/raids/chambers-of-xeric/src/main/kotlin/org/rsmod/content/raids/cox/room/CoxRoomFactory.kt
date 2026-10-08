@@ -15,6 +15,12 @@ object CoxRoomFactory {
             CoxRoomType.Mystics -> MysticsRoom(raid, room, services)
             CoxRoomType.Muttadiles -> MuttadilesRoom(raid, room, services)
             CoxRoomType.Vespula -> VespulaRoom(raid, room, services)
+            CoxRoomType.IceDemon -> IceDemonRoom(raid, room, services)
+            CoxRoomType.Thieving -> ThievingRoom(raid, room, services)
+            CoxRoomType.Crabs -> CrabsRoom(raid, room, services)
+            CoxRoomType.Tightrope -> TightropeRoom(raid, room, services)
+            CoxRoomType.Scavengers,
+            CoxRoomType.ScavengersLarge -> ScavengersRoom(raid, room, services)
             else -> null
         }
 }

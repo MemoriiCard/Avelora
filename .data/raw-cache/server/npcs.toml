@@ -16706,8 +16706,15 @@ inherit = "npc.deadman_breach_superior_abyssal_demon"
 [[npc]]
 id = "npc.raids_icedemon_combat"
 inherit = "npc.raids_icedemon_combat"
+huntMode = 8
+huntRange = 14
+maxRange = 32
+attackRange = 10
+defaultMode = "None"
 [npc.params]
 "param.demon"=1
+"param.death_anim"="seq.demon_death"
+"param.defend_anim"="seq.demon_block"
 
 [[npc]]
 id = "npc.raids_icedemon_noncombat"
