@@ -1,6 +1,7 @@
 package org.rsmod.content.raids.tob
 
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
@@ -38,6 +39,8 @@ class TobRoomTest {
     fun `rooms run in raid order and end at the treasure room`() {
         assertEquals(TobRoom.Bloat, TobRoom.Maiden.next)
         assertEquals(TobRoom.Treasure, TobRoom.Verzik.next)
+        assertEquals(TobRoom.Xarpus, TobRoom.Sotetseg.next)
+        assertFalse(TobRoom.Maze.inSequence)
         assertEquals(null, TobRoom.Treasure.next)
         assertNotEquals(TobRoom.Treasure.isFight, true)
     }

@@ -138,7 +138,7 @@ constructor(private val parties: TobParties, private val raids: TobRaids) : Plug
         val party = parties.of(player) ?: parties.create(player)
         val raid = raids.of(party)
         if (raid != null) {
-            if (raid.engaged || raid.room != TobRoom.entries.first()) {
+            if (raid.engaged || raid.room != TobRoom.SEQUENCE.first()) {
                 mes("Your party has already moved too far into the Theatre to follow.")
                 return
             }
