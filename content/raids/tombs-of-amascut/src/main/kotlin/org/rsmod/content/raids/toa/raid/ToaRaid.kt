@@ -3,6 +3,7 @@ package org.rsmod.content.raids.toa.raid
 import org.rsmod.api.repo.region.RegionTemplate
 import org.rsmod.content.raids.toa.invocation.ToaInvocation
 import org.rsmod.content.raids.toa.invocation.ToaInvocations
+import org.rsmod.content.raids.toa.layout.ToaPath
 import org.rsmod.content.raids.toa.layout.ToaRoom
 import org.rsmod.content.raids.toa.party.ToaMode
 import org.rsmod.content.raids.toa.party.ToaParty
@@ -24,6 +25,11 @@ class ToaRaid(
     internal var emptyTicks: Int = 0
     internal var attemptsLeft: Int = ToaInvocations.attempts(invocations) ?: Int.MAX_VALUE
     internal var timeExpired: Boolean = false
+    internal val clearedPaths = mutableSetOf<ToaPath>()
+    internal var path: ToaPath? = null
+    internal var engaged: Boolean = false
+    internal var roomCleared: Boolean = false
+    internal var controller: ToaRoomController? = null
     internal var levelPenalty: Int = 0
 
     val baseLevel: Int = ToaInvocations.raidLevel(invocations)
@@ -52,6 +58,8 @@ class ToaRaid(
     fun coords(room: ToaRoom, source: CoordGrid): CoordGrid = room.toInstance(southWest, source)
 
     fun arrival(room: ToaRoom): CoordGrid = coords(room, room.arrival)
+
+    fun source(instance: CoordGrid): CoordGrid? = roomAt(instance)?.toSource(southWest, instance)
 
     companion object {
         fun template(): RegionTemplate =
