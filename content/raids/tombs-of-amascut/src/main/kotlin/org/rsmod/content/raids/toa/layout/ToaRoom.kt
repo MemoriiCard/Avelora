@@ -20,7 +20,9 @@ enum class ToaRoom(
     HetPuzzle("Het Puzzle", 57, 82, 1, 0, 1, arrival = CoordGrid(3696, 5278, 0)),
     Akkha("Akkha's Lair", 57, 84, 0, 1, 1, arrival = CoordGrid(3696, 5406, 1), level = 1),
     ApmekenPuzzle("Apmeken Puzzle", 59, 82, 1, 1, 1, arrival = CoordGrid(3794, 5279, 0)),
-    Baba("Ba-Ba's Lair", 59, 84, 0, 0, 2, arrival = CoordGrid(3791, 5407, 0));
+    Baba("Ba-Ba's Lair", 59, 84, 0, 0, 2, arrival = CoordGrid(3791, 5407, 0)),
+    WardensOne("The Wardens' Chamber", 59, 80, 1, 0, 2, arrival = CoordGrid(3808, 5146, 1), level = 1),
+    WardensTwo("The Wardens' Throne", 61, 80, 0, 1, 2, arrival = CoordGrid(3936, 5159, 1), level = 1);
 
     private val originX: Int
         get() = squareX * SQUARE

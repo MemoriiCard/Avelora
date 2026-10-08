@@ -96,15 +96,56 @@ constructor(
         }
     }
 
+    fun enterWardens(raid: ToaRaid): Boolean {
+        if (raid.room != ToaRoom.Nexus) return false
+        if (raid.clearedPaths.size < ToaPath.entries.size) return false
+        raid.path = null
+        moveTo(raid, ToaRoom.WardensOne)
+        worldQueues.add(BOSS_DELAY) {
+            if (raid.room == ToaRoom.WardensOne && !raid.engaged) beginRoom(raid)
+        }
+        return true
+    }
+
     fun clearRoom(raid: ToaRaid, room: ToaRoom) {
         if (raid.room != room || raid.roomCleared) return
         raid.roomCleared = true
         for (player in raid.downed.toList()) revive(raid, player)
+        if (room == ToaRoom.WardensOne) {
+            for (member in raid.insiders) member.mes("<col=ef1020>The first Warden has fallen. The throne awaits.</col>")
+            worldQueues.add(RETURN_DELAY) {
+                if (raid.room != ToaRoom.WardensOne) return@add
+                raid.controller?.destroy()
+                raid.controller = null
+                moveTo(raid, ToaRoom.WardensTwo)
+                worldQueues.add(BOSS_DELAY) {
+                    if (raid.room == ToaRoom.WardensTwo && !raid.engaged) beginRoom(raid)
+                }
+            }
+            return
+        }
+        if (room == ToaRoom.WardensTwo) {
+            completeRaid(raid)
+            return
+        }
         val path = raid.path ?: return
         for (member in raid.insiders) member.mes("<col=ef1020>${room.label} has been cleared.</col>")
         if (room == path.boss) {
             raid.clearedPaths += path
             worldQueues.add(RETURN_DELAY) { if (raid.room == path.boss) returnToNexus(raid) }
+        }
+    }
+
+    private fun completeRaid(raid: ToaRaid) {
+        raid.completed = true
+        for (member in raid.insiders) {
+            member.mes("<col=ef1020>Congratulations! You have conquered the Tombs of Amascut.</col>")
+        }
+        worldQueues.add(RETURN_DELAY) {
+            raid.controller?.destroy()
+            raid.controller = null
+            for (member in raid.insiders.toList()) leave(member, raid)
+            destroy(raid)
         }
     }
 
