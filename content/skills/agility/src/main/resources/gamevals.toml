@@ -5,6 +5,9 @@ agility_laps_gnome = 64302
 agility_laps_draynor = 64303
 agility_laps_alkharid = 64304
 agility_laps_varrock = 64305
+agility_laps_wilderness = 64306
+agility_laps_barbarian = 64307
+agility_wilderness_tag = 64308
 
 [gamevals.varbit]
 agility_course_progress = 64300

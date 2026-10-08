@@ -18,14 +18,23 @@ private var Player.nextMarkMinute by intVarp("varp.agility_mark_cooldown")
 
 class AgilityCourseScript @Inject constructor(private val objRepo: ObjRepository) : PluginScript() {
     override fun ScriptContext.startup() {
+        val byLoc = mutableMapOf<String, MutableList<Entry>>()
         for (course in AgilityCourses.all) {
             course.obstacles.forEachIndexed { index, obstacle ->
                 for (loc in obstacle.locs) {
-                    onOpLoc1(loc) { attempt(course, index, obstacle, it.loc) }
+                    byLoc.getOrPut(loc) { mutableListOf() } += Entry(course, index, obstacle)
                 }
             }
         }
+        for ((loc, entries) in byLoc) {
+            onOpLoc1(loc) {
+                val entry = entries.firstOrNull { e -> e.obstacle.at == null || e.obstacle.at == it.loc.coords }
+                if (entry != null) attempt(entry.course, entry.index, entry.obstacle, it.loc)
+            }
+        }
     }
+
+    private class Entry(val course: AgilityCourse, val index: Int, val obstacle: Obstacle)
 
     private suspend fun ProtectedAccess.attempt(
         course: AgilityCourse,
@@ -58,6 +67,7 @@ class AgilityCourseScript @Inject constructor(private val objRepo: ObjRepository
         val laps = vars[course.lapVarp] + 1
         vars[course.lapVarp] = laps
         mes("Your ${course.name} Agility lap count is: <col=ff0000>$laps</col>.")
+        course.onLap?.invoke(this)
         rollMarkOfGrace(course)
     }
 
