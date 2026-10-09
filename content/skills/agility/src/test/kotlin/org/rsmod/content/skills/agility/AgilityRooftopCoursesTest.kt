@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.parallel.ResourceLock
+import org.rsmod.content.skills.agility.courses.ArdougneRooftopCourse
 import org.rsmod.content.skills.agility.courses.CanifisRooftopCourse
 import org.rsmod.content.skills.agility.courses.FaladorRooftopCourse
 import org.rsmod.content.skills.agility.courses.PollnivneachRooftopCourse
@@ -22,6 +23,7 @@ class AgilityRooftopCoursesTest {
         assertEquals(586.0, total(FaladorRooftopCourse.course), 0.001)
         assertEquals(570.0, total(SeersRooftopCourse.course), 0.001)
         assertEquals(890.0, total(PollnivneachRooftopCourse.course), 0.001)
+        assertEquals(793.0, total(ArdougneRooftopCourse.course), 0.001)
     }
 
     @Test
