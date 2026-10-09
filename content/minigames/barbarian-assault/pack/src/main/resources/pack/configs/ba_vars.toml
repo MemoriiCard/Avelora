@@ -1,0 +1,5 @@
+[[varp]]
+isServerOnly = true
+id = "varp.ba_honour"
+scope = "Perm"
+transmit = "Never"
