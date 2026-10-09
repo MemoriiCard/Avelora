@@ -1,0 +1,5 @@
+[[varp]]
+isServerOnly = true
+id = "varp.lms_points"
+scope = "Perm"
+transmit = "Never"
