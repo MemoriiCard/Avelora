@@ -65,3 +65,27 @@ isServerOnly = true
 id = "varp.agility_wilderness_tag"
 scope = "Perm"
 transmit = "Never"
+
+[[varp]]
+isServerOnly = true
+id = "varp.agility_laps_canifis"
+scope = "Perm"
+transmit = "Never"
+
+[[varp]]
+isServerOnly = true
+id = "varp.agility_laps_falador"
+scope = "Perm"
+transmit = "Never"
+
+[[varp]]
+isServerOnly = true
+id = "varp.agility_laps_seers"
+scope = "Perm"
+transmit = "Never"
+
+[[varp]]
+isServerOnly = true
+id = "varp.agility_laps_pollnivneach"
+scope = "Perm"
+transmit = "Never"
