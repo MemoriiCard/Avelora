@@ -45,5 +45,12 @@ object ShopCurrencyTable {
             column(PLURAL_NAME, "unidentified minerals")
             columnRSCM(OBJ, "obj.mguild_minerals")
         }
+
+        row("dbrow.shop_currency_castlewars_ticket") {
+            column(KEY, "currency.castlewars_ticket")
+            column(SINGULAR_NAME, "Castle Wars ticket")
+            column(PLURAL_NAME, "Castle Wars tickets")
+            columnRSCM(OBJ, "obj.castlewars_ticket")
+        }
     }
 }
