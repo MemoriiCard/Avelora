@@ -89,3 +89,9 @@ isServerOnly = true
 id = "varp.agility_laps_pollnivneach"
 scope = "Perm"
 transmit = "Never"
+
+[[varp]]
+isServerOnly = true
+id = "varp.agility_laps_ardougne"
+scope = "Perm"
+transmit = "Never"
