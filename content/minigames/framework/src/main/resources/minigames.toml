@@ -1,0 +1,18 @@
+# target = full game size bots fill up to; bot_free_at = real players at which bots switch off.
+# Missing games or keys use the built-in defaults.
+
+[castle_wars]
+target = 10
+bot_free_at = 8
+
+[soul_wars]
+target = 10
+bot_free_at = 8
+
+[last_man_standing]
+target = 8
+bot_free_at = 6
+
+[barbarian_assault]
+target = 5
+bot_free_at = 5

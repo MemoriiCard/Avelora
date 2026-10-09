@@ -1,0 +1,11 @@
+[[varp]]
+isServerOnly = true
+id = "varp.minigame_tokens"
+scope = "Perm"
+transmit = "Never"
+
+[[varp]]
+isServerOnly = true
+id = "varp.minigame_first_win_day"
+scope = "Perm"
+transmit = "Never"
