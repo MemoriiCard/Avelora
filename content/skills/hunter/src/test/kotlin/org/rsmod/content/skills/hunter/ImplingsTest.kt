@@ -20,7 +20,8 @@ class ImplingsTest {
 
     @Test
     fun `every impling npc, jar and net exists`() {
-        for (impling in Implings.all) {
+        for (impling in Implings.all + Implings.butterflies) {
+            assertNotNull(ServerCacheManager.getItem(impling.emptyJar.asRSCM(RSCMType.OBJ)), impling.emptyJar)
             assertNotNull(ServerCacheManager.getItem(impling.jar.asRSCM(RSCMType.OBJ)), impling.jar)
             for (npc in impling.npcs) {
                 assertNotNull(ServerCacheManager.getNpc(npc.asRSCM(RSCMType.NPC)), npc)

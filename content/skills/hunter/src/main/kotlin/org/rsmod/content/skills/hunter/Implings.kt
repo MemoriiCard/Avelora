@@ -7,11 +7,14 @@ data class Impling(
     val xp: Double,
     val catchLow: Int,
     val catchHigh: Int,
+    val emptyJar: String = Implings.EMPTY_JAR,
+    val noun: String = "impling",
 )
 
 object Implings {
     const val EMPTY_JAR = "obj.ii_impling_jar"
     const val NET = "obj.hunting_butterfly_net"
+    const val BUTTERFLY_JAR = "obj.butterfly_jar"
     const val MAGIC_NET = "obj.ii_magic_butterfly_net"
 
     private val crystalNames =
@@ -53,5 +56,16 @@ object Implings {
                 catchLow = 50,
                 catchHigh = 205,
             ),
+        )
+
+    private fun butterfly(npc: String, jar: String, level: Int, xp: Double, low: Int, high: Int) =
+        Impling(listOf(npc), jar, level, xp, low, high, BUTTERFLY_JAR, "butterfly")
+
+    val butterflies: List<Impling> =
+        listOf(
+            butterfly("npc.butterfly_ruby", "obj.butterfly_jar_ruby", 15, 24.0, 150, 255),
+            butterfly("npc.butterfly_glacialis", "obj.butterfly_jar_glacialis", 25, 34.0, 130, 250),
+            butterfly("npc.butterfly_snowy", "obj.butterfly_jar_snowy", 35, 44.0, 110, 245),
+            butterfly("npc.butterfly_warlock", "obj.butterfly_jar_warlock", 45, 54.0, 90, 240),
         )
 }

@@ -18,7 +18,7 @@ class ImplingScript
 @Inject
 constructor(private val npcRepo: NpcRepository, private val random: GameRandom) : PluginScript() {
     override fun ScriptContext.startup() {
-        for (impling in Implings.all) {
+        for (impling in Implings.all + Implings.butterflies) {
             for (npc in impling.npcs) {
                 onOpNpc1(npc) { catch(it.npc, impling) }
             }
@@ -27,15 +27,15 @@ constructor(private val npcRepo: NpcRepository, private val random: GameRandom) 
 
     private suspend fun ProtectedAccess.catch(npc: Npc, impling: Impling) {
         if (player.hunterLvl < impling.level) {
-            mes("You need a Hunter level of ${impling.level} to catch that impling.")
+            mes("You need a Hunter level of ${impling.level} to catch that ${impling.noun}.")
             return
         }
         if (!hasNet()) {
-            mes("You need a butterfly net to catch implings.")
+            mes("You need a butterfly net to catch that.")
             return
         }
-        if (!inv.contains(Implings.EMPTY_JAR)) {
-            mes("You need an empty impling jar to catch an impling.")
+        if (!inv.contains(impling.emptyJar)) {
+            mes("You need an empty jar to catch that ${impling.noun}.")
             return
         }
         if (!npc.isVisible) {
@@ -49,16 +49,16 @@ constructor(private val npcRepo: NpcRepository, private val random: GameRandom) 
         val caught =
             player.statRandom(random, STAT, impling.catchLow, impling.catchHigh, invisibleBoost = 0)
         if (!caught) {
-            mes("You fail to catch the impling.")
+            mes("You fail to catch the ${impling.noun}.")
             return
         }
-        if (invDel(inv, Implings.EMPTY_JAR).failure) {
+        if (invDel(inv, impling.emptyJar).failure) {
             return
         }
         invAdd(inv, impling.jar)
         npcRepo.hide(npc, RESPAWN_TICKS)
         statAdvance(STAT, impling.xp)
-        mes("You manage to catch the impling and squeeze it into a jar.")
+        mes("You manage to catch the ${impling.noun} and squeeze it into a jar.")
     }
 
     private fun ProtectedAccess.hasNet(): Boolean {
