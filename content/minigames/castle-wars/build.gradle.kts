@@ -12,5 +12,6 @@ dependencies {
     implementation(projects.api.pluginCommons)
     implementation(projects.api.repo)
     implementation(projects.api.script)
+    implementation(projects.api.shops)
     implementation(projects.content.minigames.framework)
 }

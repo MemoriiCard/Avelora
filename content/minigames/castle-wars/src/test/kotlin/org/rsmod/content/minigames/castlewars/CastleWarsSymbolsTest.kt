@@ -34,6 +34,11 @@ class CastleWarsSymbolsTest {
                 } + CastleWarsItems.TICKET
             for (item in items) assertNotNull(ServerCacheManager.getItem(item.asRSCM(RSCMType.OBJ)), item)
             assertEquals(65530, CastleWarsService.TIMER.asRSCM(RSCMType.TIMER))
+            assertNotNull(CastleWarsShop.CURRENCY.asRSCM(RSCMType.CURRENCY))
+            assertNotNull(CastleWarsShop.JUDGE.asRSCM(RSCMType.NPC))
+            for (item in CastleWarsShop.PRICES.keys) {
+                assertNotNull(ServerCacheManager.getItem(item.asRSCM(RSCMType.OBJ)), item)
+            }
         } finally {
             cache.close()
         }
