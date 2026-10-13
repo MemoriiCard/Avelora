@@ -48,6 +48,8 @@ constructor(
 
     fun isKnight(npc: Npc): Boolean = npc === knight
 
+    fun isShielded(npc: Npc): Boolean = portalIndex(npc).let { it >= 0 && match.isShielded(it) }
+
     fun toggleQueue(player: Player) {
         val id = id(player)
         if (match.isPlaying(id)) {
@@ -132,6 +134,8 @@ constructor(
             when (event) {
                 is PcEvent.WaitExtended -> notify(match.waiting, event.reason)
                 is PcEvent.GameStarted -> start(event)
+                is PcEvent.ShieldDropped ->
+                    notify(match.squad, "The ${PcNpcs.PORTAL_NAMES[event.index]} portal shield has dropped!")
                 is PcEvent.PortalDown ->
                     notify(match.squad, "A portal has been destroyed. ${match.portalsAlive} remain.")
                 is PcEvent.KnightHurt ->
@@ -148,15 +152,15 @@ constructor(
         val roster = event.players.mapNotNull { player(it) }
         val average = if (roster.isEmpty()) 3 else roster.map { it.appearance.combatLevel }.average().toInt()
         pestTier = PcNpcs.tier(average)
-        spawnStatics(roster.size)
+        spawnStatics(average)
         roster.forEachIndexed { index, player ->
             teleport(player, PcMap.START[index % PcMap.START.size])
             player.mes("Defend the Void Knight! Destroy all four portals.")
         }
     }
 
-    private fun spawnStatics(squadSize: Int) {
-        val hitpoints = PcMatch.portalHitpoints(squadSize)
+    private fun spawnStatics(averageCombat: Int) {
+        val hitpoints = PcMatch.portalHitpoints(averageCombat)
         for (index in 0 until PcMatch.PORTALS) {
             val type = ServerCacheManager.getNpc(PcNpcs.portal(index).asRSCM(RSCMType.NPC)) ?: continue
             val npc = Npc(type, PcMap.PORTALS[index])
