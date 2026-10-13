@@ -21,6 +21,8 @@ sealed interface CwEvent {
 
     data class FlagTaken(val taker: Int, val flagOf: CwTeam) : CwEvent
 
+    data class FlagDropped(val flagOf: CwTeam) : CwEvent
+
     data class FlagReturned(val flagOf: CwTeam) : CwEvent
 
     data class Scored(val scorer: Int, val team: CwTeam) : CwEvent
@@ -46,6 +48,7 @@ class CastleWarsMatch(
     private val gameTeams = LinkedHashMap<Int, CwTeam>()
     private val joinedAt = HashMap<Int, Int>()
     private val carriers = HashMap<CwTeam, Int>()
+    private val dropped = HashMap<CwTeam, Int>()
     private val scores = CwTeam.entries.associateWith { 0 }.toMutableMap()
     private var phaseStart = 0
 
@@ -62,6 +65,8 @@ class CastleWarsMatch(
     fun score(team: CwTeam): Int = scores.getValue(team)
 
     fun carrierOf(flagOf: CwTeam): Int? = carriers[flagOf]
+
+    fun isDropped(flagOf: CwTeam): Boolean = flagOf in dropped
 
     fun carriedFlag(id: Int): CwTeam? = carriers.entries.firstOrNull { it.value == id }?.key
 
@@ -102,16 +107,30 @@ class CastleWarsMatch(
     fun update(cycle: Int): List<CwEvent> =
         when (phase) {
             CwPhase.Waiting -> if (cycle - phaseStart >= waitTicks) startOrExtend(cycle) else emptyList()
-            CwPhase.Playing -> if (cycle - phaseStart >= gameTicks) end(cycle) else emptyList()
+            CwPhase.Playing ->
+                if (cycle - phaseStart >= gameTicks) end(cycle) else expireDropped(cycle)
             CwPhase.Idle -> emptyList()
         }
 
     fun takeFlag(id: Int, standOf: CwTeam): CwEvent? {
         val team = gameTeams[id] ?: return null
         if (phase != CwPhase.Playing || team == standOf) return null
-        if (carriers.containsKey(standOf) || carriedFlag(id) != null) return null
+        if (carriers.containsKey(standOf) || standOf in dropped || carriedFlag(id) != null) return null
         carriers[standOf] = id
         return CwEvent.FlagTaken(id, standOf)
+    }
+
+    fun pickUp(id: Int, flagOf: CwTeam): CwEvent? {
+        val team = gameTeams[id] ?: return null
+        if (phase != CwPhase.Playing || flagOf !in dropped) return null
+        if (team == flagOf) {
+            dropped.remove(flagOf)
+            return CwEvent.FlagReturned(flagOf)
+        }
+        if (carriedFlag(id) != null) return null
+        dropped.remove(flagOf)
+        carriers[flagOf] = id
+        return CwEvent.FlagTaken(id, flagOf)
     }
 
     fun capture(id: Int): CwEvent? {
@@ -124,7 +143,17 @@ class CastleWarsMatch(
         return CwEvent.Scored(id, team)
     }
 
-    fun onDeath(id: Int): CwEvent? = returnFlagCarriedBy(id)?.let { CwEvent.FlagReturned(it) }
+    fun onDeath(id: Int, cycle: Int): CwEvent? {
+        val flag = returnFlagCarriedBy(id) ?: return null
+        dropped[flag] = cycle
+        return CwEvent.FlagDropped(flag)
+    }
+
+    private fun expireDropped(cycle: Int): List<CwEvent> {
+        val expired = dropped.filterValues { cycle - it >= DROP_RETURN_TICKS }.keys.toList()
+        expired.forEach(dropped::remove)
+        return expired.map { CwEvent.FlagReturned(it) }
+    }
 
     private fun returnFlagCarriedBy(id: Int): CwTeam? {
         val flag = carriedFlag(id) ?: return null
@@ -151,6 +180,7 @@ class CastleWarsMatch(
         lobbyTeams.clear()
         gameTeams.keys.forEach { joinedAt[it] = cycle }
         carriers.clear()
+        dropped.clear()
         scores.keys.forEach { scores[it] = 0 }
         phase = CwPhase.Playing
         phaseStart = cycle
@@ -173,6 +203,7 @@ class CastleWarsMatch(
         gameTeams.clear()
         joinedAt.clear()
         carriers.clear()
+        dropped.clear()
         phase = if (lobbyTeams.isEmpty()) CwPhase.Idle else CwPhase.Waiting
         phaseStart = cycle
         return listOf(CwEvent.GameEnded(result))
@@ -182,5 +213,6 @@ class CastleWarsMatch(
         const val WAIT_TICKS = 100
         const val GAME_TICKS = 1000
         const val MAX_TEAM_GAP = 2
+        const val DROP_RETURN_TICKS = 100
     }
 }

@@ -19,6 +19,7 @@ class CastleWarsDeathHook @Inject constructor(private val service: CastleWarsSer
     PlayerDeathHook, PlayerDeathCleanupHook {
     override fun handleDeath(context: PlayerDeathContext): PlayerDeathHandling? {
         if (!service.isPlaying(context.player)) return null
+        service.onDeath(context.player)
         return PlayerDeathHandling(
             keepCount = KEEP_EVERYTHING,
             dropReceiver = null,

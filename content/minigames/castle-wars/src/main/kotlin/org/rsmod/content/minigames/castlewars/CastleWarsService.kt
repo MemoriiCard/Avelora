@@ -16,6 +16,7 @@ import org.rsmod.game.entity.PlayerList
 import org.rsmod.game.entity.util.PathingEntityCommon
 import org.rsmod.game.inv.InvObj
 import org.rsmod.game.inv.isType
+import org.rsmod.game.obj.Obj
 import org.rsmod.map.CoordGrid
 import org.rsmod.routefinder.collision.CollisionFlagMap
 
@@ -29,8 +30,10 @@ constructor(
     private val objs: ObjRepository,
     private val barricades: CastleWarsBarricades,
     private val catapults: CastleWarsCatapults,
+    private val tunnels: CastleWarsTunnels,
 ) {
     val match = CastleWarsMatch()
+    private val droppedFlags = HashMap<CwTeam, Obj>()
 
     fun id(player: Player): Int = player.slotId
 
@@ -108,7 +111,42 @@ constructor(
     }
 
     fun onDeath(player: Player) {
-        match.onDeath(id(player))?.let { apply(listOf(it)) }
+        val event = match.onDeath(id(player), clock.cycle) ?: return
+        if (event is CwEvent.FlagDropped) {
+            droppedFlags[event.flagOf] =
+                objs.add(CastleWarsItems.banner(event.flagOf), player.coords, Int.MAX_VALUE, reveal = 0)
+        }
+        apply(listOf(event))
+    }
+
+    fun pickUpFlag(player: Player, flagOf: CwTeam) {
+        if (!match.isPlaying(id(player))) {
+            player.mes("You can only do that during a game.")
+            return
+        }
+        if (player.worn[Wearpos.RightHand.slot] != null && match.teamOf(id(player)) != flagOf) {
+            player.mes("You must remove your weapon before you can carry the flag.")
+            return
+        }
+        val event = match.pickUp(id(player), flagOf)
+        if (event == null) {
+            player.mes("You can't pick that flag up right now.")
+            return
+        }
+        apply(listOf(event))
+    }
+
+    fun scoreboard(player: Player) {
+        val sara = match.score(CwTeam.Saradomin)
+        val zam = match.score(CwTeam.Zamorak)
+        val seconds = match.ticksLeft(clock.cycle) * 6 / 10
+        val state =
+            when (match.phase) {
+                CwPhase.Playing -> "A game is in progress with $seconds seconds left."
+                CwPhase.Waiting -> "The next game starts in $seconds seconds."
+                CwPhase.Idle -> "No game is running."
+            }
+        player.mes("Saradomin $sara - $zam Zamorak. $state")
     }
 
     private fun apply(events: List<CwEvent>) {
@@ -121,8 +159,13 @@ constructor(
                     val name = player(event.taker)?.displayName ?: "Someone"
                     notify(everyone(), "$name has taken the ${event.flagOf.name} flag!")
                 }
+                is CwEvent.FlagDropped -> {
+                    dropBanners()
+                    notify(everyone(), "The ${event.flagOf.name} flag has been dropped!")
+                }
                 is CwEvent.FlagReturned -> {
                     dropBanners()
+                    clearDropped(event.flagOf)
                     notify(everyone(), "The ${event.flagOf.name} flag has been returned to its base.")
                 }
                 is CwEvent.Scored -> {
@@ -137,7 +180,12 @@ constructor(
         }
     }
 
+    private fun clearDropped(flagOf: CwTeam) {
+        droppedFlags.remove(flagOf)?.let { objs.del(it, Int.MAX_VALUE) }
+    }
+
     private fun start(event: CwEvent.GameStarted) {
+        tunnels.reset()
         for ((id, team) in event.players) {
             val player = player(id) ?: continue
             teleport(player, CastleWarsMap.SPAWN.getValue(team))
@@ -149,6 +197,7 @@ constructor(
     private fun finish(result: CwResult) {
         barricades.clear()
         catapults.reset()
+        CwTeam.entries.forEach(::clearDropped)
         val day = LocalDate.now(ZoneOffset.UTC).toEpochDay()
         val summary = describe(result)
         for ((id, team) in result.players) {

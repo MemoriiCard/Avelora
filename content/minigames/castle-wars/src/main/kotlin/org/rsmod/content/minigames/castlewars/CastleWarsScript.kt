@@ -1,9 +1,13 @@
 package org.rsmod.content.minigames.castlewars
 
+import dev.openrune.ServerCacheManager
+import dev.openrune.rscm.RSCM.asRSCM
+import dev.openrune.rscm.RSCMType
 import jakarta.inject.Inject
 import org.rsmod.api.player.output.mes
 import org.rsmod.api.player.protect.ProtectedAccess
 import org.rsmod.api.script.onOpLoc1
+import org.rsmod.api.script.onOpObj3
 import org.rsmod.api.script.onPlayerLogin
 import org.rsmod.api.script.onPlayerLogout
 import org.rsmod.api.script.onPlayerSoftTimer
@@ -21,6 +25,11 @@ class CastleWarsScript @Inject constructor(private val service: CastleWarsServic
         onOpLoc1("loc.castlewars_zamorak_quit") { service.leave(player) }
         onOpLoc1("loc.castlewars_saradomin_banner+stand") { service.takeFlag(player, CwTeam.Saradomin) }
         onOpLoc1("loc.castlewars_zamorak_banner+stand") { service.takeFlag(player, CwTeam.Zamorak) }
+        onOpLoc1("loc.castlewars_scoreboard") { service.scoreboard(player) }
+        for (team in CwTeam.entries) {
+            val banner = ServerCacheManager.getItem(CastleWarsItems.banner(team).asRSCM(RSCMType.OBJ))
+            if (banner != null) onOpObj3(banner) { service.pickUpFlag(player, team) }
+        }
         onPlayerSoftTimer(CastleWarsService.TIMER) { service.tick() }
         onPlayerLogout { service.leave(player, toLobby = false) }
         onPlayerLogin {
