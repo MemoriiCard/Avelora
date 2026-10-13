@@ -313,5 +313,23 @@ object InstanceSettingsTable {
             columnRSCM(ENTER_OBJECT, "loc.vmq3_ruins_door_multi")
             columnRSCM(EXIT_OBJECT, "loc.amoxliatl_exit")
         }
+
+        row("dbrow.instance_royal_titans") {
+            column(KEY, "royal_titans")
+            columnCoord(EXIT_COORD, CoordGrid(2943, 9573, 0))
+            columnCoord(ENTER_COORD, CoordGrid(2951, 9573, 0))
+            column(FEE, 0)
+            column(MAX_PLAYERS, 1)
+            column(TIME_LIMIT_MINUTES, 0)
+            column(GRACE_MINUTES, 10)
+            columnRSCM(BOSS_NPC, "npc.rt_fire_queen")
+            column(BOSS_NAME, "The Royal Titans")
+            column(RECOMMENDED_COMBAT, 90, 126)
+            column(TEAM_SIZE, 1)
+            column(LOOT_MULTIPLIER, "x1.0")
+            column(DESCRIPTION, "Branda the Fire Queen and Eldric the Ice King hold court beneath the Fremennik Isles.")
+            columnRSCM(ENTER_OBJECT, "loc.royal_titans_entrance")
+            columnRSCM(EXIT_OBJECT, "loc.royal_titans_exit")
+        }
     }
 }
