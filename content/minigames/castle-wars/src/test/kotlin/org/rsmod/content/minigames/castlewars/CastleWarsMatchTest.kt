@@ -80,12 +80,46 @@ class CastleWarsMatchTest {
     }
 
     @Test
-    fun `dying with a flag returns it to base`() {
+    fun `dying with a flag drops it where the carrier fell`() {
         val match = started()
         match.takeFlag(1, CwTeam.Zamorak)
-        assertEquals(CwEvent.FlagReturned(CwTeam.Zamorak), match.onDeath(1))
+        assertEquals(CwEvent.FlagDropped(CwTeam.Zamorak), match.onDeath(1, 20))
         assertNull(match.carrierOf(CwTeam.Zamorak))
-        assertNull(match.onDeath(2))
+        assertTrue(match.isDropped(CwTeam.Zamorak))
+        assertNull(match.onDeath(2, 20))
+    }
+
+    @Test
+    fun `a dropped flag cannot be taken from its stand`() {
+        val match = started()
+        match.takeFlag(1, CwTeam.Zamorak)
+        match.onDeath(1, 20)
+        assertNull(match.takeFlag(1, CwTeam.Zamorak))
+    }
+
+    @Test
+    fun `the enemy picks up a dropped flag and the owner returns it`() {
+        val match = started()
+        match.takeFlag(1, CwTeam.Zamorak)
+        match.onDeath(1, 20)
+        assertEquals(CwEvent.FlagTaken(1, CwTeam.Zamorak), match.pickUp(1, CwTeam.Zamorak))
+        match.onDeath(1, 30)
+        assertEquals(CwEvent.FlagReturned(CwTeam.Zamorak), match.pickUp(2, CwTeam.Zamorak))
+        assertTrue(!match.isDropped(CwTeam.Zamorak))
+        assertNull(match.pickUp(1, CwTeam.Zamorak))
+    }
+
+    @Test
+    fun `an unclaimed dropped flag returns to base after the timeout`() {
+        val match = started(game = 1000)
+        match.takeFlag(1, CwTeam.Zamorak)
+        match.onDeath(1, 20)
+        assertTrue(match.update(20 + CastleWarsMatch.DROP_RETURN_TICKS - 1).isEmpty())
+        assertEquals(
+            listOf(CwEvent.FlagReturned(CwTeam.Zamorak)),
+            match.update(20 + CastleWarsMatch.DROP_RETURN_TICKS),
+        )
+        assertTrue(!match.isDropped(CwTeam.Zamorak))
     }
 
     @Test
