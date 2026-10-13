@@ -22,6 +22,11 @@ class PcSymbolsTest {
                 )
             for (loc in locs) assertNotNull(ServerCacheManager.getObject(loc.asRSCM(RSCMType.LOC)), loc)
             for (npc in PcNpcs.ALL) assertNotNull(ServerCacheManager.getNpc(npc.asRSCM(RSCMType.NPC)), npc)
+            for (knight in PcShopScript.KNIGHTS) {
+                assertNotNull(ServerCacheManager.getNpc(knight.asRSCM(RSCMType.NPC)), knight)
+            }
+            val items = PcShop.VOID.map { it.obj } + PcShop.ELITE.flatMap { listOf(it.from, it.to) }
+            for (item in items) assertNotNull(ServerCacheManager.getItem(item.asRSCM(RSCMType.OBJ)), item)
             assertNotNull(ServerCacheManager.getVarp(PcService.POINTS.asRSCM(RSCMType.VARP)))
             assertEquals(65529, PcService.TIMER.asRSCM(RSCMType.TIMER))
         } finally {
