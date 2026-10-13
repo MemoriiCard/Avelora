@@ -310,6 +310,24 @@ object InstanceSettingsTable {
             columnRSCM(EXIT_OBJECT, "loc.inferno_exit")
         }
 
+        row("dbrow.instance_colosseum") {
+            column(KEY, "colosseum")
+            columnCoord(EXIT_COORD, CoordGrid(1808, 9506, 0))
+            columnCoord(ENTER_COORD, CoordGrid(1812, 3106, 0))
+            column(FEE, 0)
+            column(MAX_PLAYERS, 1)
+            column(TIME_LIMIT_MINUTES, 0)
+            column(GRACE_MINUTES, 1)
+            columnRSCM(BOSS_NPC, "npc.colosseum_sol_p1")
+            column(BOSS_NAME, "Fortis Colosseum")
+            column(RECOMMENDED_COMBAT, 90, 126)
+            column(TEAM_SIZE, 1)
+            column(LOOT_MULTIPLIER, "x1.0")
+            column(DESCRIPTION, "Twelve waves of Varlamore's deadliest gladiators, ending with Sol Heredit.")
+            columnRSCM(ENTER_OBJECT, "loc.colosseum_entrance")
+            columnRSCM(EXIT_OBJECT, "loc.colosseum_exit_lobby_noop", "loc.colosseum_exit")
+        }
+
         row("dbrow.instance_leviathan") {
             column(KEY, "leviathan")
             columnCoord(EXIT_COORD, CoordGrid(2064, 6436, 0))
