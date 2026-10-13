@@ -15,6 +15,7 @@ dependencies {
     implementation(projects.api.playerOutput)
     implementation(projects.api.repo)
     implementation(projects.api.pluginCommons)
+    implementation(projects.content.other.pets)
     testImplementation(projects.engine.map)
     testImplementation(projects.engine.routefinder)
     testImplementation(libs.fastutil)

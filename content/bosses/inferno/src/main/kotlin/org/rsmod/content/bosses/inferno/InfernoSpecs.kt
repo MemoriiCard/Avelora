@@ -5,6 +5,8 @@ import org.rsmod.api.bosses.spec.BossSpec
 import org.rsmod.api.bosses.spec.DamageExpr
 import org.rsmod.api.bosses.spec.Effect
 import org.rsmod.api.combat.commons.types.MeleeAttackType
+import org.rsmod.game.entity.Npc
+import org.rsmod.game.entity.Player
 
 internal const val JAD_TELL_TICKS = 3
 
@@ -134,9 +136,10 @@ internal fun jadSpec(): BossSpec =
         }
     }
 
-internal fun infernoSpecs(): List<BossSpec> =
+internal fun infernoSpecs(zukRoll: (Npc, Player) -> Int = { _, _ -> 0 }): List<BossSpec> =
     listOf(nibblerSpec(), batSpec(), blobSpec(), meleerSpec(), rangerSpec(), magerSpec(), jadSpec()) +
-        miniBlobSpecs()
+        miniBlobSpecs() +
+        listOf(zukSpec(zukRoll), zukHealerSpec(), jadHealerSpec())
 
 private const val JAD_MAX = 113
 private const val MINI_BLOB_MAX = 8
