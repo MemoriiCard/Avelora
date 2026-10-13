@@ -1,5 +1,10 @@
 package org.rsmod.content.minigames.lms
 
+enum class LmsMode {
+    Casual,
+    Competitive,
+}
+
 enum class LmsPhase {
     Idle,
     Waiting,
@@ -21,6 +26,7 @@ data class LmsResult(
     val placements: Map<Int, Int>,
     val kills: Map<Int, Int>,
     val participation: Map<Int, Int>,
+    val mode: LmsMode = LmsMode.Casual,
 )
 
 class LmsMatch(
@@ -28,7 +34,14 @@ class LmsMatch(
     private val gameTicks: Int = GAME_TICKS,
     private val minPlayers: Int = MIN_PLAYERS,
     private val maxPlayers: Int = MAX_PLAYERS,
+    private val competitiveMinPlayers: Int = COMPETITIVE_MIN_PLAYERS,
 ) {
+    var lobbyMode: LmsMode = LmsMode.Casual
+        private set
+
+    var gameMode: LmsMode = LmsMode.Casual
+        private set
+
     var phase: LmsPhase = LmsPhase.Idle
         private set
 
@@ -62,8 +75,10 @@ class LmsMatch(
             LmsPhase.Idle -> 0
         }
 
-    fun join(id: Int, cycle: Int): Boolean {
+    fun join(id: Int, cycle: Int, mode: LmsMode = LmsMode.Casual): Boolean {
         if (id in alive || id in lobby || lobby.size >= maxPlayers) return false
+        if (lobby.isNotEmpty() && mode != lobbyMode) return false
+        if (lobby.isEmpty()) lobbyMode = mode
         lobby += id
         if (phase == LmsPhase.Idle) {
             phase = LmsPhase.Waiting
@@ -99,10 +114,12 @@ class LmsMatch(
     }
 
     private fun startOrExtend(cycle: Int): List<LmsEvent> {
-        if (lobby.size < minPlayers) {
+        val required = if (lobbyMode == LmsMode.Competitive) competitiveMinPlayers else minPlayers
+        if (lobby.size < required) {
             phaseStart = cycle
-            return listOf(LmsEvent.WaitExtended("Last Man Standing needs at least $minPlayers players."))
+            return listOf(LmsEvent.WaitExtended("Last Man Standing needs at least $required players."))
         }
+        gameMode = lobbyMode
         alive.addAll(lobby)
         everyone.clear()
         everyone.addAll(lobby)
@@ -125,7 +142,7 @@ class LmsMatch(
         val finalPlacements = HashMap(placements)
         for (id in alive) finalPlacements[id] = 1
         val participation = everyone.associateWith { (outAt[it] ?: cycle) - startedAt }
-        val result = LmsResult(winner, finalPlacements, HashMap(kills), participation)
+        val result = LmsResult(winner, finalPlacements, HashMap(kills), participation, gameMode)
         alive.clear()
         everyone.clear()
         phase = if (lobby.isEmpty()) LmsPhase.Idle else LmsPhase.Waiting
@@ -138,5 +155,6 @@ class LmsMatch(
         const val GAME_TICKS = 1200
         const val MIN_PLAYERS = 2
         const val MAX_PLAYERS = 40
+        const val COMPETITIVE_MIN_PLAYERS = 24
     }
 }
