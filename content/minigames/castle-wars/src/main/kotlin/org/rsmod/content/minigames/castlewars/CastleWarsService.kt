@@ -27,6 +27,7 @@ constructor(
     private val clock: MapClock,
     private val collision: CollisionFlagMap,
     private val objs: ObjRepository,
+    private val barricades: CastleWarsBarricades,
 ) {
     val match = CastleWarsMatch()
 
@@ -67,6 +68,7 @@ constructor(
 
     fun tick() {
         apply(match.update(clock.cycle))
+        barricades.update(clock.cycle)
     }
 
     fun takeFlag(player: Player, standOf: CwTeam) {
@@ -143,6 +145,7 @@ constructor(
     }
 
     private fun finish(result: CwResult) {
+        barricades.clear()
         val day = LocalDate.now(ZoneOffset.UTC).toEpochDay()
         val summary = describe(result)
         for ((id, team) in result.players) {
