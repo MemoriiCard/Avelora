@@ -4,6 +4,7 @@ import dev.openrune.ServerCacheManager
 import dev.openrune.rscm.RSCM.asRSCM
 import dev.openrune.rscm.RSCMType
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.parallel.ResourceLock
@@ -17,7 +18,16 @@ class BaSymbolsTest {
             val locs = listOf("loc.barbassault_recruitment_entrance", "loc.barbassault_game_exit")
             for (loc in locs) assertNotNull(ServerCacheManager.getObject(loc.asRSCM(RSCMType.LOC)), loc)
             for (npc in BaMonsters.ALL) assertNotNull(ServerCacheManager.getNpc(npc.asRSCM(RSCMType.NPC)), npc)
-            assertNotNull(ServerCacheManager.getVarp(BaService.HONOUR.asRSCM(RSCMType.VARP)))
+            for (varp in listOf(BaService.HONOUR, BaService.PROGRESS, BaService.QUEEN_KILLS)) {
+                assertNotNull(ServerCacheManager.getVarp(varp.asRSCM(RSCMType.VARP)), varp)
+            }
+            assertNotNull(ServerCacheManager.getNpc(BaGambleScript.COMMANDER.asRSCM(RSCMType.NPC)))
+            val rewards = GambleTier.entries.flatMap { BaGamble.table(it) } + BaGamble.RARE
+            for (item in rewards) {
+                val type = ServerCacheManager.getItem(item.obj.asRSCM(RSCMType.OBJ))
+                assertNotNull(type, item.obj)
+                if (item.noted) assertNotEquals(0, type!!.certlink, item.obj)
+            }
             assertEquals(65534, BaService.TIMER.asRSCM(RSCMType.TIMER))
         } finally {
             cache.close()

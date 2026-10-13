@@ -159,6 +159,7 @@ constructor(
                     botShare = BOT_SHARE,
                     firstWinToday = result.cleared && MinigameProfile.claimFirstWin(player, day),
                 )
+            recordProgress(player, result)
             if (BaMap.inArena(player.coords)) teleport(player, BaMap.OUTPOST)
             val outcome = if (result.cleared) "You held the line!" else "The Penance overran you."
             player.mes("$outcome Waves cleared: ${result.wavesCleared}.")
@@ -168,6 +169,28 @@ constructor(
                 player.mes("You receive ${reward.honour} Honour Points and ${reward.tokens} Minigame Tokens.")
             }
         }
+    }
+
+    fun honour(player: Player): Int = player.vars[HONOUR]
+
+    fun gambleProgress(player: Player): Int = player.vars[PROGRESS]
+
+    fun queenKills(player: Player): Int = player.vars[QUEEN_KILLS]
+
+    fun spendHonour(player: Player, amount: Int): Boolean {
+        if (amount <= 0 || honour(player) < amount) return false
+        VarPlayerIntMapSetter.set(player, HONOUR, honour(player) - amount)
+        return true
+    }
+
+    internal fun consumeGamble(player: Player, tier: GambleTier) {
+        VarPlayerIntMapSetter.set(player, PROGRESS, 0)
+        if (tier.needsQueen) VarPlayerIntMapSetter.set(player, QUEEN_KILLS, queenKills(player) - 1)
+    }
+
+    private fun recordProgress(player: Player, result: BaResult) {
+        val progress = if (result.cleared) 0 else maxOf(gambleProgress(player), result.wavesCleared)
+        VarPlayerIntMapSetter.set(player, PROGRESS, progress)
     }
 
     private fun addHonour(player: Player, amount: Int) {
@@ -188,6 +211,8 @@ constructor(
     companion object {
         const val TIMER = "timer.barbassault"
         const val HONOUR = "varp.ba_honour"
+        const val PROGRESS = "varp.ba_gamble_progress"
+        const val QUEEN_KILLS = "varp.ba_queen_kills"
         const val BOT_SHARE = 0.0
         private const val CHASE_INTERVAL = 4
     }
