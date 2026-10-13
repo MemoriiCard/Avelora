@@ -104,7 +104,7 @@ class SoulWarsMatch(
             SwPhase.Idle -> emptyList()
         }
 
-    fun sacrifice(id: Int, fragments: Int): SwEvent? {
+    fun sacrifice(id: Int, fragments: Int): SwEvent.Sacrificed? {
         val team = gameTeams[id] ?: return null
         if (phase != SwPhase.Playing || fragments <= 0) return null
         sacrificed.merge(id, fragments, Int::plus)

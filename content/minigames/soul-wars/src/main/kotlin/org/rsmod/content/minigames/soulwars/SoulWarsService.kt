@@ -38,6 +38,7 @@ constructor(
 ) {
     val match = SoulWarsMatch()
     private val avatars = HashMap<SwTeam, Npc>()
+    private val shield = AvatarShield()
 
     fun id(player: Player): Int = player.slotId
 
@@ -87,7 +88,33 @@ constructor(
             return
         }
         player.invDel(player.inv, SoulWarsItems.FRAGMENT, held)
-        match.sacrifice(id(player), held)?.let { apply(listOf(it)) }
+        val event = match.sacrifice(id(player), held) ?: return
+        shield.sacrifice(event.team, held, obeliskController())
+        apply(listOf(event))
+    }
+
+    fun buryBones(player: Player): Boolean {
+        val team = teamOf(player)?.takeIf { isPlaying(player) }
+        if (team == null || !SoulWarsMap.inArena(player.coords)) {
+            player.mes("You can only bury soul bones during a game.")
+            return false
+        }
+        shield.bury(team, 1)
+        player.mes("You bury the bones. Your avatar's damage reduction rises.")
+        return true
+    }
+
+    fun avatarVulnerable(team: SwTeam): Boolean = shield.vulnerable(team)
+
+    fun reduction(team: SwTeam): Double = shield.reduction(team)
+
+    private fun obeliskController(): SwTeam? {
+        val counts = HashMap<SwTeam, Int>()
+        for ((id, team) in match.playing) {
+            val player = player(id) ?: continue
+            if (ObeliskControl.near(player.coords)) counts.merge(team, 1, Int::plus)
+        }
+        return ObeliskControl.controller(counts)
     }
 
     fun onPlayerKill(killer: Player, victim: Player) {
@@ -97,6 +124,7 @@ constructor(
         val vt = match.playing[vid] ?: return
         if (kt == vt) return
         killer.invAddOrDrop(objs, SoulWarsItems.FRAGMENT, 1)
+        objs.add(SoulWarsItems.BONES, victim.coords, BONES_DURATION, killer, reveal = 0)
         killer.mes("You gather a soul fragment from ${victim.displayName}.")
     }
 
@@ -122,6 +150,7 @@ constructor(
     }
 
     private fun start(event: SwEvent.GameStarted) {
+        shield.reset()
         for (team in SwTeam.entries) spawnAvatar(team, event.players)
         for ((id, team) in event.players) {
             val player = player(id) ?: continue
@@ -196,9 +225,17 @@ constructor(
         return "$outcome ($how)."
     }
 
-    private fun addZeal(player: Player, amount: Int) {
+    fun zeal(player: Player): Int = player.vars[ZEAL]
+
+    fun addZeal(player: Player, amount: Int) {
         val total = (player.vars[ZEAL].toLong() + amount).coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
         VarPlayerIntMapSetter.set(player, ZEAL, total)
+    }
+
+    fun spendZeal(player: Player, amount: Int): Boolean {
+        if (amount <= 0 || player.vars[ZEAL] < amount) return false
+        VarPlayerIntMapSetter.set(player, ZEAL, player.vars[ZEAL] - amount)
+        return true
     }
 
     private fun strip(player: Player) {
@@ -226,5 +263,6 @@ constructor(
         private const val HP_PER_COMBAT = 5
         private const val MIN_HP = 150
         private const val MAX_HP = 600
+        private const val BONES_DURATION = 100
     }
 }
