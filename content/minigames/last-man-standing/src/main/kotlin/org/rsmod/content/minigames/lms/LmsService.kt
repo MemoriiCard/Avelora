@@ -37,7 +37,7 @@ constructor(
 
     fun isPlaying(player: Player): Boolean = match.isPlaying(id(player))
 
-    fun toggleQueue(player: Player) {
+    fun toggleQueue(player: Player, mode: LmsMode = LmsMode.Casual) {
         val id = id(player)
         if (match.isPlaying(id)) {
             player.mes("You're already in a game.")
@@ -53,8 +53,8 @@ constructor(
             player.mes("You must bank everything you're carrying and wearing before you can enter.")
             return
         }
-        if (!match.join(id, clock.cycle)) {
-            player.mes("The queue is full.")
+        if (!match.join(id, clock.cycle, mode)) {
+            player.mes("The queue is full or a ${match.lobbyMode.name.lowercase()} game is forming.")
             return
         }
         player.softTimer(TIMER, 1)
@@ -154,30 +154,56 @@ constructor(
         for ((id, placement) in result.placements) {
             val player = player(id) ?: continue
             val won = id == result.winner
+            val kills = result.kills[id] ?: 0
             val reward =
                 LmsRewards.reward(
                     participationTicks = result.participation[id] ?: 0,
-                    kills = result.kills[id] ?: 0,
+                    kills = kills,
                     won = won,
                     botShare = BOT_SHARE,
                     firstWinToday = won && MinigameProfile.claimFirstWin(player, day),
                 )
+            val competitive = result.mode == LmsMode.Competitive
+            val points = if (competitive) LmsCompetitive.points(placement, kills) else 0
             player.clearSoftTimer(TIMER)
             wipe(player)
             teleport(player, LmsMap.LOBBY)
             player.mes(if (won) "You are the last one standing!" else "The game is over. You placed ${ordinal(placement)}.")
+            if (won) addVar(player, WINS, 1)
+            if (competitive) {
+                val change = LmsCompetitive.ratingChange(placement)
+                addVar(player, RATING_OFFSET, change, floor = Int.MIN_VALUE)
+                player.mes("Rating ${if (change >= 0) "+" else ""}$change: ${rating(player)} (${LmsCompetitive.title(rating(player))}).")
+                if (points > 0) addPoints(player, points)
+            }
             if (reward != LmsReward.NONE) {
-                addPoints(player, reward.points)
                 MinigameProfile.addTokens(player, reward.tokens)
-                player.mes("You receive ${reward.points} LMS points and ${reward.tokens} Minigame Tokens.")
+                player.mes(
+                    if (points > 0) "You receive $points LMS points and ${reward.tokens} Minigame Tokens."
+                    else "You receive ${reward.tokens} Minigame Tokens.",
+                )
             }
         }
     }
 
-    private fun addPoints(player: Player, amount: Int) {
-        val total = (player.vars[POINTS].toLong() + amount).coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
-        VarPlayerIntMapSetter.set(player, POINTS, total)
+    fun points(player: Player): Int = player.vars[POINTS]
+
+    fun wins(player: Player): Int = player.vars[WINS]
+
+    fun rating(player: Player): Int = LmsCompetitive.START_RATING + player.vars[RATING_OFFSET]
+
+    fun spendPoints(player: Player, amount: Int): Boolean {
+        if (amount <= 0 || points(player) < amount) return false
+        VarPlayerIntMapSetter.set(player, POINTS, points(player) - amount)
+        return true
     }
+
+    private fun addVar(player: Player, varp: String, amount: Int, floor: Int = 0) {
+        val total = (player.vars[varp].toLong() + amount).coerceIn(floor.toLong(), Int.MAX_VALUE.toLong()).toInt()
+        VarPlayerIntMapSetter.set(player, varp, total)
+    }
+
+    private fun addPoints(player: Player, amount: Int) = addVar(player, POINTS, amount)
 
     private fun isEmptyHanded(player: Player): Boolean = player.inv.isEmpty() && player.worn.isEmpty()
 
@@ -208,6 +234,8 @@ constructor(
     companion object {
         const val TIMER = "timer.lms"
         const val POINTS = "varp.lms_points"
+        const val WINS = "varp.lms_wins"
+        const val RATING_OFFSET = "varp.lms_rating_offset"
         const val BOT_SHARE = 0.0
     }
 }

@@ -16,9 +16,14 @@ class LmsSymbolsTest {
         try {
             for (loc in LmsScript.CHESTS) assertNotNull(ServerCacheManager.getObject(loc.asRSCM(RSCMType.LOC)), loc)
             assertNotNull(ServerCacheManager.getNpc(LmsScript.WIZARD.asRSCM(RSCMType.NPC)))
-            val items = LmsLoot.TABLE.map { it.obj } + listOf("obj.br_rune_scimitar", "obj.br_shark")
+            assertNotNull(ServerCacheManager.getNpc(LmsScript.COMPETITIVE_WIZARD.asRSCM(RSCMType.NPC)))
+            assertNotNull(ServerCacheManager.getNpc("npc.br_wizard_highstakes".asRSCM(RSCMType.NPC)))
+            val items =
+                LmsLoot.TABLE.map { it.obj } + listOf("obj.br_rune_scimitar", "obj.br_shark") + LmsShop.ALL.map { it.obj }
             for (item in items) assertNotNull(ServerCacheManager.getItem(item.asRSCM(RSCMType.OBJ)), item)
-            assertNotNull(ServerCacheManager.getVarp(LmsService.POINTS.asRSCM(RSCMType.VARP)))
+            for (varp in listOf(LmsService.POINTS, LmsService.WINS, LmsService.RATING_OFFSET)) {
+                assertNotNull(ServerCacheManager.getVarp(varp.asRSCM(RSCMType.VARP)), varp)
+            }
             assertEquals(65533, LmsService.TIMER.asRSCM(RSCMType.TIMER))
         } finally {
             cache.close()

@@ -14,6 +14,8 @@ class LmsScript @Inject constructor(private val service: LmsService) : PluginScr
     override fun ScriptContext.startup() {
         onOpNpc1(WIZARD) { service.toggleQueue(player) }
         onOpNpc3(WIZARD) { service.toggleQueue(player) }
+        onOpNpc1(COMPETITIVE_WIZARD) { service.toggleQueue(player, LmsMode.Competitive) }
+        onOpNpc3(COMPETITIVE_WIZARD) { service.toggleQueue(player, LmsMode.Competitive) }
         for (chest in CHESTS) onOpLoc1(chest) { service.openChest(player, it.loc.coords) }
         onPlayerSoftTimer(LmsService.TIMER) { service.tick() }
         onPlayerLogout { service.leave(player, toLobby = false) }
@@ -24,6 +26,7 @@ class LmsScript @Inject constructor(private val service: LmsService) : PluginScr
 
     companion object {
         const val WIZARD = "npc.br_wizard_casual"
+        const val COMPETITIVE_WIZARD = "npc.br_wizard_competitive"
         val CHESTS =
             listOf(
                 "loc.br_loot_chest_closed",
