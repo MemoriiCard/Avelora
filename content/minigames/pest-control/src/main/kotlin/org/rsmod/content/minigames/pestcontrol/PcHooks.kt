@@ -45,6 +45,7 @@ class PcNpcHook @Inject constructor(private val service: PcService) :
     override fun validate(player: Player, npc: Npc): NpcAttackValidateResult =
         when {
             service.isKnight(npc) -> NpcAttackValidateResult.Deny("You can't attack a Void Knight.")
+            service.isShielded(npc) -> NpcAttackValidateResult.Deny("The portal is shielded.")
             (service.portalIndex(npc) >= 0 || service.isPest(npc)) && !service.isPlaying(player) ->
                 NpcAttackValidateResult.Deny("That isn't part of your game.")
             else -> NpcAttackValidateResult.Pass

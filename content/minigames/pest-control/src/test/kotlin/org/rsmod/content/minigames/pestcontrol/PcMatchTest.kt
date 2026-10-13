@@ -6,10 +6,19 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
 class PcMatchTest {
-    private fun started(vararg ids: Int, gameTicks: Int = PcMatch.GAME_TICKS): PcMatch {
+    private fun started(
+        vararg ids: Int,
+        gameTicks: Int = PcMatch.GAME_TICKS,
+        shieldsDown: Boolean = true,
+    ): PcMatch {
         val match = PcMatch(gameTicks = gameTicks)
         ids.forEach { match.join(it, 0) }
         match.update(PcMatch.WAIT_TICKS)
+        if (shieldsDown) {
+            for (i in 0 until PcMatch.PORTALS) {
+                match.update(PcMatch.WAIT_TICKS + PcMatch.SHIELD_FIRST_TICKS + i * PcMatch.SHIELD_GAP_TICKS)
+            }
+        }
         return match
     }
 
@@ -109,8 +118,43 @@ class PcMatchTest {
     }
 
     @Test
-    fun `portal hitpoints grow with the squad`() {
-        assertTrue(PcMatch.portalHitpoints(10) > PcMatch.portalHitpoints(1))
-        assertEquals(PcMatch.portalHitpoints(25), PcMatch.portalHitpoints(60))
+    fun `portal hitpoints follow the lander tier`() {
+        assertEquals(200, PcMatch.portalHitpoints(40))
+        assertEquals(250, PcMatch.portalHitpoints(70))
+        assertEquals(250, PcMatch.portalHitpoints(126))
+    }
+
+    @Test
+    fun `portals start shielded and cannot be destroyed`() {
+        val match = started(1, shieldsDown = false)
+        assertTrue((0 until PcMatch.PORTALS).all { match.isShielded(it) })
+        assertTrue(match.portalKilled(0, 1, 5).isEmpty())
+        assertEquals(4, match.portalsAlive)
+    }
+
+    @Test
+    fun `shields drop at 15 seconds then every 30 seconds`() {
+        val match = started(1, shieldsDown = false)
+        val start = PcMatch.WAIT_TICKS
+        assertTrue(match.update(start + PcMatch.SHIELD_FIRST_TICKS - 1).isEmpty())
+        val first = match.update(start + PcMatch.SHIELD_FIRST_TICKS)
+        assertEquals(PcEvent.ShieldDropped(0), first.single())
+        assertTrue(match.update(start + PcMatch.SHIELD_FIRST_TICKS + PcMatch.SHIELD_GAP_TICKS - 1).isEmpty())
+        assertEquals(
+            PcEvent.ShieldDropped(1),
+            match.update(start + PcMatch.SHIELD_FIRST_TICKS + PcMatch.SHIELD_GAP_TICKS).single(),
+        )
+        val last = start + PcMatch.SHIELD_FIRST_TICKS + 3 * PcMatch.SHIELD_GAP_TICKS
+        assertEquals(105 * 10 / 6, last - start)
+    }
+
+    @Test
+    fun `a destroyed portal heals the knight`() {
+        val match = started(1, 2)
+        match.update(PcMatch.WAIT_TICKS + 10 * PcMatch.KNIGHT_INTERVAL, pestsAlive = 60)
+        val hurt = match.knightHp
+        assertTrue(hurt < PcMatch.KNIGHT_HITPOINTS)
+        match.portalKilled(0, 1, 500)
+        assertEquals(minOf(PcMatch.KNIGHT_HITPOINTS, hurt + PcMatch.PORTAL_KNIGHT_HEAL), match.knightHp)
     }
 }
