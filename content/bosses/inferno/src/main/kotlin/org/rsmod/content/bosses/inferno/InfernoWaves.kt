@@ -12,6 +12,7 @@ internal enum class InfernoMonster(val npc: String, val size: Int) {
 
 internal object InfernoWaves {
     const val FINAL_WAVE = 68
+    const val ZUK_WAVE = 69
     const val TOKKUL_NUMERATOR = 7
 
     private val ORDER =
