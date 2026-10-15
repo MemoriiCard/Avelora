@@ -11,6 +11,7 @@ enum class AttackKind {
     Snow,
     Extinguish,
     Shatter,
+    Knockout,
 }
 
 sealed interface WintertodtEvent {
@@ -29,6 +30,7 @@ class WintertodtRound(private val nextInt: (Int) -> Int) {
         private set
 
     private val braziers = Array(BRAZIERS) { BrazierState.Unlit }
+    private val fallen = BooleanArray(BRAZIERS)
     private val points = LinkedHashMap<Int, Int>()
     private var restUntil = 0
     private var nextAttack = 0
@@ -37,6 +39,15 @@ class WintertodtRound(private val nextInt: (Int) -> Int) {
         get() = points.keys
 
     fun brazier(index: Int): BrazierState = braziers[index]
+
+    fun pyromancerDown(index: Int): Boolean = fallen[index]
+
+    fun revive(index: Int, id: Int): Boolean {
+        if (!active || id !in points || !fallen[index]) return false
+        fallen[index] = false
+        award(id, REVIVE_POINTS)
+        return true
+    }
 
     fun pointsOf(id: Int): Int = points[id] ?: 0
 
@@ -92,6 +103,7 @@ class WintertodtRound(private val nextInt: (Int) -> Int) {
         active = true
         energy = ENERGY_MAX
         braziers.fill(BrazierState.Unlit)
+        fallen.fill(false)
         points.keys.forEach { points[it] = 0 }
         nextAttack = cycle + ATTACK_BASE
         return listOf(WintertodtEvent.Started)
@@ -102,6 +114,7 @@ class WintertodtRound(private val nextInt: (Int) -> Int) {
         energy = 0.0
         restUntil = cycle + RESPAWN_TICKS
         braziers.fill(BrazierState.Unlit)
+        fallen.fill(false)
         val result = points.toMap()
         points.keys.forEach { points[it] = 0 }
         return listOf(WintertodtEvent.Ended(result))
@@ -113,6 +126,7 @@ class WintertodtRound(private val nextInt: (Int) -> Int) {
         return when {
             roll < COLD_PERCENT -> WintertodtEvent.Attack(AttackKind.Cold, null)
             roll < COLD_PERCENT + SNOW_PERCENT -> WintertodtEvent.Attack(AttackKind.Snow, null)
+            roll < COLD_PERCENT + SNOW_PERCENT + KNOCK_PERCENT -> knockout()
             lit.isEmpty() -> WintertodtEvent.Attack(AttackKind.Cold, null)
             else -> {
                 val target = lit[nextInt(lit.size)]
@@ -125,6 +139,14 @@ class WintertodtRound(private val nextInt: (Int) -> Int) {
                 }
             }
         }
+    }
+
+    private fun knockout(): WintertodtEvent {
+        val standing = fallen.indices.filter { !fallen[it] }
+        if (standing.isEmpty()) return WintertodtEvent.Attack(AttackKind.Cold, null)
+        val target = standing[nextInt(standing.size)]
+        fallen[target] = true
+        return WintertodtEvent.Attack(AttackKind.Knockout, target)
     }
 
     companion object {
@@ -143,5 +165,7 @@ class WintertodtRound(private val nextInt: (Int) -> Int) {
         const val ATTACK_SPREAD = 18
         const val COLD_PERCENT = 55
         const val SNOW_PERCENT = 25
+        const val KNOCK_PERCENT = 7
+        const val REVIVE_POINTS = 30
     }
 }
