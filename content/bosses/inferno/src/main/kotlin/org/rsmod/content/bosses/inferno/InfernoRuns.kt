@@ -12,6 +12,7 @@ import org.rsmod.api.npc.access.StandardNpcAccess
 import org.rsmod.api.npc.apPlayer2
 import org.rsmod.api.npc.interact.AiPlayerInteractions
 import org.rsmod.api.npc.opPlayer2
+import org.rsmod.api.player.hit.queueHit
 import org.rsmod.api.player.output.mes
 import org.rsmod.api.player.vars.intVarp
 import org.rsmod.api.repo.obj.ObjRepository
@@ -19,6 +20,10 @@ import org.rsmod.content.other.pets.PetRewards
 import org.rsmod.game.entity.Npc
 import org.rsmod.game.entity.Player
 import org.rsmod.game.entity.util.PathingEntityCommon
+import org.rsmod.game.hit.HitType
+import org.rsmod.game.loc.LocAngle
+import org.rsmod.game.loc.LocInfo
+import org.rsmod.game.loc.LocShape
 import org.rsmod.game.map.collision.isWalkBlocked
 import org.rsmod.map.CoordGrid
 
@@ -35,6 +40,12 @@ internal class InfernoRun(val player: Player, val session: InstanceSession) {
     var zuk: Npc? = null
     var glyph: Npc? = null
     var shield: ZukShield? = null
+    val pillars: MutableList<Npc> = mutableListOf()
+    val pillarLocs: IdentityHashMap<Npc, LocInfo> = IdentityHashMap()
+    var pillarsSpawned: Boolean = false
+    val revived: MutableSet<Npc> = identitySet()
+    val usedMagers: MutableSet<Npc> = identitySet()
+    var pendingRevives: Int = 0
 }
 
 private fun identitySet(): MutableSet<Npc> = java.util.Collections.newSetFromMap(IdentityHashMap())
@@ -67,6 +78,7 @@ constructor(
         val run = runs.remove(id) ?: return
         run.finished = true
         (run.monsters + run.healers + listOfNotNull(run.glyph)).forEach { runByNpc.remove(it) }
+        clearPillars(run)
     }
 
     fun forfeit(player: Player, run: InfernoRun, rewardCoords: CoordGrid) {
@@ -88,28 +100,38 @@ constructor(
         run.player.infernoWave = wave
         run.player.mes("<col=ef1020>Wave: $wave</col>")
         if (wave == InfernoWaves.ZUK_WAVE) {
+            clearPillars(run)
             spawnZuk(run)
             return
         }
+        if (!run.pillarsSpawned) spawnPillars(run)
         for ((index, monster) in InfernoWaves.wave(wave).withIndex()) {
             val coords = instances.resolveCoord(run.session, InfernoArena.spawnPoint(wave, index)) ?: continue
             run.monsters += spawn(run, monster.npc, coords)
         }
     }
 
-    private fun spawn(run: InfernoRun, type: String, coords: CoordGrid): Npc {
+    private fun spawn(run: InfernoRun, type: String, coords: CoordGrid, engage: Boolean = true): Npc {
         val npc = Npc(type, coords)
         deps.npcRepo.add(npc, Int.MAX_VALUE)
         npc.respawns = false
         instances.attachNpc(run.session.id, npc)
         runByNpc[npc] = run
+        if (!engage || (type == InfernoMonster.Nibbler.npc && run.pillars.isNotEmpty())) {
+            return npc
+        }
+        engage(run, npc)
+        return npc
+    }
+
+    private fun engage(run: InfernoRun, npc: Npc) {
+        val type = npc.type.internalName
         if (type in RANGED_TYPES) {
             npc.apRangeOverride = RANGED_ATTACK_RANGE
             npc.apPlayer2(run.player, aiPlayerInteractions)
         } else {
             npc.opPlayer2(run.player, aiPlayerInteractions)
         }
-        return npc
     }
 
     suspend fun onDeath(access: StandardNpcAccess, deathSeq: String, deathTicks: Int) {
@@ -129,8 +151,117 @@ constructor(
             return
         }
         if (!run.monsters.remove(npc)) return
-        if (npc.type.internalName == InfernoMonster.Blob.npc) splitBlob(run, coords)
-        if (run.monsters.isEmpty() && !run.finished) scheduleWave(run, run.wave + 1, WAVE_DELAY)
+        val type = npc.type.internalName
+        if (type == InfernoMonster.Blob.npc) splitBlob(run, coords)
+        if (tryRevive(run, npc, type, coords)) return
+        advanceIfCleared(run)
+    }
+
+    private fun advanceIfCleared(run: InfernoRun) {
+        if (run.monsters.isEmpty() && run.pendingRevives == 0 && !run.finished) {
+            scheduleWave(run, run.wave + 1, WAVE_DELAY)
+        }
+    }
+
+    private fun tryRevive(run: InfernoRun, fallen: Npc, type: String, coords: CoordGrid): Boolean {
+        val mager =
+            run.monsters.firstOrNull {
+                it.type.internalName == InfernoMonster.Mager.npc &&
+                    it !in run.usedMagers &&
+                    it.isSlotAssigned &&
+                    it.hitpoints > 0 &&
+                    it.isWithinDistance(coords, InfernoPillars.REVIVE_REACH)
+            }
+        if (!InfernoPillars.canRevive(type, fallen in run.revived, mager != null) || mager == null) return false
+        run.usedMagers += mager
+        run.pendingRevives++
+        mager.anim(InfernoPillars.REVIVE_SEQ)
+        deps.worldQueues.add(InfernoPillars.REVIVE_DELAY) { finishRevive(run, mager, type, coords) }
+        return true
+    }
+
+    private fun finishRevive(run: InfernoRun, mager: Npc, type: String, coords: CoordGrid) {
+        run.pendingRevives--
+        if (run.finished) return
+        if (mager.isSlotAssigned && mager.hitpoints > 0) {
+            val npc = spawn(run, type, coords)
+            npc.hitpoints = (npc.baseHitpointsLvl / 2).coerceAtLeast(1)
+            run.monsters += npc
+            run.revived += npc
+            run.player.mes("<col=ef1020>A Jal-Zek resurrects a fallen monster.</col>")
+            return
+        }
+        advanceIfCleared(run)
+    }
+
+    private fun spawnPillars(run: InfernoRun) {
+        run.pillarsSpawned = true
+        for ((index, symbol) in InfernoPillars.SYMBOLS.withIndex()) {
+            val coords = instances.resolveCoord(run.session, InfernoPillars.TILES[index]) ?: continue
+            val pillar = Npc(InfernoPillars.TARGET, coords)
+            pillar.baseHitpointsLvl = InfernoPillars.HITPOINTS
+            pillar.hitpoints = InfernoPillars.HITPOINTS
+            deps.npcRepo.add(pillar, Int.MAX_VALUE)
+            pillar.respawns = false
+            instances.attachNpc(run.session.id, pillar)
+            run.pillars += pillar
+            run.pillarLocs[pillar] =
+                deps.locRepo.add(coords, symbol, Int.MAX_VALUE, LocAngle[0], LocShape.CentrepieceStraight)
+        }
+        deps.worldQueues.add(InfernoPillars.TICK) { tickPillars(run) }
+    }
+
+    private fun tickPillars(run: InfernoRun) {
+        if (run.finished || runs[run.session.id] !== run || run.pillars.isEmpty()) return
+        val nibblers =
+            run.monsters.filter {
+                it.type.internalName == InfernoMonster.Nibbler.npc && it.isSlotAssigned && it.hitpoints > 0
+            }
+        for (nibbler in nibblers) {
+            val pillar =
+                run.pillars
+                    .filter { it.isSlotAssigned }
+                    .minByOrNull { it.coords.chebyshevDistance(nibbler.coords) } ?: break
+            if (nibbler.isWithinDistance(pillar, InfernoPillars.REACH)) {
+                nibbler.faceNpc(pillar)
+                nibbler.anim(NIBBLE_SEQ)
+                pillar.hitpoints -= deps.random.of(1, InfernoPillars.NIBBLE_MAX)
+                if (pillar.hitpoints <= 0) collapse(run, pillar)
+            } else if (nibbler.routeDestination.isEmpty()) {
+                nibbler.walk(pillar.coords)
+            }
+        }
+        if (run.pillars.isNotEmpty()) deps.worldQueues.add(InfernoPillars.TICK) { tickPillars(run) }
+    }
+
+    private fun collapse(run: InfernoRun, pillar: Npc) {
+        run.pillars.remove(pillar)
+        val centre = pillar.coords.translate(1, 1)
+        removePillar(run, pillar)
+        run.player.mes("<col=ef1020>A pillar collapses!</col>")
+        val damage =
+            InfernoPillars.collapseDamage(
+                deps.random.of(0, InfernoPillars.COLLAPSE_MAX),
+                run.player.coords.chebyshevDistance(centre),
+            )
+        if (damage > 0) run.player.queueHit(1, HitType.Typeless, damage, deps.playerHitModifier)
+        if (run.pillars.isEmpty()) {
+            for (monster in run.monsters) {
+                if (monster.type.internalName == InfernoMonster.Nibbler.npc && monster.isSlotAssigned) {
+                    engage(run, monster)
+                }
+            }
+        }
+    }
+
+    private fun clearPillars(run: InfernoRun) {
+        for (pillar in run.pillars.toList()) removePillar(run, pillar)
+        run.pillars.clear()
+    }
+
+    private fun removePillar(run: InfernoRun, pillar: Npc) {
+        if (pillar.isSlotAssigned) deps.npcRepo.del(pillar, Int.MAX_VALUE)
+        run.pillarLocs.remove(pillar)?.let { deps.locRepo.del(it, Int.MAX_VALUE) }
     }
 
     private fun splitBlob(run: InfernoRun, coords: CoordGrid) {
@@ -143,7 +274,11 @@ constructor(
 
     private fun spawnZuk(run: InfernoRun) {
         val spawn = instances.resolveCoord(run.session, ZukStats.SPAWN) ?: return
-        val zuk = spawn(run, ZukStats.NPC, spawn)
+        val zuk = spawn(run, ZukStats.NPC, spawn, engage = false)
+        zuk.anim(InfernoPillars.ZUK_SPAWN_SEQ)
+        deps.worldQueues.add(InfernoPillars.ZUK_SPAWN_TICKS) {
+            if (!run.finished && zuk.isSlotAssigned) engage(run, zuk)
+        }
         run.zuk = zuk
         run.monsters += zuk
         val shield = ZukShield(deps.mapClock.cycle, spawn.x - ZukStats.SPAWN.x, spawn.z - ZukStats.SPAWN.z)
@@ -325,6 +460,7 @@ constructor(
         const val JAD_HEAL_AMOUNT = 5
         const val JAD_HEAL_INTERVAL = 4
         const val HEAL_SEQ = "seq.lizard_cleric_heal"
+        const val NIBBLE_SEQ = "seq.jalnib_attack"
         const val HEAL_SPOTANIM = "spotanim.tzhaar_heal"
         val ZUK_SET = listOf(InfernoMonster.Ranger.npc, InfernoMonster.Mager.npc)
 

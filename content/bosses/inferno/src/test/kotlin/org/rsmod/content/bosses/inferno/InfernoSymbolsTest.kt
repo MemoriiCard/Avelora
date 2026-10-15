@@ -14,6 +14,11 @@ class InfernoSymbolsTest {
         val cache = ServerCacheManager.init(240)
         try {
             for (npc in InfernoMonsters.DEATHS.keys) assertNotNull(ServerCacheManager.getNpc(npc.asRSCM(RSCMType.NPC)), npc)
+            for (loc in InfernoPillars.SYMBOLS) assertNotNull(ServerCacheManager.getObject(loc.asRSCM(RSCMType.LOC)), loc)
+            assertNotNull(
+                ServerCacheManager.getNpc(InfernoPillars.TARGET.asRSCM(RSCMType.NPC)),
+                InfernoPillars.TARGET,
+            )
             for (loc in listOf("loc.inferno_entrance_op", "loc.inferno_exit")) {
                 assertNotNull(ServerCacheManager.getObject(loc.asRSCM(RSCMType.LOC)), loc)
             }
