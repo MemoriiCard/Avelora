@@ -1,3 +1,6 @@
 [gamevals.varp]
 minigame_tokens = 64820
 minigame_first_win_day = 64821
+
+[gamevals.obj]
+minigame_crate = 64830
