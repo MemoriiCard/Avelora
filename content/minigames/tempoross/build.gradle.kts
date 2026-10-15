@@ -5,7 +5,9 @@ plugins {
 
 dependencies {
     implementation(projects.api.instances)
+    implementation(projects.api.combat.combatManager)
     implementation(projects.api.invtx)
+    implementation(projects.api.objCharges)
     implementation(projects.api.player)
     implementation(projects.api.playerOutput)
     implementation(projects.api.pluginCommons)
