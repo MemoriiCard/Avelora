@@ -14,6 +14,14 @@ internal object WintertodtMap {
             CoordGrid(1638, 4015, 0),
         )
 
+    val PYROMANCERS =
+        listOf(
+            CoordGrid(1622, 3995, 0),
+            CoordGrid(1636, 3995, 0),
+            CoordGrid(1622, 4013, 0),
+            CoordGrid(1636, 4013, 0),
+        )
+
     private const val ARENA_MIN_X = 1608
     private const val ARENA_MAX_X = 1652
     private const val ARENA_MIN_Z = 3965

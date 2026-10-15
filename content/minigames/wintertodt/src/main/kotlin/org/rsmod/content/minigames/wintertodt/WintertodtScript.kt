@@ -15,9 +15,11 @@ import org.rsmod.api.script.onOpHeld1
 import org.rsmod.api.script.onOpHeldU
 import org.rsmod.api.script.onOpLoc1
 import org.rsmod.api.script.onOpLoc3
+import org.rsmod.api.script.onOpNpc1
 import org.rsmod.api.script.onPlayerLogin
 import org.rsmod.api.script.onPlayerLogout
 import org.rsmod.api.script.onPlayerSoftTimer
+import org.rsmod.game.entity.Npc
 import org.rsmod.game.entity.util.PathingEntityCommon
 import org.rsmod.game.loc.BoundLocInfo
 import org.rsmod.plugin.scripts.PluginScript
@@ -41,6 +43,7 @@ constructor(
         onOpLoc1("loc.wint_brazier_broken") { repair(it.loc) }
         onOpLoc1("loc.wint_reward_pile") { search(1) }
         onOpLoc3("loc.wint_reward_pile") { search(ALL) }
+        onOpNpc1("npc.wint_wizard_down") { help(it.npc) }
         for ((chest, obj) in CHESTS) {
             onOpLoc1(chest) { take(obj) }
         }
@@ -76,6 +79,13 @@ constructor(
             return false
         }
         return true
+    }
+
+    private suspend fun ProtectedAccess.help(npc: Npc) {
+        if (!arenaActive()) return
+        anim("seq.human_pickupfloor")
+        delay(2)
+        if (service.revive(player, npc)) mes("You help the pyromancer back to their feet.")
     }
 
     private fun ProtectedAccess.take(obj: String) {

@@ -14,9 +14,11 @@ import org.rsmod.api.player.vars.intVarBit
 import org.rsmod.api.player.vars.intVarp
 import org.rsmod.api.random.GameRandom
 import org.rsmod.api.repo.loc.LocRepository
+import org.rsmod.api.repo.npc.NpcRepository
 import org.rsmod.api.repo.obj.ObjRepository
 import org.rsmod.events.EventBus
 import org.rsmod.game.MapClock
+import org.rsmod.game.entity.Npc
 import org.rsmod.game.entity.Player
 import org.rsmod.game.entity.PlayerList
 import org.rsmod.game.entity.util.PathingEntityCommon
@@ -38,6 +40,7 @@ constructor(
     private val clock: MapClock,
     private val locRepo: LocRepository,
     private val objs: ObjRepository,
+    private val npcs: NpcRepository,
     private val collision: CollisionFlagMap,
     private val random: GameRandom,
     private val events: EventBus,
@@ -46,6 +49,7 @@ constructor(
 
     private val inside = HashSet<Int>()
     private val brazierLocs = arrayOfNulls<LocInfo>(WintertodtRound.BRAZIERS)
+    private val pyromancers = arrayOfNulls<Npc>(WintertodtRound.BRAZIERS)
     private var lastTick = -1
 
     fun isInside(player: Player): Boolean = player.slotId in inside
@@ -89,6 +93,14 @@ constructor(
 
     fun feed(player: Player, brazier: Int, points: Int): Boolean = round.feed(brazier, player.slotId, points)
 
+    fun revive(player: Player, npc: Npc): Boolean {
+        val index = pyromancers.indexOfFirst { it === npc }
+        if (index < 0 || !round.revive(index, player.slotId)) return false
+        setPyromancer(index, down = false)
+        player.statAdvance("stat.firemaking", player.firemakingLvl * REVIVE_XP_PER_LEVEL)
+        return true
+    }
+
     fun warmth(player: Player): Int = player.warmthVar
 
     fun restore(player: Player, amount: Int) {
@@ -109,6 +121,7 @@ constructor(
             when (event) {
                 WintertodtEvent.Started -> {
                     syncAll()
+                    spawnPyromancers()
                     broadcast("The Wintertodt awakens! Light the braziers and keep them burning.")
                 }
                 is WintertodtEvent.Attack -> attack(event)
@@ -132,6 +145,11 @@ constructor(
             AttackKind.Extinguish -> {
                 event.brazier?.let(::sync)
                 broadcast("The Wintertodt snuffs out a brazier.")
+            }
+            AttackKind.Knockout -> {
+                val index = event.brazier ?: return
+                setPyromancer(index, down = true)
+                broadcast("A pyromancer is knocked out by the Wintertodt's attack! Help them back up.")
             }
             AttackKind.Shatter -> {
                 val index = event.brazier ?: return
@@ -162,6 +180,7 @@ constructor(
 
     private fun finish(points: Map<Int, Int>) {
         broadcast("The Wintertodt has been subdued!")
+        clearPyromancers()
         for ((id, earned) in points) {
             val player = players[id] ?: continue
             val rolls = WintertodtLoot.rolls(earned) { random.of(it) }
@@ -175,6 +194,24 @@ constructor(
             player.mes("You earned $earned points and $rolls reward cart searches.")
         }
         syncAll()
+    }
+
+    private fun spawnPyromancers() {
+        for (index in pyromancers.indices) setPyromancer(index, down = false)
+    }
+
+    private fun clearPyromancers() {
+        for (index in pyromancers.indices) {
+            pyromancers[index]?.let { if (it.isSlotAssigned) npcs.del(it, Int.MAX_VALUE) }
+            pyromancers[index] = null
+        }
+    }
+
+    private fun setPyromancer(index: Int, down: Boolean) {
+        pyromancers[index]?.let { if (it.isSlotAssigned) npcs.del(it, Int.MAX_VALUE) }
+        val npc = Npc(if (down) PYROMANCER_DOWN else PYROMANCER, WintertodtMap.PYROMANCERS[index])
+        npcs.add(npc, Int.MAX_VALUE)
+        pyromancers[index] = npc
     }
 
     private fun sync(index: Int) {
@@ -252,6 +289,9 @@ constructor(
         const val REGEN_INTERVAL = 10
         const val OVERLAY_INTERVAL = 2
         const val PYRO_HIDDEN = 1
+        const val REVIVE_XP_PER_LEVEL = 3.0
+        const val PYROMANCER = "npc.wint_wizard"
+        const val PYROMANCER_DOWN = "npc.wint_wizard_down"
 
         val WARM_ITEMS =
             listOf(
