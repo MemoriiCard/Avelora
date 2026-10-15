@@ -178,3 +178,32 @@ class TemporossSymbolTest {
         for (symbol in locs) assertNotNull(ServerCacheManager.getObject(symbol.asRSCM(RSCMType.LOC)), symbol)
     }
 }
+
+@ResourceLock("server-cache")
+class TomeOfWaterSymbolsTest {
+    @Test
+    fun `tome items carry their variant params and the charge varobj and curse spells resolve`() {
+        val cache = ServerCacheManager.init(240)
+        try {
+            val charged = "param.charged_variant".asRSCM(RSCMType.PARAM)
+            val uncharged = "param.uncharged_variant".asRSCM(RSCMType.PARAM)
+            val empty = checkNotNull(ServerCacheManager.getItem(TomeOfWaterScript.EMPTY.asRSCM(RSCMType.OBJ)))
+            val full = checkNotNull(ServerCacheManager.getItem(TomeOfWaterScript.CHARGED.asRSCM(RSCMType.OBJ)))
+            assertEquals(full.id, empty.paramsRaw?.get(charged))
+            assertEquals(empty.id, full.paramsRaw?.get(uncharged))
+            assertNotNull(
+                ServerCacheManager.getVarObj(
+                    org.rsmod.api.combat.manager.TomeChargeManager.VAROBJ.asRSCM(RSCMType.VAROBJ)
+                )
+            )
+            for (spell in listOf("03_confuse", "11_weaken", "19_curse", "66_vulnerability", "73_enfeeble", "80_stun")) {
+                assertNotNull(
+                    ServerCacheManager.getItem("obj.$spell".asRSCM(RSCMType.OBJ)),
+                    spell,
+                )
+            }
+        } finally {
+            cache.close()
+        }
+    }
+}
