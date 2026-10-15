@@ -15,6 +15,9 @@ import org.rsmod.api.player.output.mes
 import org.rsmod.api.player.vars.VarPlayerIntMapSetter
 import org.rsmod.api.repo.npc.NpcRepository
 import org.rsmod.api.repo.obj.ObjRepository
+import org.rsmod.content.minigames.framework.BotPolicy
+import org.rsmod.content.minigames.framework.Minigame
+import org.rsmod.content.minigames.framework.MinigameConfig
 import org.rsmod.content.minigames.framework.MinigameProfile
 import org.rsmod.game.MapClock
 import org.rsmod.game.entity.Npc
@@ -35,8 +38,12 @@ constructor(
     private val collision: CollisionFlagMap,
     private val objs: ObjRepository,
     private val npcs: NpcRepository,
+    private val bots: SoulWarsBots,
+    private val souls: SoulWarsSouls,
 ) {
-    val match = SoulWarsMatch()
+    private val botPolicy = BotPolicy(MinigameConfig.load())
+    val match = SoulWarsMatch(botPlan = ::planBots)
+    private var lastTick = -1
     private val avatars = HashMap<SwTeam, Npc>()
     private val shield = AvatarShield()
 
@@ -77,8 +84,38 @@ constructor(
         apply(events)
     }
 
+    private fun planBots(blue: Int, red: Int): Map<SwTeam, Int> {
+        val split = botPolicy.distribute(Minigame.SoulWars, listOf(blue, red))
+        return mapOf(SwTeam.Blue to split[0], SwTeam.Red to split[1])
+    }
+
+    fun isBot(npc: Npc): Boolean = bots.isBot(npc)
+
+    fun botTeam(npc: Npc): SwTeam? = bots.teamOf(npc)
+
+    fun isSoul(npc: Npc): Boolean = souls.isSoul(npc)
+
+    fun onBotKilled(npc: Npc) {
+        bots.onKilled(npc, clock.cycle)
+    }
+
+    fun onSoulKilled(npc: Npc, hero: Player) {
+        val fragments = souls.fragmentsFor(npc)
+        souls.onKilled(npc, clock.cycle)
+        if (fragments <= 0 || !isPlaying(hero)) return
+        hero.invAddOrDrop(objs, SoulWarsItems.FRAGMENT, fragments)
+        hero.mes("You gather $fragments soul fragment${if (fragments == 1) "" else "s"}.")
+    }
+
     fun tick() {
+        if (clock.cycle == lastTick) return
+        lastTick = clock.cycle
         apply(match.update(clock.cycle, avatarHealth()))
+        if (match.phase == SwPhase.Playing) {
+            val humans = match.playing.mapNotNull { (id, team) -> player(id)?.let { it to team } }.toMap()
+            bots.update(clock.cycle, humans)
+            souls.update(clock.cycle)
+        }
     }
 
     fun sacrifice(player: Player) {
@@ -151,6 +188,8 @@ constructor(
 
     private fun start(event: SwEvent.GameStarted) {
         shield.reset()
+        bots.spawn(event.bots)
+        souls.spawn()
         for (team in SwTeam.entries) spawnAvatar(team, event.players)
         for ((id, team) in event.players) {
             val player = player(id) ?: continue
@@ -185,6 +224,8 @@ constructor(
     }
 
     private fun finish(result: SwResult) {
+        bots.clear()
+        souls.clear()
         clearAvatars()
         val day = LocalDate.now(ZoneOffset.UTC).toEpochDay()
         val summary = describe(result)
@@ -196,7 +237,7 @@ constructor(
                     participationTicks = result.participation[id] ?: 0,
                     fragmentsSacrificed = result.sacrificed[id] ?: 0,
                     won = won,
-                    botShare = BOT_SHARE,
+                    botShare = result.botShare,
                     firstWinToday = won && MinigameProfile.claimFirstWin(player, day),
                 )
             strip(player)
@@ -258,7 +299,6 @@ constructor(
     companion object {
         const val TIMER = "timer.soul_wars"
         const val ZEAL = "varp.soul_wars_zeal"
-        const val BOT_SHARE = 0.0
         private const val MIN_COMBAT = 3
         private const val HP_PER_COMBAT = 5
         private const val MIN_HP = 150

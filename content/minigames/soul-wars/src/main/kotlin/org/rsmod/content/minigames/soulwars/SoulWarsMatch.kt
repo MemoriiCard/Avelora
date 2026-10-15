@@ -17,7 +17,7 @@ enum class SwPhase {
 sealed interface SwEvent {
     data class WaitExtended(val reason: String) : SwEvent
 
-    data class GameStarted(val players: Map<Int, SwTeam>) : SwEvent
+    data class GameStarted(val players: Map<Int, SwTeam>, val bots: Map<SwTeam, Int>) : SwEvent
 
     data class Sacrificed(val id: Int, val fragments: Int, val team: SwTeam) : SwEvent
 
@@ -36,11 +36,13 @@ data class SwResult(
     val players: Map<Int, SwTeam>,
     val participation: Map<Int, Int>,
     val sacrificed: Map<Int, Int>,
+    val botShare: Double = 0.0,
 )
 
 class SoulWarsMatch(
     private val waitTicks: Int = WAIT_TICKS,
     private val gameTicks: Int = GAME_TICKS,
+    private val botPlan: (blue: Int, red: Int) -> Map<SwTeam, Int> = { _, _ -> emptyMap() },
 ) {
     var phase: SwPhase = SwPhase.Idle
         private set
@@ -50,6 +52,7 @@ class SoulWarsMatch(
     private val joinedAt = HashMap<Int, Int>()
     private val sacrificed = HashMap<Int, Int>()
     private var phaseStart = 0
+    private var bots: Map<SwTeam, Int> = emptyMap()
 
     val waiting: Map<Int, SwTeam>
         get() = lobbyTeams
@@ -90,8 +93,12 @@ class SoulWarsMatch(
         val team = gameTeams.remove(id)
         joinedAt.remove(id)
         val events = mutableListOf<SwEvent>()
-        if (team != null && phase == SwPhase.Playing && gameTeams.values.none { it == team }) {
-            events += end(cycle, SwEnding.Forfeit, team.other)
+        if (team != null && phase == SwPhase.Playing) {
+            if (gameTeams.isEmpty()) {
+                events += end(cycle, SwEnding.Forfeit, null)
+            } else if (gameTeams.values.none { it == team } && (bots[team] ?: 0) == 0) {
+                events += end(cycle, SwEnding.Forfeit, team.other)
+            }
         }
         if (phase == SwPhase.Waiting && lobbyTeams.isEmpty()) phase = SwPhase.Idle
         return events
@@ -119,17 +126,19 @@ class SoulWarsMatch(
     private fun startOrExtend(cycle: Int): List<SwEvent> {
         val blue = lobbyTeams.values.count { it == SwTeam.Blue }
         val red = lobbyTeams.size - blue
-        if (blue == 0 || red == 0) {
+        val plan = botPlan(blue, red)
+        if ((blue == 0 && (plan[SwTeam.Blue] ?: 0) == 0) || (red == 0 && (plan[SwTeam.Red] ?: 0) == 0)) {
             phaseStart = cycle
             return listOf(SwEvent.WaitExtended("Soul Wars needs at least one player on each team."))
         }
+        bots = plan
         gameTeams.putAll(lobbyTeams)
         lobbyTeams.clear()
         gameTeams.keys.forEach { joinedAt[it] = cycle }
         sacrificed.clear()
         phase = SwPhase.Playing
         phaseStart = cycle
-        return listOf(SwEvent.GameStarted(gameTeams.toMap()))
+        return listOf(SwEvent.GameStarted(gameTeams.toMap(), bots))
     }
 
     private fun timeout(cycle: Int, avatarHp: Map<SwTeam, Double>): List<SwEvent> {
@@ -156,8 +165,12 @@ class SoulWarsMatch(
 
     private fun end(cycle: Int, ending: SwEnding, winner: SwTeam?): List<SwEvent> {
         val participation = joinedAt.mapValues { (_, start) -> cycle - start }
+        val botTotal = bots.values.sum()
+        val total = gameTeams.size + botTotal
+        val botShare = if (total == 0) 0.0 else botTotal.toDouble() / total
         val result =
-            SwResult(winner, ending, LinkedHashMap(gameTeams), participation, HashMap(sacrificed))
+            SwResult(winner, ending, LinkedHashMap(gameTeams), participation, HashMap(sacrificed), botShare)
+        bots = emptyMap()
         gameTeams.clear()
         joinedAt.clear()
         sacrificed.clear()

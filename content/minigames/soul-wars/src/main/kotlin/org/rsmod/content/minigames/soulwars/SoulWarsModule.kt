@@ -1,6 +1,7 @@
 package org.rsmod.content.minigames.soulwars
 
 import org.rsmod.api.death.NpcAttackValidateHook
+import org.rsmod.api.death.NpcDeathDropHook
 import org.rsmod.api.death.NpcDeathKillHook
 import org.rsmod.api.death.PlayerDeathHook
 import org.rsmod.api.death.PlayerRespawnHook
@@ -15,6 +16,7 @@ class SoulWarsModule : PluginModule() {
         addSetBinding<PvPAttackValidateHook>(SoulWarsPvPHook::class.java)
         addSetBinding<NpcAttackValidateHook>(SoulWarsAvatarHook::class.java)
         addSetBinding<NpcDeathKillHook>(SoulWarsAvatarHook::class.java)
+        addSetBinding<NpcDeathDropHook>(SoulWarsAvatarHook::class.java)
         addSetBinding<PlayerTeleportValidateHook>(SoulWarsTeleportHook::class.java)
     }
 }
