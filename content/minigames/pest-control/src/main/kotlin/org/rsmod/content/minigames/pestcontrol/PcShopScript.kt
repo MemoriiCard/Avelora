@@ -30,9 +30,21 @@ constructor(
     private suspend fun ProtectedAccess.talk(npc: Npc) {
         startDialogue(npc) {
             chatNpc(neutral, "You have ${service.points(player)} commendation points.")
-            when (choice3("Void knight equipment", Menu.Void, "Elite void upgrade", Menu.Elite, "Experience", Menu.Xp)) {
+            val menu =
+                choice4(
+                    "Void knight equipment",
+                    Menu.Void,
+                    "Elite void upgrade",
+                    Menu.Elite,
+                    "Void seal",
+                    Menu.Seal,
+                    "Experience",
+                    Menu.Xp,
+                )
+            when (menu) {
                 Menu.Void -> buyVoid()
                 Menu.Elite -> upgrade()
+                Menu.Seal -> buySeal()
                 Menu.Xp -> exchange()
             }
         }
@@ -63,6 +75,16 @@ constructor(
         }
         player.invAddOrDrop(objs, stock.obj, 1)
         player.mes("You spend ${stock.cost} points.")
+    }
+
+    private suspend fun Dialogue.buySeal() {
+        val seal = PcShop.SEAL
+        if (!service.spendPoints(player, seal.cost)) {
+            chatNpc(neutral, "A void seal costs ${seal.cost} points.")
+            return
+        }
+        player.invAddOrDrop(objs, seal.obj, 1)
+        player.mes("You spend ${seal.cost} points.")
     }
 
     private suspend fun Dialogue.upgrade() {
@@ -121,6 +143,7 @@ constructor(
     private enum class Menu {
         Void,
         Elite,
+        Seal,
         Xp,
     }
 

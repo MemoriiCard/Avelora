@@ -46,6 +46,8 @@ internal object PcShop {
             PcStock("Void knight mace", "obj.pest_void_knight_mace", 250),
         )
 
+    val SEAL = PcStock("Void seal", PcSeal.symbol(PcSeal.FULL_CHARGES), PcSeal.COST)
+
     val ELITE =
         listOf(
             PcUpgrade("Elite void top", "obj.pest_void_knight_top", "obj.elite_void_knight_top", 200),
