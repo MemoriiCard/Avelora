@@ -173,4 +173,35 @@ class CastleWarsMatchTest {
         val ended = assertIs<CwEvent.GameEnded>(match.update(110).single())
         assertEquals(mapOf(1 to 100, 2 to 100), ended.result.participation)
     }
+
+    private fun withBots(): CastleWarsMatch =
+        CastleWarsMatch(10, 100) { sara, zam -> mapOf(CwTeam.Saradomin to 4 - sara, CwTeam.Zamorak to 5 - zam) }
+
+    @Test
+    fun `a lone player starts against bots and the plan is reported`() {
+        val match = withBots()
+        match.join(1, CwTeam.Saradomin, 0)
+        val started = assertIs<CwEvent.GameStarted>(match.update(10).single())
+        assertEquals(mapOf(CwTeam.Saradomin to 3, CwTeam.Zamorak to 5), started.bots)
+        assertEquals(CwPhase.Playing, match.phase)
+    }
+
+    @Test
+    fun `bot share reaches the result and a bot only team does not forfeit`() {
+        val match = withBots()
+        match.join(1, CwTeam.Saradomin, 0)
+        match.update(10)
+        val ended = match.update(110).filterIsInstance<CwEvent.GameEnded>().single()
+        assertEquals(8.0 / 9.0, ended.result.botShare, 1e-9)
+    }
+
+    @Test
+    fun `the game ends when the last human leaves a bot game`() {
+        val match = withBots()
+        match.join(1, CwTeam.Saradomin, 0)
+        match.update(10)
+        val ended = match.leave(1, 40).filterIsInstance<CwEvent.GameEnded>().single()
+        assertNull(ended.result.winner)
+        assertEquals(CwPhase.Idle, match.phase)
+    }
 }

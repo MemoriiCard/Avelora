@@ -15,7 +15,7 @@ enum class CwPhase {
 }
 
 sealed interface CwEvent {
-    data class GameStarted(val players: Map<Int, CwTeam>) : CwEvent
+    data class GameStarted(val players: Map<Int, CwTeam>, val bots: Map<CwTeam, Int>) : CwEvent
 
     data class WaitExtended(val reason: String) : CwEvent
 
@@ -35,11 +35,13 @@ data class CwResult(
     val scores: Map<CwTeam, Int>,
     val players: Map<Int, CwTeam>,
     val participation: Map<Int, Int>,
+    val botShare: Double = 0.0,
 )
 
 class CastleWarsMatch(
     private val waitTicks: Int = WAIT_TICKS,
     private val gameTicks: Int = GAME_TICKS,
+    private val botPlan: (saradomin: Int, zamorak: Int) -> Map<CwTeam, Int> = { _, _ -> emptyMap() },
 ) {
     var phase: CwPhase = CwPhase.Idle
         private set
@@ -51,6 +53,7 @@ class CastleWarsMatch(
     private val dropped = HashMap<CwTeam, Int>()
     private val scores = CwTeam.entries.associateWith { 0 }.toMutableMap()
     private var phaseStart = 0
+    private var bots: Map<CwTeam, Int> = emptyMap()
 
     val waiting: Map<Int, CwTeam>
         get() = lobbyTeams
@@ -96,8 +99,12 @@ class CastleWarsMatch(
             returnFlagCarriedBy(id)?.let { events += CwEvent.FlagReturned(it) }
             val team = gameTeams.remove(id)
             joinedAt.remove(id)
-            if (phase == CwPhase.Playing && team != null && gameTeams.values.none { it == team }) {
-                events += end(cycle, forfeitWinner = team.other)
+            if (phase == CwPhase.Playing && team != null) {
+                if (gameTeams.isEmpty()) {
+                    events += end(cycle)
+                } else if (gameTeams.values.none { it == team } && botsOf(team) == 0) {
+                    events += end(cycle, forfeitWinner = team.other)
+                }
             }
         }
         if (phase == CwPhase.Waiting && lobbyTeams.isEmpty()) phase = CwPhase.Idle
@@ -149,6 +156,8 @@ class CastleWarsMatch(
         return CwEvent.FlagDropped(flag)
     }
 
+    private fun botsOf(team: CwTeam): Int = bots[team] ?: 0
+
     private fun expireDropped(cycle: Int): List<CwEvent> {
         val expired = dropped.filterValues { cycle - it >= DROP_RETURN_TICKS }.keys.toList()
         expired.forEach(dropped::remove)
@@ -172,10 +181,13 @@ class CastleWarsMatch(
     private fun startOrExtend(cycle: Int): List<CwEvent> {
         val saradomin = lobbyTeams.values.count { it == CwTeam.Saradomin }
         val zamorak = lobbyTeams.size - saradomin
-        if (saradomin == 0 || zamorak == 0) {
+        val plan = botPlan(saradomin, zamorak)
+        val sideless = (saradomin == 0 && (plan[CwTeam.Saradomin] ?: 0) == 0) || (zamorak == 0 && (plan[CwTeam.Zamorak] ?: 0) == 0)
+        if (sideless) {
             phaseStart = cycle
             return listOf(CwEvent.WaitExtended("Castle Wars needs at least one player on each team."))
         }
+        bots = plan
         gameTeams.putAll(lobbyTeams)
         lobbyTeams.clear()
         gameTeams.keys.forEach { joinedAt[it] = cycle }
@@ -184,7 +196,7 @@ class CastleWarsMatch(
         scores.keys.forEach { scores[it] = 0 }
         phase = CwPhase.Playing
         phaseStart = cycle
-        return listOf(CwEvent.GameStarted(gameTeams.toMap()))
+        return listOf(CwEvent.GameStarted(gameTeams.toMap(), bots))
     }
 
     private fun end(cycle: Int, forfeitWinner: CwTeam? = null): List<CwEvent> {
@@ -199,11 +211,16 @@ class CastleWarsMatch(
                 else -> null
             }
         val everyone = LinkedHashMap(gameTeams)
-        val result = CwResult(winner, mapOf(CwTeam.Saradomin to sara, CwTeam.Zamorak to zam), everyone, participation)
+        val botTotal = bots.values.sum()
+        val total = everyone.size + botTotal
+        val botShare = if (total == 0) 0.0 else botTotal.toDouble() / total
+        val result =
+            CwResult(winner, mapOf(CwTeam.Saradomin to sara, CwTeam.Zamorak to zam), everyone, participation, botShare)
         gameTeams.clear()
         joinedAt.clear()
         carriers.clear()
         dropped.clear()
+        bots = emptyMap()
         phase = if (lobbyTeams.isEmpty()) CwPhase.Idle else CwPhase.Waiting
         phaseStart = cycle
         return listOf(CwEvent.GameEnded(result))

@@ -2,6 +2,12 @@ package org.rsmod.content.minigames.castlewars
 
 import jakarta.inject.Inject
 import org.rsmod.api.area.checker.AreaChecker
+import org.rsmod.api.death.NpcAttackValidateHook
+import org.rsmod.api.death.NpcAttackValidateResult
+import org.rsmod.api.death.NpcDeathDropContext
+import org.rsmod.api.death.NpcDeathDropHook
+import org.rsmod.api.death.NpcDeathKillContext
+import org.rsmod.api.death.NpcDeathKillHook
 import org.rsmod.api.death.PlayerDeathCleanupHook
 import org.rsmod.api.death.PlayerDeathContext
 import org.rsmod.api.death.PlayerDeathHandling
@@ -12,6 +18,7 @@ import org.rsmod.api.death.PvPAttackValidateResult
 import org.rsmod.api.death.UntradeableHandling
 import org.rsmod.api.player.hook.PlayerTeleportValidateHook
 import org.rsmod.api.player.hook.TeleportType
+import org.rsmod.game.entity.Npc
 import org.rsmod.game.entity.Player
 import org.rsmod.map.CoordGrid
 
@@ -69,4 +76,22 @@ class CastleWarsTeleportHook @Inject constructor() : PlayerTeleportValidateHook 
         } else {
             null
         }
+}
+
+class CastleWarsBotHook @Inject constructor(private val service: CastleWarsService) :
+    NpcAttackValidateHook, NpcDeathKillHook, NpcDeathDropHook {
+    override fun tryConsume(context: NpcDeathDropContext): Boolean = service.isPlaying(context.hero)
+
+    override fun validate(player: Player, npc: Npc): NpcAttackValidateResult {
+        val team = service.botTeam(npc) ?: return NpcAttackValidateResult.Pass
+        return when {
+            !service.isPlaying(player) -> NpcAttackValidateResult.Deny("That isn't part of your game.")
+            service.teamOf(player) == team -> NpcAttackValidateResult.Deny("You can't attack your own team.")
+            else -> NpcAttackValidateResult.Pass
+        }
+    }
+
+    override fun onKill(context: NpcDeathKillContext) {
+        service.onBotKilled(context.npc)
+    }
 }
