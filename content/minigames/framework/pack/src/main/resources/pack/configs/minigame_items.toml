@@ -1,0 +1,6 @@
+[[item]]
+id = "obj.minigame_crate"
+inherit = "obj.tempoross_reward_casket"
+name = "Minigame crate"
+tradeable = true
+examine = "A crate of rewards from the minigames. Open it to see what's inside."
