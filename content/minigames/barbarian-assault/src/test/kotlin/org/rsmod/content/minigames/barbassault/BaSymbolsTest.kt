@@ -3,7 +3,6 @@ package org.rsmod.content.minigames.barbassault
 import dev.openrune.ServerCacheManager
 import dev.openrune.rscm.RSCM.asRSCM
 import dev.openrune.rscm.RSCMType
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
@@ -18,7 +17,8 @@ class BaSymbolsTest {
             val locs = listOf("loc.barbassault_recruitment_entrance", "loc.barbassault_game_exit")
             for (loc in locs) assertNotNull(ServerCacheManager.getObject(loc.asRSCM(RSCMType.LOC)), loc)
             for (npc in BaMonsters.ALL) assertNotNull(ServerCacheManager.getNpc(npc.asRSCM(RSCMType.NPC)), npc)
-            for (varp in listOf(BaService.HONOUR, BaService.PROGRESS, BaService.QUEEN_KILLS)) {
+            val varps = BaRole.entries.map { it.varp } + listOf(BaPoints.PROGRESS, BaPoints.QUEEN_KILLS)
+            for (varp in varps) {
                 assertNotNull(ServerCacheManager.getVarp(varp.asRSCM(RSCMType.VARP)), varp)
             }
             assertNotNull(ServerCacheManager.getNpc(BaGambleScript.COMMANDER.asRSCM(RSCMType.NPC)))
@@ -28,7 +28,8 @@ class BaSymbolsTest {
                 assertNotNull(type, item.obj)
                 if (item.noted) assertNotEquals(0, type!!.certlink, item.obj)
             }
-            assertEquals(65534, BaService.TIMER.asRSCM(RSCMType.TIMER))
+            val objs = BaGear.entries.map { it.obj } + BaEggs.COLOURS.map { it.obj } + listOf(BaGear.GRANITE_BODY, BaGear.PET)
+            for (obj in objs) assertNotNull(ServerCacheManager.getItem(obj.asRSCM(RSCMType.OBJ)), obj)
         } finally {
             cache.close()
         }
@@ -36,6 +37,8 @@ class BaSymbolsTest {
 
     @Test
     fun `wave symbols stay within the monster table`() {
-        for (wave in 1..BaMatch.WAVES) for (i in 0..8) assert(BaMonsters.symbol(wave, i) in BaMonsters.ALL)
+        for (wave in 1..BaWave.FINAL) {
+            for (kind in BaKind.entries) assert(BaMonsters.symbol(kind, wave) in BaMonsters.ALL)
+        }
     }
 }
