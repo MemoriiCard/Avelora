@@ -33,6 +33,7 @@ class CastleWarsSymbolsTest {
                     listOf(CastleWarsItems.cloak(it), CastleWarsItems.banner(it))
                 } + CastleWarsItems.TICKET
             for (item in items) assertNotNull(ServerCacheManager.getItem(item.asRSCM(RSCMType.OBJ)), item)
+            for (bot in CastleWarsBots.SYMBOLS.values) assertNotNull(ServerCacheManager.getNpc(bot.asRSCM(RSCMType.NPC)), bot)
             assertEquals(65530, CastleWarsService.TIMER.asRSCM(RSCMType.TIMER))
             assertNotNull(CastleWarsShop.CURRENCY.asRSCM(RSCMType.CURRENCY))
             assertNotNull(CastleWarsShop.JUDGE.asRSCM(RSCMType.NPC))
