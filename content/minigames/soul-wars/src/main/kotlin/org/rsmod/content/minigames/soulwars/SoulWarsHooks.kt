@@ -4,6 +4,8 @@ import jakarta.inject.Inject
 import org.rsmod.api.area.checker.AreaChecker
 import org.rsmod.api.death.NpcAttackValidateHook
 import org.rsmod.api.death.NpcAttackValidateResult
+import org.rsmod.api.death.NpcDeathDropContext
+import org.rsmod.api.death.NpcDeathDropHook
 import org.rsmod.api.death.NpcDeathKillContext
 import org.rsmod.api.death.NpcDeathKillHook
 import org.rsmod.api.death.PlayerDeathContext
@@ -63,8 +65,22 @@ class SoulWarsPvPHook @Inject constructor(private val service: SoulWarsService) 
 }
 
 class SoulWarsAvatarHook @Inject constructor(private val service: SoulWarsService) :
-    NpcAttackValidateHook, NpcDeathKillHook {
+    NpcAttackValidateHook, NpcDeathKillHook, NpcDeathDropHook {
+    override fun tryConsume(context: NpcDeathDropContext): Boolean = service.isPlaying(context.hero)
+
     override fun validate(player: Player, npc: Npc): NpcAttackValidateResult {
+        val botTeam = service.botTeam(npc)
+        if (botTeam != null) {
+            val team = service.teamOf(player)?.takeIf { service.isPlaying(player) }
+            return when {
+                team == null -> NpcAttackValidateResult.Deny("That isn't part of your game.")
+                team == botTeam -> NpcAttackValidateResult.Deny("You can't attack your own team.")
+                else -> NpcAttackValidateResult.Pass
+            }
+        }
+        if (service.isSoul(npc) && !service.isPlaying(player)) {
+            return NpcAttackValidateResult.Deny("That isn't part of your game.")
+        }
         val avatarTeam = service.teamOfAvatar(npc) ?: return NpcAttackValidateResult.Pass
         val team = service.teamOf(player)?.takeIf { service.isPlaying(player) }
         return if (team == null || team == avatarTeam) {
@@ -77,6 +93,8 @@ class SoulWarsAvatarHook @Inject constructor(private val service: SoulWarsServic
     }
 
     override fun onKill(context: NpcDeathKillContext) {
+        service.onBotKilled(context.npc)
+        service.onSoulKilled(context.npc, context.hero)
         service.teamOfAvatar(context.npc)?.let { service.onAvatarKilled(it) }
     }
 }
