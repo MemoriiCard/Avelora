@@ -18,6 +18,7 @@ import org.rsmod.api.repo.obj.ObjRepository
 import org.rsmod.api.repo.player.PlayerRepository
 import org.rsmod.api.script.onOpHeld1
 import org.rsmod.api.script.onOpLoc1
+import org.rsmod.api.script.onOpLoc2
 import org.rsmod.api.script.onPlayerLogout
 import org.rsmod.api.script.onPlayerSoftTimer
 import org.rsmod.game.entity.Npc
@@ -49,9 +50,11 @@ constructor(
             onOpHeld1(kind.obj) { layTrap(kind) }
             onOpLoc1(kind.setLoc) { pickUp(it.loc) }
             onOpLoc1(kind.brokenLoc) { pickUp(it.loc) }
+            onOpLoc2(kind.brokenLoc) { reset(it.loc) }
         }
         for (fullLoc in HunterCreatures.all.map { it.fullLoc }.distinct()) {
             onOpLoc1(fullLoc) { check(it.loc) }
+            onOpLoc2(fullLoc) { check(it.loc, rearm = true) }
         }
         onPlayerSoftTimer(TIMER) { tickTraps(player) }
         onPlayerLogout { traps.ownedBy(player).forEach { collapse(it, notify = false) } }
@@ -117,10 +120,12 @@ constructor(
         mes("You dismantle the trap.")
     }
 
-    private suspend fun ProtectedAccess.check(loc: BoundLocInfo) {
+    private suspend fun ProtectedAccess.check(loc: BoundLocInfo, rearm: Boolean = false) {
         val trap = ownTrapAt(loc) ?: return
         val creature = trap.creature ?: return
-        val loot = creature.loot.map { it.obj to random.of(it.min..it.max) } + (trap.kind.obj to 1)
+        val loot =
+            creature.loot.map { it.obj to random.of(it.min..it.max) } +
+                if (rearm) emptyList() else listOf(trap.kind.obj to 1)
         anim("seq.human_pickupfloor")
         delay(1)
         if (traps[loc.coords] !== trap) {
@@ -141,9 +146,25 @@ constructor(
             mes("You don't have enough inventory space to do that.")
             return
         }
-        remove(trap)
+        if (rearm) rearm(trap) else remove(trap)
         statAdvance(STAT, creature.xp)
         mes("You've caught ${creature.displayName()}.")
+    }
+
+    private suspend fun ProtectedAccess.reset(loc: BoundLocInfo) {
+        val trap = ownTrapAt(loc) ?: return
+        anim("seq.human_pickupfloor")
+        delay(1)
+        if (traps[loc.coords] !== trap) {
+            return
+        }
+        rearm(trap)
+        mes("You reset the trap.")
+    }
+
+    private fun rearm(trap: Trap) {
+        trap.creature = null
+        settle(trap, TrapState.Set, trap.kind.setLoc, trap.owner.currentMapClock)
     }
 
     private fun tickTraps(player: Player) {
