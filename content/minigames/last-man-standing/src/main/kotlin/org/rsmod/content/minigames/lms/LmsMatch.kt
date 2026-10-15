@@ -14,7 +14,7 @@ enum class LmsPhase {
 sealed interface LmsEvent {
     data class WaitExtended(val reason: String) : LmsEvent
 
-    data class GameStarted(val players: Set<Int>) : LmsEvent
+    data class GameStarted(val players: Set<Int>, val bots: Set<Int> = emptySet()) : LmsEvent
 
     data class Eliminated(val id: Int, val placement: Int, val killer: Int?) : LmsEvent
 
@@ -27,6 +27,7 @@ data class LmsResult(
     val kills: Map<Int, Int>,
     val participation: Map<Int, Int>,
     val mode: LmsMode = LmsMode.Casual,
+    val botShare: Double = 0.0,
 )
 
 class LmsMatch(
@@ -35,6 +36,7 @@ class LmsMatch(
     private val minPlayers: Int = MIN_PLAYERS,
     private val maxPlayers: Int = MAX_PLAYERS,
     private val competitiveMinPlayers: Int = COMPETITIVE_MIN_PLAYERS,
+    private val botPlan: (humans: Int) -> Int = { 0 },
 ) {
     var lobbyMode: LmsMode = LmsMode.Casual
         private set
@@ -52,6 +54,7 @@ class LmsMatch(
     private val kills = HashMap<Int, Int>()
     private val outAt = HashMap<Int, Int>()
     private var startedAt = 0
+    private var botCount = 0
     private var phaseStart = 0
 
     val waiting: Set<Int>
@@ -109,18 +112,27 @@ class LmsMatch(
         val credited = killer?.takeIf { it in alive }
         if (credited != null) kills.merge(credited, 1, Int::plus)
         val events = mutableListOf<LmsEvent>(LmsEvent.Eliminated(id, placement, credited))
-        if (alive.size <= 1) events += end(cycle, alive.firstOrNull())
+        if (alive.size <= 1 || alive.none { it >= 0 }) events += end(cycle, alive.firstOrNull()?.takeIf { it >= 0 })
         return events
     }
 
     private fun startOrExtend(cycle: Int): List<LmsEvent> {
-        val required = if (lobbyMode == LmsMode.Competitive) competitiveMinPlayers else minPlayers
+        val bots = if (lobbyMode == LmsMode.Casual) botPlan(lobby.size).coerceAtLeast(0) else 0
+        val required =
+            when {
+                lobbyMode == LmsMode.Competitive -> competitiveMinPlayers
+                bots > 0 -> 1
+                else -> minPlayers
+            }
         if (lobby.size < required) {
             phaseStart = cycle
             return listOf(LmsEvent.WaitExtended("Last Man Standing needs at least $required players."))
         }
         gameMode = lobbyMode
+        botCount = bots
+        val botIds = (1..bots).map { -it }.toSet()
         alive.addAll(lobby)
+        alive.addAll(botIds)
         everyone.clear()
         everyone.addAll(lobby)
         lobby.clear()
@@ -129,20 +141,23 @@ class LmsMatch(
         outAt.clear()
         phase = LmsPhase.Playing
         startedAt = cycle
-        return listOf(LmsEvent.GameStarted(alive.toSet()))
+        return listOf(LmsEvent.GameStarted(alive.filter { it >= 0 }.toSet(), botIds))
     }
 
     private fun timeout(cycle: Int): List<LmsEvent> {
         val best = alive.maxOf { killsOf(it) }
         val leaders = alive.filter { killsOf(it) == best }
-        return end(cycle, leaders.singleOrNull())
+        return end(cycle, leaders.singleOrNull()?.takeIf { it >= 0 })
     }
 
     private fun end(cycle: Int, winner: Int?): List<LmsEvent> {
-        val finalPlacements = HashMap(placements)
-        for (id in alive) finalPlacements[id] = 1
+        val finalPlacements = HashMap(placements.filterKeys { it >= 0 })
+        for (id in alive) if (id >= 0) finalPlacements[id] = 1
         val participation = everyone.associateWith { (outAt[it] ?: cycle) - startedAt }
-        val result = LmsResult(winner, finalPlacements, HashMap(kills), participation, gameMode)
+        val total = everyone.size + botCount
+        val botShare = if (total == 0) 0.0 else botCount.toDouble() / total
+        val result = LmsResult(winner, finalPlacements, HashMap(kills), participation, gameMode, botShare)
+        botCount = 0
         alive.clear()
         everyone.clear()
         phase = if (lobby.isEmpty()) LmsPhase.Idle else LmsPhase.Waiting
