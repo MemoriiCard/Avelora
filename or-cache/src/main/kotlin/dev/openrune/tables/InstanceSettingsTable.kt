@@ -384,5 +384,22 @@ object InstanceSettingsTable {
             columnRSCM(ENTER_OBJECT, "loc.slayer_cave_kraken_boss_entrance")
             columnRSCM(EXIT_OBJECT, "loc.slayer_cave_kraken_boss_exit")
         }
+
+        row("dbrow.instance_alchemical_hydra") {
+            column(KEY, "alchemical_hydra")
+            columnCoord(EXIT_COORD, CoordGrid(1354, 10259, 0))
+            columnCoord(ENTER_COORD, CoordGrid(1356, 10259, 0))
+            column(FEE, 0)
+            column(MAX_PLAYERS, 1)
+            column(TIME_LIMIT_MINUTES, 0)
+            column(GRACE_MINUTES, 1)
+            columnRSCM(BOSS_NPC, "npc.hydraboss")
+            column(BOSS_NAME, "Alchemical Hydra")
+            column(RECOMMENDED_COMBAT, 100, 126)
+            column(TEAM_SIZE, 1)
+            column(LOOT_MULTIPLIER, "x1.0")
+            column(DESCRIPTION, "The Alchemical Hydra's private lair beneath Mount Karuulm.")
+            columnRSCM(ENTER_OBJECT, "loc.karuulm_hydra_room_door")
+        }
     }
 }
