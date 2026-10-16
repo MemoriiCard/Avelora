@@ -1,6 +1,7 @@
 package org.rsmod.content.raids.cox.party
 
 import org.rsmod.api.player.vars.boolVarBit
+import org.rsmod.api.player.vars.boolVarp
 import org.rsmod.api.player.vars.intVarBit
 import org.rsmod.api.player.vars.intVarp
 import org.rsmod.game.entity.Player
@@ -33,3 +34,4 @@ internal var Player.coxKc by intVarp("varp.total_completed_xericchambers")
 internal var Player.coxCmKc by intVarp("varp.total_completed_xericchambers_challenge")
 internal var Player.coxBestTime by intVarp("varp.cox_best_time")
 internal var Player.coxCmBestTime by intVarp("varp.cox_cm_best_time")
+internal var Player.coxLevelScalingOff by boolVarp("varp.cox_level_scaling_off")

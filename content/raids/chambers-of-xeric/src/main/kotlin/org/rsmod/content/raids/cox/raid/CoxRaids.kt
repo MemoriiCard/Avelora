@@ -12,6 +12,7 @@ import org.rsmod.api.repo.region.RegionRepository
 import org.rsmod.content.raids.cox.layout.CoxLayoutGenerator
 import org.rsmod.content.raids.cox.layout.CoxRoom
 import org.rsmod.content.raids.cox.layout.CoxRoomType
+import org.rsmod.content.raids.cox.olm.OlmRoom
 import org.rsmod.content.raids.cox.party.CoxParties
 import org.rsmod.content.raids.cox.party.CoxParty
 import org.rsmod.content.raids.cox.party.CoxPartyScreens
@@ -127,6 +128,10 @@ constructor(
             raid.rooms += controller
             controller.spawn()
         }
+        val olm = OlmRoom(raid, OlmRoom.ROOM, roomServices) { complete(raid) }
+        olm.pointSink = { player, amount -> addPoints(raid, player, amount) }
+        raid.olm = olm
+        raid.rooms += olm
         party.progress = CoxProgress.Upper
         party.advertisedAt = -1
         for (member in party.members.toList()) {

@@ -5,6 +5,7 @@ import org.rsmod.content.raids.cox.layout.CoxCell
 import org.rsmod.content.raids.cox.layout.CoxLayout
 import org.rsmod.content.raids.cox.layout.CoxLayoutGenerator
 import org.rsmod.content.raids.cox.layout.CoxRoom
+import org.rsmod.content.raids.cox.olm.OlmRoom
 import org.rsmod.content.raids.cox.party.CoxParty
 import org.rsmod.content.raids.cox.party.CoxScaling
 import org.rsmod.content.raids.cox.reward.CoxItem
@@ -32,6 +33,7 @@ class CoxRaid(val party: CoxParty, val layout: CoxLayout, val region: Region) {
     internal var potionUnits: Int = 0
     internal val rewards = mutableMapOf<Player, List<CoxItem>>()
     internal val rooms = mutableListOf<CoxRoomController>()
+    internal var olm: OlmRoom? = null
 
     val started: Boolean
         get() = startedAt >= 0
@@ -77,6 +79,13 @@ class CoxRaid(val party: CoxParty, val layout: CoxLayout, val region: Region) {
             southWest.x + staticCoords.x - OLM_TEMPLATE_X,
             southWest.z + OLM_REGION_OFFSET_Z + staticCoords.z - OLM_TEMPLATE_Z,
             CoxLayoutGenerator.OLM_PLANE,
+        )
+
+    fun olmStatic(coords: CoordGrid): CoordGrid =
+        CoordGrid(
+            coords.x - southWest.x + OLM_TEMPLATE_X,
+            coords.z - southWest.z - OLM_REGION_OFFSET_Z + OLM_TEMPLATE_Z,
+            0,
         )
 
     fun inOlmRoom(coords: CoordGrid): Boolean =

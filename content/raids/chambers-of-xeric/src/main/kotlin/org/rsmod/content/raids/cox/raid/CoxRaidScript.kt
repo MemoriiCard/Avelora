@@ -7,6 +7,7 @@ import org.rsmod.api.script.onOpLoc1
 import org.rsmod.api.script.onOpLoc2
 import org.rsmod.content.interfaces.bank.tryOpenBank
 import org.rsmod.content.raids.cox.layout.CoxRoomCategory
+import org.rsmod.content.raids.cox.olm.OlmRoom
 import org.rsmod.content.raids.cox.party.CoxParties
 import org.rsmod.content.raids.cox.party.CoxPartyScreens
 import org.rsmod.game.loc.BoundLocInfo
@@ -148,11 +149,21 @@ constructor(private val parties: CoxParties, private val raids: CoxRaids) : Plug
 
     private fun ProtectedAccess.leaveOlm() {
         val raid = raids.containing(player) ?: return
+        if (raid.olm?.engagedAndActive == true) {
+            mes("You can't leave the Great Olm's lair until the fight is over.")
+            return
+        }
         telejump(raids.endRoomArrival(raid, raid.layout.floors.last().end))
     }
 
     private fun ProtectedAccess.passOlmBarrier(loc: BoundLocInfo) {
-        telejump(acrossLoc(loc, player.coords))
+        val destination = acrossLoc(loc, player.coords)
+        val raid = raids.containing(player)
+        if (raid?.olm?.engagedAndActive == true && raid.olmStatic(destination).z < OlmRoom.ARENA_MIN_Z) {
+            mes("You can't leave the arena during the fight.")
+            return
+        }
+        telejump(destination)
     }
 
     /** The tile directly across a doorway-style loc from [from]. */
