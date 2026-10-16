@@ -5,6 +5,8 @@ import dev.openrune.rscm.RSCM.asRSCM
 import dev.openrune.rscm.RSCMType
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.parallel.ResourceLock
+import org.rsmod.content.raids.tob.reward.TobLoot
+import org.rsmod.content.raids.tob.reward.TobRewards
 
 @ResourceLock("server-cache")
 class TobGamevalTest {
@@ -14,6 +16,13 @@ class TobGamevalTest {
         try {
             for (name in LOCS) name.asRSCM(RSCMType.LOC)
             for (name in NPCS) name.asRSCM(RSCMType.NPC)
+            val objs =
+                TobLoot.UNIQUES.map { it.obj } + TobLoot.COMMONS.map { it.obj } +
+                    TobLoot.SHROUDS.map { it.second } +
+                    listOf(TobLoot.PET, TobLoot.HARD_KIT, TobLoot.HARD_KIT_BLOOD, TobLoot.HARD_DUST)
+            for (name in objs) name.asRSCM(RSCMType.OBJ)
+            for (name in listOf(TobRewards.CHEST, TobRewards.CHEST_RARE)) name.asRSCM(RSCMType.LOC)
+            "varp.total_completed_theatreofblood".asRSCM(RSCMType.VARP)
             for (name in SEQS) name.asRSCM(RSCMType.SEQ)
             for (name in SPOTANIMS) name.asRSCM(RSCMType.SPOTANIM)
         } finally {
