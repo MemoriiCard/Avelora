@@ -74,6 +74,7 @@ cooks_assistant_progress = 63704
 cooks_assistant_milk = 63705
 cooks_assistant_egg = 63706
 cooks_assistant_flour = 63707
+knights_sword_progress = 63715
 
 [gamevals.models]
 misthalin_gem_diamond = 32333
