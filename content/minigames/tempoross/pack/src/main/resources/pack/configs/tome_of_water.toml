@@ -1,0 +1,11 @@
+[[item]]
+id = "obj.tome_of_water_uncharged"
+inherit = "obj.tome_of_water_uncharged"
+[item.params]
+"param.charged_variant"="obj.tome_of_water"
+
+[[item]]
+id = "obj.tome_of_water"
+inherit = "obj.tome_of_water"
+[item.params]
+"param.uncharged_variant"="obj.tome_of_water_uncharged"
