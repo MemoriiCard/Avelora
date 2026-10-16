@@ -69,6 +69,8 @@ class SoulWarsAvatarHook @Inject constructor(private val service: SoulWarsServic
         val team = service.teamOf(player)?.takeIf { service.isPlaying(player) }
         return if (team == null || team == avatarTeam) {
             NpcAttackValidateResult.Deny("You can only attack the enemy avatar.")
+        } else if (!service.avatarVulnerable(avatarTeam)) {
+            NpcAttackValidateResult.Deny("The avatar's damage reduction is still at 100%. Sacrifice soul fragments first.")
         } else {
             NpcAttackValidateResult.Pass
         }
