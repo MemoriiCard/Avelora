@@ -121,6 +121,7 @@ class BlackKnightsFortress : QuestScript(
     private suspend fun Dialogue.amikFinish() {
         chatPlayer(happy, "The potion has been ruined.")
         chatNpc(happy, "Excellent! The Black Knights have withdrawn their demands. Here is your payment.")
+        player.listened = 0
         quest.advanceQuestStage(access, COMPLETE_STAGE - SABOTAGED)
     }
 
