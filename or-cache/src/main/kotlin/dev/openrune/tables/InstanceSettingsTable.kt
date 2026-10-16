@@ -292,6 +292,24 @@ object InstanceSettingsTable {
             columnRSCM(EXIT_OBJECT, "loc.tzhaar_fightcave_wall_exit")
         }
 
+        row("dbrow.instance_inferno") {
+            column(KEY, "inferno")
+            columnCoord(EXIT_COORD, CoordGrid(2496, 5122, 0))
+            columnCoord(ENTER_COORD, CoordGrid(2271, 5329, 0))
+            column(FEE, 0)
+            column(MAX_PLAYERS, 1)
+            column(TIME_LIMIT_MINUTES, 0)
+            column(GRACE_MINUTES, 1)
+            columnRSCM(BOSS_NPC, "npc.inferno_jad")
+            column(BOSS_NAME, "The Inferno")
+            column(RECOMMENDED_COMBAT, 100, 126)
+            column(TEAM_SIZE, 1)
+            column(LOOT_MULTIPLIER, "x1.0")
+            column(DESCRIPTION, "Sixty-eight waves of the TzHaar's deadliest creatures.")
+            columnRSCM(ENTER_OBJECT, "loc.inferno_entrance_op")
+            columnRSCM(EXIT_OBJECT, "loc.inferno_exit")
+        }
+
         row("dbrow.instance_leviathan") {
             column(KEY, "leviathan")
             columnCoord(EXIT_COORD, CoordGrid(2064, 6436, 0))
