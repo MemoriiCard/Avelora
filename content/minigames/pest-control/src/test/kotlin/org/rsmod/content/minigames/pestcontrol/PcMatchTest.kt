@@ -22,6 +22,11 @@ class PcMatchTest {
         return match
     }
 
+    private fun destroyAllPortals(match: PcMatch, by: Int, cycle: Int): PcResult {
+        val events = (0 until PcMatch.PORTALS).flatMap { match.portalKilled(it, by, cycle) }
+        return ended(events)!!
+    }
+
     private fun ended(events: List<PcEvent>): PcResult? =
         events.filterIsInstance<PcEvent.GameEnded>().singleOrNull()?.result
 
@@ -76,7 +81,7 @@ class PcMatchTest {
         var result: PcResult? = null
         while (result == null && cycle < PcMatch.WAIT_TICKS + PcMatch.GAME_TICKS - 1) {
             cycle++
-            result = ended(match.update(cycle, pestsAlive = 30))
+            result = ended(match.update(cycle, knightDamage = 5))
         }
         assertEquals(PcEnding.KnightFell, result!!.ending)
         assertFalse(result.won)
@@ -86,15 +91,99 @@ class PcMatchTest {
     @Test
     fun `no pests means the knight is never hurt`() {
         val match = started(1)
-        for (cycle in 101..400) assertTrue(match.update(cycle, 0).isEmpty())
+        for (cycle in 101..400) assertTrue(match.update(cycle, 0).none { it is PcEvent.KnightHurt })
         assertEquals(PcMatch.KNIGHT_HITPOINTS, match.knightHp)
     }
 
     @Test
-    fun `running out the clock loses`() {
+    fun `holding out for the full duration wins`() {
         val match = started(1, gameTicks = 200)
         val result = ended(match.update(PcMatch.WAIT_TICKS + 200))!!
         assertEquals(PcEnding.Timeout, result.ending)
+        assertTrue(result.won)
+    }
+
+    @Test
+    fun `the game lasts twenty minutes`() {
+        assertEquals(20 * 60 * 10 / 6, PcMatch.GAME_TICKS)
+    }
+
+    @Test
+    fun `activity decays and runs dry for an idle player`() {
+        val match = started(1)
+        val first = PcMatch.WAIT_TICKS + PcMatch.ACTIVITY_DECAY_INTERVAL
+        var cycle = PcMatch.WAIT_TICKS
+        val events = mutableListOf<PcEvent>()
+        while (!match.hasIdled(1) && cycle < PcMatch.WAIT_TICKS + PcMatch.GAME_TICKS - 1) {
+            cycle++
+            events += match.update(cycle)
+        }
+        assertTrue(match.hasIdled(1))
+        assertEquals(0, match.activityOf(1))
+        assertTrue(PcEvent.ActivityLow(1) in events)
+        assertTrue(PcEvent.ActivityDepleted(1) in events)
+        assertTrue(first <= cycle)
+    }
+
+    @Test
+    fun `engaging pests keeps the bar up`() {
+        val match = started(1)
+        var cycle = PcMatch.WAIT_TICKS
+        repeat(300) {
+            cycle++
+            if (cycle % 4 == 0) match.engage(1, PcMatch.ENGAGE_PEST)
+            match.update(cycle)
+        }
+        assertFalse(match.hasIdled(1))
+        assertTrue(match.activityOf(1) > 0)
+    }
+
+    @Test
+    fun `activity never exceeds the cap`() {
+        val match = started(1)
+        repeat(100) { match.engage(1, PcMatch.ENGAGE_PORTAL) }
+        assertEquals(PcMatch.ACTIVITY_MAX, match.activityOf(1))
+    }
+
+    @Test
+    fun `an idled player is reported and cannot recover`() {
+        val match = started(1, 2)
+        var cycle = PcMatch.WAIT_TICKS
+        while (!match.hasIdled(1)) {
+            cycle++
+            match.engage(2, 3)
+            match.update(cycle)
+        }
+        match.engage(1, 50)
+        assertEquals(0, match.activityOf(1))
+        assertEquals(setOf(1), destroyAllPortals(match, 2, cycle).idled)
+    }
+
+    @Test
+    fun `forfeiting is recorded and ends an empty game`() {
+        val match = started(1, 2)
+        match.leave(1, 150, forfeit = true)
+        val result = ended(match.leave(2, 160, forfeit = true))!!
+        assertEquals(setOf(1, 2), result.forfeited)
+        assertEquals(PcEnding.Abandoned, result.ending)
+    }
+
+    @Test
+    fun `leaving without forfeit keeps the credit`() {
+        val match = started(1, 2)
+        match.leave(1, 150)
+        val result = destroyAllPortals(match, 2, 160)
+        assertTrue(result.forfeited.isEmpty())
+        assertTrue(1 in result.participation)
+    }
+
+    @Test
+    fun `aborting a started game ends it without a winner`() {
+        val match = started(1)
+        val result = ended(match.abort(150))!!
+        assertEquals(PcEnding.Abandoned, result.ending)
+        assertFalse(result.won)
+        assertEquals(PcPhase.Idle, match.phase)
     }
 
     @Test
@@ -118,10 +207,10 @@ class PcMatchTest {
     }
 
     @Test
-    fun `portal hitpoints follow the lander tier`() {
-        assertEquals(200, PcMatch.portalHitpoints(40))
-        assertEquals(250, PcMatch.portalHitpoints(70))
-        assertEquals(250, PcMatch.portalHitpoints(126))
+    fun `lander tiers follow the wiki`() {
+        assertEquals(listOf(40, 70, 100), PcLander.entries.map { it.minCombat })
+        assertEquals(listOf(200, 250, 250), PcLander.entries.map { it.portalHitpoints })
+        assertEquals(listOf(3, 4, 5), PcLander.entries.map { it.basePoints })
     }
 
     @Test
@@ -151,7 +240,7 @@ class PcMatchTest {
     @Test
     fun `a destroyed portal heals the knight`() {
         val match = started(1, 2)
-        match.update(PcMatch.WAIT_TICKS + 10 * PcMatch.KNIGHT_INTERVAL, pestsAlive = 60)
+        match.update(PcMatch.WAIT_TICKS + 10 * PcMatch.KNIGHT_INTERVAL, knightDamage = 12)
         val hurt = match.knightHp
         assertTrue(hurt < PcMatch.KNIGHT_HITPOINTS)
         match.portalKilled(0, 1, 500)
