@@ -26,6 +26,7 @@ object VampyreSlayerMorgan {
                 if (player.countSlain == 1) {
                     chatPlayer(happy, "The Count is dead!")
                     chatNpc(happy, "You've saved us all! The village is in your debt.")
+                    player.countSlain = 0
                     quest.advanceQuestStage(access, COMPLETE_STAGE - quest.getQuestStage(player))
                 } else {
                     chatNpc(worried, "Please hurry! I'm sure Dr Harlow in Varrock's Blue Moon Inn can help.")

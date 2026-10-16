@@ -68,6 +68,7 @@ class VampyreSlayerInteractionTest {
         with(VampyreSlayerMorgan) { f.player.countSlain = 1 }
         f.talk("npc.morgan"); f.finish()
         assertEquals(3, f.script.quest.getQuestStage(f.player))
+        assertEquals(3, f.player.vars["varp.vampire"])
         assertEquals(3, f.player.vars["varp.qp"])
         assertEquals(4825, f.player.statMap.getXP("stat.attack"))
     }
