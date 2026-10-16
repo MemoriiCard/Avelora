@@ -70,6 +70,15 @@ class ToaGamevalTest {
                 "npc.toa_baba_baboon",
                 "npc.toa_het_goal",
                 "npc.toa_het_goal_vulnerable",
+                "npc.toa_wardens_p1_obelisk_npc",
+                "npc.toa_warden_elidinis_phase1_inactive",
+                "npc.toa_warden_tumeken_phase1_inactive",
+                "npc.toa_warden_elidinis_phase2_mage",
+                "npc.toa_warden_elidinis_phase2_range",
+                "npc.toa_warden_elidinis_core",
+                "npc.toa_warden_elidinis_phase3",
+                "npc.toa_warden_tumeken_phase3_inactive",
+                "npc.toa_kephri_scarab_rangekite",
             )
     }
 }

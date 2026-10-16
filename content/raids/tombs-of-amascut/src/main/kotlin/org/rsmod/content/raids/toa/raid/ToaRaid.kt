@@ -31,6 +31,7 @@ class ToaRaid(
     internal var roomCleared: Boolean = false
     internal var controller: ToaRoomController? = null
     internal var levelPenalty: Int = 0
+    internal var completed: Boolean = false
 
     val baseLevel: Int = ToaInvocations.raidLevel(invocations)
 

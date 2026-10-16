@@ -13,6 +13,8 @@ import org.rsmod.content.raids.toa.puzzle.ScabarasPuzzleRoom
 import org.rsmod.content.raids.toa.raid.ToaRaid
 import org.rsmod.content.raids.toa.raid.ToaRoomController
 import org.rsmod.content.raids.toa.raid.ToaRoomFactory
+import org.rsmod.content.raids.toa.wardens.WardensOneRoom
+import org.rsmod.content.raids.toa.wardens.WardensTwoRoom
 import org.rsmod.content.raids.toa.zebak.ZebakRoom
 
 class ToaBossFactory @Inject constructor(private val services: CoxRoomServices) : ToaRoomFactory {
@@ -26,6 +28,8 @@ class ToaBossFactory @Inject constructor(private val services: CoxRoomServices) 
             ToaRoom.Akkha -> AkkhaRoom(raid, services, onCleared)
             ToaRoom.ApmekenPuzzle -> ApmekenPuzzleRoom(raid, services, onCleared)
             ToaRoom.Baba -> BabaRoom(raid, services, onCleared)
+            ToaRoom.WardensOne -> WardensOneRoom(raid, services, onCleared)
+            ToaRoom.WardensTwo -> WardensTwoRoom(raid, services, onCleared)
             ToaRoom.Nexus -> null
         }
 }

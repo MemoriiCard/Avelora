@@ -50,8 +50,8 @@ class ToaRaidScript @Inject constructor(private val raids: ToaRaids) : PluginScr
     }
 
     private fun ProtectedAccess.wardens() {
-        if (raids.containing(player) == null) return
-        mes("The way to the Wardens is sealed until every path is cleared.")
+        val raid = raids.containing(player) ?: return
+        if (!raids.enterWardens(raid)) mes("The way to the Wardens is sealed until every path is cleared.")
     }
 
     private fun ProtectedAccess.continuePath() {
