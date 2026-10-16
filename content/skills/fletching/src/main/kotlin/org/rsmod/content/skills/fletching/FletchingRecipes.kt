@@ -28,6 +28,7 @@ data class FletchRecipe(
     val tool: String? = null,
     val menu: SkillingActionType = if (perSet > 0) SkillingActionType.MAKE_SETS else SkillingActionType.MAKE,
     val message: String,
+    val requiresBroader: Boolean = false,
 ) {
     val isSet: Boolean
         get() = perSet > 0
@@ -241,7 +242,7 @@ object FletchingRecipes {
     val all: List<FletchRecipe>
         get() =
             logCutting.values.flatten() + bowStringing + headlessArrows + arrows +
-                AmmoRecipes.all + CrossbowRecipes.all
+                AmmoRecipes.all + CrossbowRecipes.all + ExtraRecipes.all
 
     /** How many actions the inventory can afford, given a per-input [count] function. */
     fun FletchRecipe.maxActions(count: (String) -> Int): Int =

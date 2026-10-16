@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import org.rsmod.api.table.slayer.SlayerUnlockRow
 import org.rsmod.content.skills.fletching.FletchingRecipes.maxActions
 import org.rsmod.content.skills.fletching.FletchingRecipes.setSize
 
@@ -87,5 +88,28 @@ class FletchingRecipesTest {
         val dragon = CrossbowRecipes.stringing.single { it.output == "obj.xbows_crossbow_dragon" }
         assertEquals(78, dragon.level)
         assertEquals(70.0, dragon.xp)
+    }
+
+    @Test
+    fun `broad ammo needs the slayer unlock and amethyst cuts at the wiki levels`() {
+        assertEquals(3, ExtraRecipes.broad.size)
+        assertEquals(true, ExtraRecipes.broad.all { it.requiresBroader })
+        assertEquals(listOf(82, 83, 84, 85), ExtraRecipes.amethystCutting.map { it.level })
+        assertEquals(false, ExtraRecipes.amethystCutting.any { it.requiresBroader })
+    }
+
+    @Test
+    fun `ballistae pay out on the final step only`() {
+        val light = ExtraRecipes.ballistae.single { it.output == "obj.light_ballista" }
+        val heavy = ExtraRecipes.ballistae.single { it.output == "obj.heavy_ballista" }
+        assertEquals(110.0, light.xp)
+        assertEquals(150.0, heavy.xp)
+        assertEquals(6, ExtraRecipes.ballistae.size)
+    }
+
+    @Test
+    fun `broader fletching unlock is slayer reward bit 7`() {
+        val row = SlayerUnlockRow.all().single { it.name == "Broader Fletching" }
+        assertEquals(7, row.bit)
     }
 }

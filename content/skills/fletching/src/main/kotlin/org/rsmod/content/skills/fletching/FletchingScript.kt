@@ -29,10 +29,7 @@ class FletchingScript : PluginScript() {
     private suspend fun ProtectedAccess.startFletching(recipes: List<FletchRecipe>) {
         val single = recipes.singleOrNull()
         if (single != null && single.isInstant) {
-            if (!hasLevel(single)) {
-                mesbox("You need a Fletching level of ${single.level} to make that.")
-                return
-            }
+            if (!canMake(single)) return
             anim(single.anim)
             fletchOnce(FletchTask(single, amount = 1))
             return
@@ -54,10 +51,7 @@ class FletchingScript : PluginScript() {
             )
         openSkillMulti(config) { selection ->
             val recipe = byOutput.getValue(selection.entry.internal)
-            if (!hasLevel(recipe)) {
-                mesbox("You need a Fletching level of ${recipe.level} to make that.")
-                return@openSkillMulti
-            }
+            if (!canMake(recipe)) return@openSkillMulti
             anim(recipe.anim)
             weakQueue(QUEUE, recipe.firstTicks + QUEUE_COMPENSATION, FletchTask(recipe, selection.amount))
         }
@@ -65,7 +59,7 @@ class FletchingScript : PluginScript() {
 
     private fun ProtectedAccess.fletchOnce(task: FletchTask) {
         val recipe = task.recipe
-        if (!hasLevel(recipe) || !hasTool(recipe) || recipe.maxActions(inv::count) <= 0) {
+        if (!hasLevel(recipe) || (recipe.requiresBroader && !hasBroaderFletching()) || !hasTool(recipe) || recipe.maxActions(inv::count) <= 0) {
             resetAnim()
             return
         }
@@ -107,6 +101,21 @@ class FletchingScript : PluginScript() {
         weakQueue(QUEUE, recipe.ticks + QUEUE_COMPENSATION, task.copy(done = done))
     }
 
+    private suspend fun ProtectedAccess.canMake(recipe: FletchRecipe): Boolean {
+        if (!hasLevel(recipe)) {
+            mesbox("You need a Fletching level of ${recipe.level} to make that.")
+            return false
+        }
+        if (recipe.requiresBroader && !hasBroaderFletching()) {
+            mesbox("You need to unlock Broader Fletching from a Slayer master to make that.")
+            return false
+        }
+        return true
+    }
+
+    private fun ProtectedAccess.hasBroaderFletching(): Boolean =
+        (player.vars[BROADER_VARP] and BROADER_MASK) != 0
+
     private fun ProtectedAccess.hasLevel(recipe: FletchRecipe): Boolean =
         statBase(STAT) >= recipe.level
 
@@ -118,6 +127,8 @@ class FletchingScript : PluginScript() {
     private companion object {
         const val QUEUE = "queue.fletching_make"
         const val STAT = "stat.fletching"
+        const val BROADER_VARP = "varp.slayer_rewards_unlocks"
+        const val BROADER_MASK = 1 shl 7
 
         /** A queue scheduled from inside a queue handler ticks down once in that same cycle. */
         const val QUEUE_COMPENSATION = 1

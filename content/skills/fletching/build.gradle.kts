@@ -4,6 +4,7 @@ plugins {
 }
 
 dependencies {
+    implementation(projects.api.generated)
     implementation(projects.api.invtx)
     implementation(projects.api.player)
     implementation(projects.api.pluginCommons)
