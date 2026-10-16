@@ -3,6 +3,7 @@ package org.rsmod.content.areas.city.portsarim.npcs
 import org.rsmod.api.config.Constants
 import org.rsmod.api.player.dialogue.Dialogue
 import org.rsmod.api.script.onOpNpc1
+import org.rsmod.content.quest.area.portsarim.PiratesTreasureHooks
 import org.rsmod.content.quest.manager.QuestRequirements
 import org.rsmod.plugin.scripts.PluginScript
 import org.rsmod.plugin.scripts.ScriptContext
@@ -17,6 +18,7 @@ class RustyAnchorScript : PluginScript() {
     }
 
     private suspend fun Dialogue.redbeardFrank() {
+        if (with(PiratesTreasureHooks) { frank() }) return
         chatNpc(laugh, "Arr, Matey!")
         while (true) {
             if (choice2("Arr!", true, "Do you have anything for trade?", false)) {

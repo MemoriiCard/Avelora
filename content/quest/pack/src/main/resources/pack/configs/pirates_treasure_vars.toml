@@ -1,0 +1,34 @@
+[[varbit]]
+isServerOnly = true
+id = "varbit.pirates_treasure_progress"
+varp = "varp.hunt"
+startBit = 0
+endBit = 6
+
+[[varbit]]
+isServerOnly = true
+id = "varbit.pirates_treasure_bananas"
+varp = "varp.hunt"
+startBit = 7
+endBit = 10
+
+[[varbit]]
+isServerOnly = true
+id = "varbit.pirates_treasure_rum_hidden"
+varp = "varp.hunt"
+startBit = 11
+endBit = 11
+
+[[varbit]]
+isServerOnly = true
+id = "varbit.pirates_treasure_rum_shipped"
+varp = "varp.hunt"
+startBit = 12
+endBit = 12
+
+[[varbit]]
+isServerOnly = true
+id = "varbit.pirates_treasure_hired"
+varp = "varp.hunt"
+startBit = 13
+endBit = 13

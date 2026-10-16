@@ -9,6 +9,7 @@ import org.rsmod.api.script.onOpNpc3
 import org.rsmod.api.script.onOpNpc4
 import org.rsmod.api.script.onOpNpc5
 import org.rsmod.api.shops.Shops
+import org.rsmod.content.quest.area.portsarim.PiratesTreasureHooks
 import org.rsmod.game.entity.Player
 import org.rsmod.plugin.scripts.PluginScript
 import org.rsmod.plugin.scripts.ScriptContext
@@ -35,7 +36,11 @@ class PortSarimDocksScript @Inject constructor(private val shops: Shops) : Plugi
         }
 
         for (crate in CRATES) {
-            onOpLoc1(crate) { mes("You search the crate, but find nothing of note.") }
+            onOpLoc1(crate) {
+                if (!with(PiratesTreasureHooks) { searchCrate() }) {
+                    mes("You search the crate, but find nothing of note.")
+                }
+            }
         }
     }
 
