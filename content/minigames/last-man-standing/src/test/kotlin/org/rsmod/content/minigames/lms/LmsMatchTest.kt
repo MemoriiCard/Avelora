@@ -93,4 +93,57 @@ class LmsMatchTest {
         val tied = started(3)
         assertNull(assertIs<LmsEvent.GameEnded>(tied.update(210).single()).result.winner)
     }
+
+    private fun withBots(wait: Int = 10, game: Int = 200): LmsMatch =
+        LmsMatch(wait, game, botPlan = { humans -> (6 - humans).coerceAtLeast(0) })
+
+    @Test
+    fun `a lone player starts against bots`() {
+        val match = withBots()
+        match.join(1, 0)
+        val started = assertIs<LmsEvent.GameStarted>(match.update(10).single())
+        assertEquals(setOf(1), started.players)
+        assertEquals(5, started.bots.size)
+        assertTrue(started.bots.all { it < 0 })
+    }
+
+    @Test
+    fun `bot eliminations push the human placement up and credit the kill`() {
+        val match = withBots()
+        match.join(1, 0)
+        match.update(10)
+        val events = match.eliminate(-1, 1, 20)
+        assertEquals(6, assertIs<LmsEvent.Eliminated>(events.single()).placement)
+        assertEquals(1, match.killsOf(1))
+    }
+
+    @Test
+    fun `the human wins by outlasting every bot and results exclude bots`() {
+        val match = withBots()
+        match.join(1, 0)
+        match.update(10)
+        var last = emptyList<LmsEvent>()
+        for (bot in 1..5) last = match.eliminate(-bot, 1, 20 + bot)
+        val ended = last.filterIsInstance<LmsEvent.GameEnded>().single().result
+        assertEquals(1, ended.winner)
+        assertEquals(mapOf(1 to 1), ended.placements)
+        assertEquals(5.0 / 6.0, ended.botShare, 1e-9)
+    }
+
+    @Test
+    fun `the game ends when the last human dies while bots remain`() {
+        val match = withBots()
+        match.join(1, 0)
+        match.update(10)
+        val ended = match.eliminate(1, null, 30).filterIsInstance<LmsEvent.GameEnded>().single().result
+        assertNull(ended.winner)
+        assertEquals(mapOf(1 to 6), ended.placements)
+    }
+
+    @Test
+    fun `competitive games never use bots`() {
+        val match = LmsMatch(waitTicks = 10, botPlan = { 5 })
+        match.join(1, 0, LmsMode.Competitive)
+        assertIs<LmsEvent.WaitExtended>(match.update(10).single())
+    }
 }

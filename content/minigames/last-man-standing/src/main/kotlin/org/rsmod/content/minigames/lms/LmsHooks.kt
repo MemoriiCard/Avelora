@@ -2,6 +2,12 @@ package org.rsmod.content.minigames.lms
 
 import jakarta.inject.Inject
 import org.rsmod.api.area.checker.AreaChecker
+import org.rsmod.api.death.NpcAttackValidateHook
+import org.rsmod.api.death.NpcAttackValidateResult
+import org.rsmod.api.death.NpcDeathDropContext
+import org.rsmod.api.death.NpcDeathDropHook
+import org.rsmod.api.death.NpcDeathKillContext
+import org.rsmod.api.death.NpcDeathKillHook
 import org.rsmod.api.death.PlayerDeathContext
 import org.rsmod.api.death.PlayerDeathHandling
 import org.rsmod.api.death.PlayerDeathHook
@@ -9,6 +15,7 @@ import org.rsmod.api.death.PlayerRespawnHook
 import org.rsmod.api.death.UntradeableHandling
 import org.rsmod.api.player.hook.PlayerTeleportValidateHook
 import org.rsmod.api.player.hook.TeleportType
+import org.rsmod.game.entity.Npc
 import org.rsmod.game.entity.Player
 import org.rsmod.map.CoordGrid
 
@@ -40,4 +47,20 @@ class LmsTeleportHook @Inject constructor(private val service: LmsService) :
         } else {
             null
         }
+}
+
+class LmsBotHook @Inject constructor(private val service: LmsService) :
+    NpcAttackValidateHook, NpcDeathKillHook, NpcDeathDropHook {
+    override fun validate(player: Player, npc: Npc): NpcAttackValidateResult =
+        if (service.isBot(npc) && !service.isPlaying(player)) {
+            NpcAttackValidateResult.Deny("That isn't part of your game.")
+        } else {
+            NpcAttackValidateResult.Pass
+        }
+
+    override fun onKill(context: NpcDeathKillContext) {
+        service.onBotKilled(context.npc, context.hero)
+    }
+
+    override fun tryConsume(context: NpcDeathDropContext): Boolean = service.isPlaying(context.hero)
 }

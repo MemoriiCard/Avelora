@@ -11,8 +11,12 @@ import org.rsmod.api.player.hit.queueHit
 import org.rsmod.api.player.output.mes
 import org.rsmod.api.player.vars.VarPlayerIntMapSetter
 import org.rsmod.api.random.GameRandom
+import org.rsmod.content.minigames.framework.BotPolicy
+import org.rsmod.content.minigames.framework.Minigame
+import org.rsmod.content.minigames.framework.MinigameConfig
 import org.rsmod.content.minigames.framework.MinigameProfile
 import org.rsmod.game.MapClock
+import org.rsmod.game.entity.Npc
 import org.rsmod.game.entity.Player
 import org.rsmod.game.entity.PlayerList
 import org.rsmod.game.entity.util.PathingEntityCommon
@@ -28,8 +32,10 @@ constructor(
     private val clock: MapClock,
     private val collision: CollisionFlagMap,
     private val random: GameRandom,
+    private val bots: LmsBots,
 ) {
-    val match = LmsMatch()
+    private val botPolicy = BotPolicy(MinigameConfig.load())
+    val match = LmsMatch(botPlan = { botPolicy.botsNeeded(Minigame.LastManStanding, it) })
     private val looted = HashSet<Int>()
     private var lastTick = -1
 
@@ -77,7 +83,10 @@ constructor(
         if (cycle == lastTick) return
         lastTick = cycle
         apply(match.update(cycle))
-        if (match.phase == LmsPhase.Playing) applyZone(cycle)
+        if (match.phase == LmsPhase.Playing) {
+            applyZone(cycle)
+            bots.update(cycle, match.survivors.mapNotNull { player(it) }, match.elapsed(cycle))
+        }
     }
 
     fun openChest(player: Player, coords: CoordGrid) {
@@ -97,6 +106,13 @@ constructor(
     fun onDeath(victim: Player, killer: Player?) {
         wipe(victim)
         apply(match.eliminate(id(victim), killer?.let { id(it) }, clock.cycle))
+    }
+
+    fun isBot(npc: Npc): Boolean = bots.isBot(npc)
+
+    fun onBotKilled(npc: Npc, hero: Player) {
+        val botId = bots.remove(npc) ?: return
+        apply(match.eliminate(botId, id(hero), clock.cycle))
     }
 
     private fun applyZone(cycle: Int) {
@@ -121,16 +137,17 @@ constructor(
         for (event in events) {
             when (event) {
                 is LmsEvent.WaitExtended -> notify(match.waiting, event.reason)
-                is LmsEvent.GameStarted -> start(event.players)
+                is LmsEvent.GameStarted -> start(event.players, event.bots)
                 is LmsEvent.Eliminated -> eliminated(event)
                 is LmsEvent.GameEnded -> finish(event.result)
             }
         }
     }
 
-    private fun start(ids: Set<Int>) {
+    private fun start(ids: Set<Int>, botIds: Set<Int>) {
         looted.clear()
         val starts = LmsMap.STARTS.shuffled(java.util.Random(clock.cycle.toLong()))
+        bots.spawn(botIds, starts.reversed())
         for ((index, id) in ids.withIndex()) {
             val player = player(id) ?: continue
             if (!isEmptyHanded(player)) wipe(player)
@@ -150,6 +167,7 @@ constructor(
     }
 
     private fun finish(result: LmsResult) {
+        bots.clear()
         val day = LocalDate.now(ZoneOffset.UTC).toEpochDay()
         for ((id, placement) in result.placements) {
             val player = player(id) ?: continue
@@ -160,7 +178,7 @@ constructor(
                     participationTicks = result.participation[id] ?: 0,
                     kills = kills,
                     won = won,
-                    botShare = BOT_SHARE,
+                    botShare = result.botShare,
                     firstWinToday = won && MinigameProfile.claimFirstWin(player, day),
                 )
             val competitive = result.mode == LmsMode.Competitive
@@ -236,6 +254,5 @@ constructor(
         const val POINTS = "varp.lms_points"
         const val WINS = "varp.lms_wins"
         const val RATING_OFFSET = "varp.lms_rating_offset"
-        const val BOT_SHARE = 0.0
     }
 }
