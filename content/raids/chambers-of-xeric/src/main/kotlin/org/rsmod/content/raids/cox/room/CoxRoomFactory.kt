@@ -21,6 +21,8 @@ object CoxRoomFactory {
             CoxRoomType.Tightrope -> TightropeRoom(raid, room, services)
             CoxRoomType.Scavengers,
             CoxRoomType.ScavengersLarge -> ScavengersRoom(raid, room, services)
+            CoxRoomType.FarmingFishing,
+            CoxRoomType.FarmingBats -> ResourceRoom(raid, room, services)
             else -> null
         }
 }

@@ -1807,5 +1807,75 @@ internal enum class FoodData(
         combo = true,
         eatDelay = listOf(3),
         combatDelay = listOf(2),
-    );
+    ),
+    RAIDS_FISH0_COOKED(
+        row = "dbrow.raids_fish0_cooked",
+        items = listOf("obj.raids_fish0_cooked"),
+        heal = 5,
+    ),
+    RAIDS_FISH1_COOKED(
+        row = "dbrow.raids_fish1_cooked",
+        items = listOf("obj.raids_fish1_cooked"),
+        heal = 8,
+    ),
+    RAIDS_FISH2_COOKED(
+        row = "dbrow.raids_fish2_cooked",
+        items = listOf("obj.raids_fish2_cooked"),
+        heal = 11,
+    ),
+    RAIDS_FISH3_COOKED(
+        row = "dbrow.raids_fish3_cooked",
+        items = listOf("obj.raids_fish3_cooked"),
+        heal = 14,
+    ),
+    RAIDS_FISH4_COOKED(
+        row = "dbrow.raids_fish4_cooked",
+        items = listOf("obj.raids_fish4_cooked"),
+        heal = 17,
+    ),
+    RAIDS_FISH5_COOKED(
+        row = "dbrow.raids_fish5_cooked",
+        items = listOf("obj.raids_fish5_cooked"),
+        heal = 20,
+    ),
+    RAIDS_FISH6_COOKED(
+        row = "dbrow.raids_fish6_cooked",
+        items = listOf("obj.raids_fish6_cooked"),
+        heal = 23,
+    ),
+    RAIDS_BAT0_COOKED(
+        row = "dbrow.raids_bat0_cooked",
+        items = listOf("obj.raids_bat0_cooked"),
+        heal = 5,
+    ),
+    RAIDS_BAT1_COOKED(
+        row = "dbrow.raids_bat1_cooked",
+        items = listOf("obj.raids_bat1_cooked"),
+        heal = 8,
+    ),
+    RAIDS_BAT2_COOKED(
+        row = "dbrow.raids_bat2_cooked",
+        items = listOf("obj.raids_bat2_cooked"),
+        heal = 11,
+    ),
+    RAIDS_BAT3_COOKED(
+        row = "dbrow.raids_bat3_cooked",
+        items = listOf("obj.raids_bat3_cooked"),
+        heal = 14,
+    ),
+    RAIDS_BAT4_COOKED(
+        row = "dbrow.raids_bat4_cooked",
+        items = listOf("obj.raids_bat4_cooked"),
+        heal = 17,
+    ),
+    RAIDS_BAT5_COOKED(
+        row = "dbrow.raids_bat5_cooked",
+        items = listOf("obj.raids_bat5_cooked"),
+        heal = 20,
+    ),
+    RAIDS_BAT6_COOKED(
+        row = "dbrow.raids_bat6_cooked",
+        items = listOf("obj.raids_bat6_cooked"),
+        heal = 23,
+    )
 }

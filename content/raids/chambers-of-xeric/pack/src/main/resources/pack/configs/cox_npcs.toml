@@ -449,3 +449,52 @@ defaultMode = "None"
 id = "npc.raids_thievingchest_beast_sleeping"
 inherit = "npc.raids_thievingchest_beast_sleeping"
 defaultMode = "None"
+
+[[npc]]
+id = "npc.raids_bat_0"
+inherit = "npc.raids_bat_0"
+maxRange = 10
+wanderRange = 6
+defaultMode = "Wander"
+
+[[npc]]
+id = "npc.raids_bat_1"
+inherit = "npc.raids_bat_1"
+maxRange = 10
+wanderRange = 6
+defaultMode = "Wander"
+
+[[npc]]
+id = "npc.raids_bat_2"
+inherit = "npc.raids_bat_2"
+maxRange = 10
+wanderRange = 6
+defaultMode = "Wander"
+
+[[npc]]
+id = "npc.raids_bat_3"
+inherit = "npc.raids_bat_3"
+maxRange = 10
+wanderRange = 6
+defaultMode = "Wander"
+
+[[npc]]
+id = "npc.raids_bat_4"
+inherit = "npc.raids_bat_4"
+maxRange = 10
+wanderRange = 6
+defaultMode = "Wander"
+
+[[npc]]
+id = "npc.raids_bat_5"
+inherit = "npc.raids_bat_5"
+maxRange = 10
+wanderRange = 6
+defaultMode = "Wander"
+
+[[npc]]
+id = "npc.raids_bat_6"
+inherit = "npc.raids_bat_6"
+maxRange = 10
+wanderRange = 6
+defaultMode = "Wander"
