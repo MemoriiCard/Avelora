@@ -1,0 +1,6 @@
+[[varbit]]
+isServerOnly = true
+id = "varbit.sheep_shearer_progress"
+varp = "varp.sheep"
+startBit = 0
+endBit = 4
