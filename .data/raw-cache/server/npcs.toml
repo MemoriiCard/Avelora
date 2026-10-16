@@ -3708,6 +3708,9 @@ inherit = "npc.smoke_devil"
 "param.elemental_weakness_percent"=30
 "param.killcount_varp"="varp.kc_smoke_devil"
 "param.killcount_notify"=false
+"param.attack_anim"="seq.lore_dust_devil_attack"
+"param.defend_anim"="seq.lore_dust_devil_defend"
+"param.death_anim"="seq.lore_dust_devil_death"
 
 [[npc]]
 id = "npc.smoke_devil_boss"
@@ -3716,6 +3719,9 @@ inherit = "npc.smoke_devil_boss"
 "param.elemental_weakness_type"=0
 "param.elemental_weakness_percent"=20
 "param.killcount_varp"="varp.kc_thermonuclear_smoke_devil"
+"param.attack_anim"="seq.lore_dust_devil_attack"
+"param.defend_anim"="seq.lore_dust_devil_defend"
+"param.death_anim"="seq.lore_dust_devil_death"
 
 [[npc]]
 id = "npc.sulphur_lizard"
@@ -3998,6 +4004,9 @@ inherit = "npc.superior_smoke_devil"
 "param.elemental_weakness_percent"=20
 "param.killcount_varp"="varp.kc_superior_monster"
 "param.killcount_notify"=false
+"param.attack_anim"="seq.lore_dust_devil_attack"
+"param.defend_anim"="seq.lore_dust_devil_defend"
+"param.death_anim"="seq.lore_dust_devil_death"
 
 [[npc]]
 id = "npc.superior_turoth"
