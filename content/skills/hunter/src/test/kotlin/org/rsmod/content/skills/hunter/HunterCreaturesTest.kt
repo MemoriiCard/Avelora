@@ -65,4 +65,13 @@ class HunterCreaturesTest {
         assertEquals(4, HunterCreatures.maxTraps(60))
         assertEquals(5, HunterCreatures.maxTraps(99))
     }
+
+    @Test
+    fun `broken and full locs offer Reset as option two`() {
+        val locs = TrapKind.entries.map { it.brokenLoc } + HunterCreatures.all.map { it.fullLoc }
+        for (loc in locs) {
+            val type = checkNotNull(ServerCacheManager.getObject(loc.asRSCM(RSCMType.LOC)))
+            assertEquals("Reset", type.actions.ops[1]?.text, loc)
+        }
+    }
 }
