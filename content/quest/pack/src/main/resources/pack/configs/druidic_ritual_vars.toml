@@ -1,0 +1,6 @@
+[[varbit]]
+isServerOnly = true
+id = "varbit.druidic_ritual_progress"
+varp = "varp.druidquest"
+startBit = 0
+endBit = 3
