@@ -20,7 +20,7 @@ class WoodsmanTutor : PluginScript() {
 
     private suspend fun Dialogue.woodsmanDialogue() {
         when {
-            player.baseWoodcuttingLvl >= 99 -> TODO("Mastery dialogue")
+            player.baseWoodcuttingLvl >= 99 -> masteryMenu()
             player.baseWoodcuttingLvl in 29..98 -> highLevelMenu()
             player.baseWoodcuttingLvl in 20..28 -> intermediateLevelMenu()
             else -> lowLevelMenu()
@@ -293,6 +293,36 @@ class WoodsmanTutor : PluginScript() {
                 "You don't seem to have any space so I canm't give you another tinderbox.",
             )
         }
+    }
+
+    private suspend fun Dialogue.masteryMenu() {
+        chatNpc(happy, "Well met, master woodcutter. There is little left I can teach you.")
+        val choice =
+            choice2(
+                "Can I buy a Skillcape of Woodcutting?",
+                1,
+                "What is that cape you're wearing?",
+                2,
+            )
+        if (choice == 1) {
+            chatPlayer(quiz, "Can I buy a Skillcape of Woodcutting?")
+            chatNpc(
+                neutral,
+                "Skillcapes are sold by the masters of each skill in their guilds. " +
+                    "The Woodcutting Guild in Zeah will have one for you.",
+            )
+        } else {
+            capeExplanationMastery()
+        }
+    }
+
+    private suspend fun Dialogue.capeExplanationMastery() {
+        chatPlayer(happy, "What is that cape you're wearing?")
+        chatNpc(
+            happy,
+            "A Skillcape of Woodcutting, which you have earned the right to wear " +
+                "yourself. It increases your chance of finding bird's nests.",
+        )
     }
 
     private suspend fun Dialogue.capeExplanationNonMastery() {
