@@ -14,3 +14,6 @@ coords = "3_60_155_23_38"
 npc = "npc.nightmare_totem_4_dormant"
 coords = "3_60_155_39_38"
 
+[[spawn]]
+npc = "npc.nightmare_initial"
+coords = "3_60_155_29_28"
