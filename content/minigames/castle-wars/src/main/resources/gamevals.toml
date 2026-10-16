@@ -1,0 +1,11 @@
+[gamevals.timer]
+castle_wars = 65530
+
+[gamevals.currency]
+castlewars_ticket = 65532
+
+[gamevals.dbrow]
+shop_currency_castlewars_ticket = 63502
+
+[gamevals.inv]
+castlewars_ticket_shop = 1102
