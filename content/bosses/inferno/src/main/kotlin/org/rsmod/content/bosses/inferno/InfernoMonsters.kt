@@ -7,6 +7,8 @@ import jakarta.inject.Inject
 import org.rsmod.api.bosses.runtime.BossCombat
 import org.rsmod.api.bosses.runtime.BossDeps
 import org.rsmod.api.script.onNpcQueue
+import org.rsmod.game.entity.Npc
+import org.rsmod.game.entity.Player
 import org.rsmod.plugin.scripts.PluginScript
 import org.rsmod.plugin.scripts.ScriptContext
 
@@ -14,7 +16,25 @@ class InfernoMonsters
 @Inject
 internal constructor(private val deps: BossDeps, private val runs: InfernoRuns) : PluginScript() {
     override fun ScriptContext.startup() {
-        for (spec in infernoSpecs()) BossCombat.register(this, spec, deps)
+        val zukRoll: (Npc, Player) -> Int = { npc, target -> runs.zukDamage(npc, target) }
+        for (spec in infernoSpecs(zukRoll)) {
+            when (spec.npcTypes.first()) {
+                InfernoMonster.Jad.npc ->
+                    BossCombat.register(this, spec, deps, onHit = {
+                        if (npc.hitpoints in 1 until npc.baseHitpointsLvl / 2) runs.summonJadHealers(npc)
+                    })
+                ZukStats.HEALER,
+                ZukStats.JAD_HEALER ->
+                    BossCombat.register(this, spec, deps, onHit = {
+                        if (hit.isFromPlayer) runs.distractHealer(npc)
+                    })
+                else -> BossCombat.register(this, spec, deps)
+            }
+        }
+        val registry = deps.extensionRegistry
+        registry.register(ZukStats.SET_HANDLER) { _, npc, _, _ -> runs.zukSet(npc) }
+        registry.register(ZukStats.JAD_HANDLER) { _, npc, _, _ -> runs.zukJad(npc) }
+        registry.register(ZukStats.HEALERS_HANDLER) { _, npc, _, _ -> runs.zukHealers(npc) }
 
         for ((type, death) in DEATHS) {
             val npcType = ServerCacheManager.getNpc(type.asRSCM(RSCMType.NPC)) ?: continue
@@ -32,6 +52,9 @@ internal constructor(private val deps: BossDeps, private val runs: InfernoRuns) 
                 InfernoMonster.Ranger.npc to ("seq.jalxil_death" to 4),
                 InfernoMonster.Mager.npc to ("seq.jalakxil_death" to 4),
                 InfernoMonster.Jad.npc to ("seq.jaltokjad_death" to 5),
+                ZukStats.NPC to ("seq.zuk_death" to 6),
+                ZukStats.HEALER to ("seq.jalmejrah_death" to 3),
+                ZukStats.JAD_HEALER to ("seq.lizard_cleric_death" to 3),
                 BLOB_MELEE to ("seq.jalak_death" to 3),
                 BLOB_RANGE to ("seq.jalak_death" to 3),
                 BLOB_MAGE to ("seq.jalak_death" to 3),
