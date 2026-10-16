@@ -14,6 +14,7 @@ class Obstacle(
     val locs: List<String>,
     val xp: Double,
     val level: Int = 1,
+    val at: CoordGrid? = null,
     val traverse: Traverse,
 )
 
@@ -33,6 +34,7 @@ class AgilityCourse(
     val obstacles: List<Obstacle>,
     val markTiles: List<CoordGrid>,
     val markChance: MarkChance = MarkChance.STANDARD,
+    val onLap: (ProtectedAccess.() -> Unit)? = null,
 ) {
     val allObstaclesMask: Int
         get() = (1 shl obstacles.size) - 1

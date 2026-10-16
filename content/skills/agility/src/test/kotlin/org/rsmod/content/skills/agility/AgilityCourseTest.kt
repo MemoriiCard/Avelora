@@ -10,10 +10,12 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.parallel.ResourceLock
 import org.rsmod.content.skills.agility.courses.AlKharidRooftopCourse
 import org.rsmod.content.skills.agility.courses.GnomeStrongholdCourse
 import org.rsmod.content.skills.agility.courses.VarrockRooftopCourse
 
+@ResourceLock("server-cache")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class AgilityCourseTest {
     private val gnome = GnomeStrongholdCourse.course
