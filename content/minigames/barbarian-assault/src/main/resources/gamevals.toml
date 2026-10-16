@@ -3,3 +3,5 @@ barbassault = 65534
 
 [gamevals.varp]
 ba_honour = 64824
+ba_gamble_progress = 64872
+ba_queen_kills = 64873
