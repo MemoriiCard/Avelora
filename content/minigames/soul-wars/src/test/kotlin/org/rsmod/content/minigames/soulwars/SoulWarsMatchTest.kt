@@ -113,4 +113,40 @@ class SoulWarsMatchTest {
         assertEquals(SwPhase.Waiting, match.phase)
         assertTrue(9 in match.waiting)
     }
+
+    private fun withBots(): SoulWarsMatch =
+        SoulWarsMatch(10, 100) { blue, red -> mapOf(SwTeam.Blue to 5 - blue, SwTeam.Red to 5 - red) }
+
+    @Test
+    fun `a lone player starts against bots`() {
+        val match = withBots()
+        match.join(1, 0)
+        val started = assertIs<SwEvent.GameStarted>(match.update(10, even).single())
+        assertEquals(mapOf(SwTeam.Blue to 4, SwTeam.Red to 5), started.bots)
+    }
+
+    @Test
+    fun `bot share reaches the result`() {
+        val match = withBots()
+        match.join(1, 0)
+        match.update(10, even)
+        val ended = match.update(110, even).filterIsInstance<SwEvent.GameEnded>().single()
+        assertEquals(9.0 / 10.0, ended.result.botShare, 1e-9)
+    }
+
+    @Test
+    fun `the game ends when the last human leaves a bot game`() {
+        val match = withBots()
+        match.join(1, 0)
+        match.update(10, even)
+        val ended = match.leave(1, 40).filterIsInstance<SwEvent.GameEnded>().single()
+        assertNull(ended.result.winner)
+    }
+
+    @Test
+    fun `soul rolls respect the weights`() {
+        assertEquals(SoulKind.WeakA, SoulKind.roll(0))
+        assertEquals(SoulKind.Wolf, SoulKind.roll(SoulKind.TOTAL_WEIGHT - 1))
+        assertTrue(SoulKind.entries.all { it.fragments in 1..2 })
+    }
 }

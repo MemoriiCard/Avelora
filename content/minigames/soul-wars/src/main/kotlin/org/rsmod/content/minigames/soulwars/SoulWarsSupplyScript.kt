@@ -4,6 +4,8 @@ import jakarta.inject.Inject
 import org.rsmod.api.invtx.invAddOrDrop
 import org.rsmod.api.player.output.mes
 import org.rsmod.api.player.protect.ProtectedAccess
+import org.rsmod.api.player.stat.statBoost
+import org.rsmod.api.player.stat.statHeal
 import org.rsmod.api.repo.obj.ObjRepository
 import org.rsmod.api.script.onOpHeld1
 import org.rsmod.api.script.onOpHeld3
@@ -28,6 +30,10 @@ constructor(
             onOpLoc4(counter) { take(item, 10) }
         }
         onOpHeld1(SoulWarsItems.BONES) { if (service.buryBones(player)) invDel(inv, SoulWarsItems.BONES) }
+        onOpHeld1(SoulWarsItems.BANDAGES) { bandage(it.slot) }
+        for (dose in 1..SoulWarsSupplies.POTION_DOSES) {
+            onOpHeld1(SoulWarsSupplies.potion(dose)) { drink(it.slot, dose) }
+        }
         onOpHeld3("obj.soul_cape_blue") { toggleCape("obj.soul_cape_blue", "obj.soul_cape_red") }
         onOpHeld3("obj.soul_cape_red") { toggleCape("obj.soul_cape_red", "obj.soul_cape_blue") }
     }
@@ -43,6 +49,29 @@ constructor(
             return
         }
         player.invAddOrDrop(objs, item, allowed)
+    }
+
+    private fun ProtectedAccess.bandage(slot: Int) {
+        if (!service.isPlaying(player)) {
+            mes("You can only use bandages during a game.")
+            return
+        }
+        if (invDel(inv, SoulWarsItems.BANDAGES, 1, slot = slot).failure) return
+        player.statHeal("stat.hitpoints", SoulWarsSupplies.BANDAGE_HEAL, SoulWarsSupplies.BANDAGE_PERCENT)
+        mes("You bandage your wounds.")
+    }
+
+    private fun ProtectedAccess.drink(slot: Int, dose: Int) {
+        if (!service.isPlaying(player)) {
+            mes("You can only drink that during a game.")
+            return
+        }
+        if (invDel(inv, SoulWarsSupplies.potion(dose), 1, slot = slot).failure) return
+        if (dose > 1) invAdd(inv, SoulWarsSupplies.potion(dose - 1))
+        for (stat in SoulWarsSupplies.BOOSTED) {
+            player.statBoost(stat, SoulWarsSupplies.BOOST_CONSTANT, SoulWarsSupplies.BOOST_PERCENT)
+        }
+        mes("You drink some of the potion of power.")
     }
 
     private fun ProtectedAccess.toggleCape(from: String, to: String) {
@@ -68,4 +97,13 @@ constructor(
 
 internal object SoulWarsSupplies {
     const val CARRY_LIMIT = 10
+    const val POTION_DOSES = 4
+    const val BANDAGE_HEAL = 10
+    const val BANDAGE_PERCENT = 10
+    const val BOOST_CONSTANT = 5
+    const val BOOST_PERCENT = 15
+    val BOOSTED =
+        listOf("stat.attack", "stat.strength", "stat.defence", "stat.ranged", "stat.magic")
+
+    fun potion(dose: Int): String = "obj.soul_wars_buff_potion_$dose"
 }

@@ -52,6 +52,9 @@ class SoulWarsSymbolsTest {
                 assertNotNull(ServerCacheManager.getNpc(npc.asRSCM(RSCMType.NPC)), npc)
             }
             assertNotNull(ServerCacheManager.getVarp(SoulWarsService.ZEAL.asRSCM(RSCMType.VARP)))
+            for (bot in SoulWarsBots.SYMBOLS.values) assertNotNull(ServerCacheManager.getNpc(bot.asRSCM(RSCMType.NPC)), bot)
+            for (soul in SoulKind.entries) assertNotNull(ServerCacheManager.getNpc(soul.symbol.asRSCM(RSCMType.NPC)), soul.symbol)
+            for (dose in 1..SoulWarsSupplies.POTION_DOSES) assertNotNull(ServerCacheManager.getItem(SoulWarsSupplies.potion(dose).asRSCM(RSCMType.OBJ)))
             assertEquals(65531, SoulWarsService.TIMER.asRSCM(RSCMType.TIMER))
         } finally {
             cache.close()
