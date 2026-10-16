@@ -333,6 +333,10 @@ npc = "npc.godwars_ancient_saradomin_wizard"
 coords = "0_45_81_43_56"
 
 [[spawn]]
+npc = "npc.nex"
+coords = "0_45_81_44_18"
+
+[[spawn]]
 npc = "npc.nex_prison_blood_reaver"
 coords = "0_44_81_38_22"
 
