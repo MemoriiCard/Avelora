@@ -1,0 +1,41 @@
+[[varbit]]
+isServerOnly = true
+id = "varbit.demon_slayer_progress"
+varp = "varp.demonstart"
+startBit = 0
+endBit = 3
+
+[[varbit]]
+isServerOnly = true
+id = "varbit.demon_slayer_bones"
+varp = "varp.demonstart"
+startBit = 4
+endBit = 8
+
+[[varbit]]
+isServerOnly = true
+id = "varbit.demon_slayer_drain_wet"
+varp = "varp.demonstart"
+startBit = 9
+endBit = 9
+
+[[varbit]]
+isServerOnly = true
+id = "varbit.demon_slayer_incantation"
+varp = "varp.demonstart"
+startBit = 10
+endBit = 12
+
+[[varbit]]
+isServerOnly = true
+id = "varbit.demon_slayer_delrith_weakened"
+varp = "varp.demonstart"
+startBit = 13
+endBit = 13
+
+[[varbit]]
+isServerOnly = true
+id = "varbit.demon_slayer_silverlight"
+varp = "varp.demonstart"
+startBit = 14
+endBit = 14
