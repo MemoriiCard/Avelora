@@ -16,6 +16,7 @@ import org.rsmod.api.script.onOpNpc2
 import org.rsmod.api.script.onPlayerLogin
 import org.rsmod.api.script.onPlayerLogout
 import org.rsmod.api.script.onPlayerSoftTimer
+import org.rsmod.content.other.pets.PetRewards
 import org.rsmod.game.entity.util.PathingEntityCommon
 import org.rsmod.game.loc.BoundLocInfo
 import org.rsmod.plugin.scripts.PluginScript
@@ -27,6 +28,7 @@ class GotrScript
 constructor(
     private val service: GotrService,
     private val random: GameRandom,
+    private val pets: PetRewards,
     private val objs: ObjRepository,
     private val collision: CollisionFlagMap,
 ) : PluginScript() {
@@ -244,6 +246,7 @@ constructor(
             val result = GotrLoot.roll(player.baseRunecraftingLvl) { random.of(it) }
             invAddOrDrop(objs, result.obj, result.amount)
             mes("You find ${result.amount} x ${result.obj.substringAfter('.').replace('_', ' ')}.")
+            if (random.of(GotrLoot.PET_ODDS) == 0) pets.give(player, GotrLoot.PET)
             searched++
         }
         if (searched == 0) {

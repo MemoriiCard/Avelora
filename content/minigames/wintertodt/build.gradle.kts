@@ -11,4 +11,5 @@ dependencies {
     implementation(projects.api.random)
     implementation(projects.api.repo)
     implementation(projects.api.script)
+    implementation(projects.content.other.pets)
 }

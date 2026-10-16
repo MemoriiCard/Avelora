@@ -181,3 +181,16 @@ class GotrSymbolTest {
         assertTrue(GotrService.OVERLAY.asRSCM(RSCMType.INTERFACE) > 0)
     }
 }
+
+@ResourceLock("server-cache")
+class GotrPetTest {
+    @Test
+    fun `the abyssal protector pet is a registered pet`() {
+        val cache = ServerCacheManager.init(240)
+        try {
+            assertNotNull(org.rsmod.content.other.pets.Pets.forObj(GotrLoot.PET))
+        } finally {
+            cache.close()
+        }
+    }
+}

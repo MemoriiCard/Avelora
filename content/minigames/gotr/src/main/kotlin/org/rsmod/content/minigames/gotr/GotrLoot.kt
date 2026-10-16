@@ -1,6 +1,9 @@
 package org.rsmod.content.minigames.gotr
 
 object GotrLoot {
+    const val PET_ODDS = 4000
+    const val PET = "obj.abyssalpet"
+
     class Prize(val obj: String, val min: Int, val max: Int, val weight: Int, val rune: GotrRune? = null)
 
     private val talismans =

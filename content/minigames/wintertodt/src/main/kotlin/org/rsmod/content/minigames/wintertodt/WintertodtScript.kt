@@ -19,6 +19,7 @@ import org.rsmod.api.script.onOpNpc1
 import org.rsmod.api.script.onPlayerLogin
 import org.rsmod.api.script.onPlayerLogout
 import org.rsmod.api.script.onPlayerSoftTimer
+import org.rsmod.content.other.pets.PetRewards
 import org.rsmod.game.entity.Npc
 import org.rsmod.game.entity.util.PathingEntityCommon
 import org.rsmod.game.loc.BoundLocInfo
@@ -31,6 +32,7 @@ class WintertodtScript
 constructor(
     private val service: WintertodtService,
     private val random: GameRandom,
+    private val pets: PetRewards,
     private val objs: ObjRepository,
     private val collision: CollisionFlagMap,
 ) : PluginScript() {
@@ -205,6 +207,7 @@ constructor(
             val drop = WintertodtLoot.roll(levels) { random.of(it) }
             invAddOrDrop(objs, drop.obj, drop.count)
             mes("You find ${drop.count} x ${drop.obj.substringAfter('.').replace('_', ' ')}.")
+            if (random.of(WintertodtLoot.PET_ODDS) == 0) pets.give(player, WintertodtLoot.PET)
             searched++
         }
         if (searched == 0) {
