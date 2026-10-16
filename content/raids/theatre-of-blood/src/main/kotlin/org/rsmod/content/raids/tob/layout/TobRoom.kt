@@ -13,6 +13,7 @@ enum class TobRoom(
     val arrival: CoordGrid,
     val arena: CoordGrid,
     val exit: CoordGrid?,
+    val inSequence: Boolean = true,
 ) {
     Maiden(
         "The Maiden of Sugadinti",
@@ -62,13 +63,21 @@ enum class TobRoom(
         arrival = CoordGrid(3237, 4312, 0),
         arena = CoordGrid(3237, 4312, 0),
         exit = null,
+    ),
+    Maze(
+        "The Shadow Realm",
+        52, 67, 3, 1, 0, 1,
+        arrival = CoordGrid(3356, 4311, 3),
+        arena = CoordGrid(3360, 4320, 3),
+        exit = null,
+        inSequence = false,
     );
 
     val next: TobRoom?
-        get() = entries.getOrNull(ordinal + 1)
+        get() = SEQUENCE.getOrNull(SEQUENCE.indexOf(this) + 1)
 
     val isFight: Boolean
-        get() = this != Treasure
+        get() = this != Treasure && inSequence
 
     private val originX: Int
         get() = squareX * SQUARE
@@ -112,6 +121,7 @@ enum class TobRoom(
         const val SQUARE = 64
         const val ZONES = SQUARE / 8
         const val REGION_LENGTH = 128
+        val SEQUENCE: List<TobRoom> by lazy { entries.filter { it.inSequence } }
 
         fun at(southWest: CoordGrid, instance: CoordGrid): TobRoom? =
             entries.firstOrNull { it.owns(southWest, instance) }

@@ -78,8 +78,10 @@ abstract class TobBossRoom(
         npcs.clear()
     }
 
+    protected open fun inside(coords: CoordGrid): Boolean = raid.roomAt(coords) === room
+
     fun playersInRoom(): List<Player> =
-        raid.alive.filter { it.hitpoints > 0 && raid.roomAt(it.coords) === room }
+        raid.alive.filter { it.hitpoints > 0 && inside(it.coords) }
 
     protected fun world(source: CoordGrid): CoordGrid = raid.coords(room, source)
 
