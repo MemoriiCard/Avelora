@@ -12,6 +12,7 @@ import org.rsmod.api.script.onOpNpc3
 import org.rsmod.api.shops.Shops
 import org.rsmod.content.areas.city.draynor.npcs.DiangoHolidayItems.Companion.openHolidayItems
 import org.rsmod.content.interfaces.omnishop.openOmnishop
+import org.rsmod.content.quest.area.draynor.VampyreSlayerMorgan
 import org.rsmod.content.quest.manager.QuestRequirements
 import org.rsmod.content.quest.manager.menu
 import org.rsmod.game.entity.Player
@@ -49,6 +50,7 @@ class DraynorVillageNpcs @Inject constructor(private val shops: Shops) : PluginS
     }
 
     private suspend fun Dialogue.morgan() {
+        if (with(VampyreSlayerMorgan) { talk() }) return
         if (!QuestRequirements.hasCompleted(player, VAMPYRE_SLAYER)) {
             chatNpc(worried, "Please, please help us, bold adventurer!")
             return

@@ -72,6 +72,8 @@ misthalin_reflections = 63700
 misthalin_gem_row_slot = 63701
 cooks_assistant_progress = 63704
 cooks_assistant_milk = 63705
+vampyre_slayer_progress = 63727
+vampyre_slayer_count_slain = 63728
 cooks_assistant_egg = 63706
 cooks_assistant_flour = 63707
 
