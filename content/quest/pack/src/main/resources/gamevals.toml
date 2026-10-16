@@ -66,6 +66,7 @@ misthalin_puzzle_state = 63702
 cooks_assistant_ingredients = 63705
 
 [gamevals.varbit]
+romeo_juliet_progress = 63714
 restless_ghost_progress = 63702
 imp_catcher_progress = 63703
 misthalin_reflections = 63700
