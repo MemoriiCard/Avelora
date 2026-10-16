@@ -9,8 +9,12 @@ import org.rsmod.api.invtx.invAddOrDrop
 import org.rsmod.api.player.output.MiscOutput
 import org.rsmod.api.player.output.mes
 import org.rsmod.api.repo.obj.ObjRepository
+import org.rsmod.content.minigames.framework.BotPolicy
+import org.rsmod.content.minigames.framework.Minigame
+import org.rsmod.content.minigames.framework.MinigameConfig
 import org.rsmod.content.minigames.framework.MinigameProfile
 import org.rsmod.game.MapClock
+import org.rsmod.game.entity.Npc
 import org.rsmod.game.entity.Player
 import org.rsmod.game.entity.PlayerList
 import org.rsmod.game.entity.util.PathingEntityCommon
@@ -31,8 +35,11 @@ constructor(
     private val barricades: CastleWarsBarricades,
     private val catapults: CastleWarsCatapults,
     private val tunnels: CastleWarsTunnels,
+    private val bots: CastleWarsBots,
 ) {
-    val match = CastleWarsMatch()
+    private val botPolicy = BotPolicy(MinigameConfig.load())
+    val match = CastleWarsMatch(botPlan = ::planBots)
+    private var lastTick = -1
     private val droppedFlags = HashMap<CwTeam, Obj>()
 
     fun id(player: Player): Int = player.slotId
@@ -70,8 +77,27 @@ constructor(
         apply(events)
     }
 
+    private fun planBots(saradomin: Int, zamorak: Int): Map<CwTeam, Int> {
+        val split = botPolicy.distribute(Minigame.CastleWars, listOf(saradomin, zamorak))
+        return mapOf(CwTeam.Saradomin to split[0], CwTeam.Zamorak to split[1])
+    }
+
+    fun isBot(npc: Npc): Boolean = bots.isBot(npc)
+
+    fun botTeam(npc: Npc): CwTeam? = bots.teamOf(npc)
+
+    fun onBotKilled(npc: Npc) {
+        bots.onKilled(npc, clock.cycle)
+    }
+
     fun tick() {
+        if (clock.cycle == lastTick) return
+        lastTick = clock.cycle
         apply(match.update(clock.cycle))
+        if (match.phase == CwPhase.Playing) {
+            val humans = match.playing.mapNotNull { (id, team) -> player(id)?.let { it to team } }.toMap()
+            bots.update(clock.cycle, humans)
+        }
         barricades.update(clock.cycle)
         catapults.update(clock.cycle)
     }
@@ -186,6 +212,7 @@ constructor(
 
     private fun start(event: CwEvent.GameStarted) {
         tunnels.reset()
+        bots.spawn(event.bots)
         for ((id, team) in event.players) {
             val player = player(id) ?: continue
             teleport(player, CastleWarsMap.SPAWN.getValue(team))
@@ -195,6 +222,7 @@ constructor(
     }
 
     private fun finish(result: CwResult) {
+        bots.clear()
         barricades.clear()
         catapults.reset()
         CwTeam.entries.forEach(::clearDropped)
@@ -207,7 +235,7 @@ constructor(
                 CastleWarsRewards.reward(
                     participationTicks = result.participation[id] ?: 0,
                     won = won,
-                    botShare = BOT_SHARE,
+                    botShare = result.botShare,
                     firstWinToday = won && MinigameProfile.claimFirstWin(player, day),
                 )
             strip(player)
@@ -272,6 +300,5 @@ constructor(
 
     companion object {
         const val TIMER = "timer.castle_wars"
-        const val BOT_SHARE = 0.0
     }
 }

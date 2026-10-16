@@ -7,6 +7,7 @@ dependencies {
     implementation(projects.api.areaChecker)
     implementation(projects.api.death)
     implementation(projects.api.invtx)
+    implementation(projects.api.npc)
     implementation(projects.api.player)
     implementation(projects.api.playerOutput)
     implementation(projects.api.pluginCommons)
