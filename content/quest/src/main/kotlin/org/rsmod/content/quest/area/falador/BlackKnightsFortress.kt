@@ -2,6 +2,7 @@ package org.rsmod.content.quest.area.falador
 
 import org.rsmod.api.player.dialogue.Dialogue
 import org.rsmod.api.player.protect.ProtectedAccess
+import org.rsmod.api.player.vars.intVarBit
 import org.rsmod.api.script.onOpLoc1
 import org.rsmod.api.script.onOpLocU
 import org.rsmod.api.script.onOpNpc1
@@ -9,6 +10,9 @@ import org.rsmod.content.quest.manager.ItemRewardDisplay
 import org.rsmod.content.quest.manager.QuestProgressState
 import org.rsmod.content.quest.manager.QuestScript
 import org.rsmod.content.quest.manager.rewards
+import org.rsmod.game.entity.Player
+import org.rsmod.game.loc.BoundLocInfo
+import org.rsmod.map.CoordGrid
 import org.rsmod.plugin.scripts.ScriptContext
 
 class BlackKnightsFortress : QuestScript(
@@ -24,6 +28,9 @@ class BlackKnightsFortress : QuestScript(
                 "but the quest completes at $COMPLETE_STAGE."
         }
         onOpNpc1("npc.sir_amik_varze") { startDialogue(it.npc) { amik() } }
+        onOpLoc1("loc.bkfortressdoor1") { mes("The door won't open. It looks to be locked from the inside.") }
+        onOpLoc1("loc.bkfortressdoor2") { guardDoor(it.loc) }
+        onOpLoc1("loc.bkfortressdoor3") { crossWall(it.loc) }
         onOpLoc1("loc.witchgrill") { listen() }
         onOpLocU("loc.blackknighthole", CABBAGE) { sabotage() }
         onOpLocU("loc.blackknighthole", MAGIC_CABBAGE) { wrongCabbage() }
@@ -35,8 +42,12 @@ class BlackKnightsFortress : QuestScript(
     override fun questLog(player: ProtectedAccess) = questJournal(player) {
         description("Sir Amik Varze wants me to find out what the Black Knights' secret weapon is, and ruin it.")
         when (quest.getQuestStage(player.player)) {
-            STARTED -> objective("I should infiltrate the <red>Black Knights' fortress</red> north of Falador and listen in on their plans through the <red>grill</red>.") {}
-            LISTENED -> objective("The witch is brewing a potion that needs a <red>Draynor Manor cabbage</red>. I should tell <red>Sir Amik Varze</red>.") {}
+            STARTED ->
+                if (player.player.listened == 1) {
+                    objective("The witch is brewing a potion that needs a <red>Draynor Manor cabbage</red>. I should tell <red>Sir Amik Varze</red>.") {}
+                } else {
+                    objective("I should infiltrate the <red>Black Knights' fortress</red> north of Falador and listen in on their plans through the <red>grill</red>.") {}
+                }
             REPORTED -> objective("I should drop an ordinary <red>cabbage</red> through the <red>hole</red> above the witch's cauldron.") {
                 hasItem("cabbage", "I have a cabbage.")
             }
@@ -48,6 +59,8 @@ class BlackKnightsFortress : QuestScript(
         line("I sabotaged the Black Knights' secret weapon and Sir Amik Varze paid me for it.")
     }
 
+    private var Player.listened by intVarBit("varbit.black_knights_listened")
+
     private suspend fun Dialogue.amik() {
         when (quest.questState(player)) {
             QuestProgressState.NOT_STARTED -> amikStart()
@@ -55,11 +68,13 @@ class BlackKnightsFortress : QuestScript(
                 chatNpc(happy, "Thank you for your help, adventurer. The Black Knights will trouble us no more.")
             QuestProgressState.IN_PROGRESS ->
                 when (quest.getQuestStage(player)) {
-                    STARTED -> {
-                        chatNpc(quiz, "Have you managed to find out what the Black Knights are up to?")
-                        chatPlayer(neutral, "Not yet. I'll try listening at the grill in their fortress.")
-                    }
-                    LISTENED -> amikReport()
+                    STARTED ->
+                        if (player.listened == 1) {
+                            amikReport()
+                        } else {
+                            chatNpc(quiz, "Have you managed to find out what the Black Knights are up to?")
+                            chatPlayer(neutral, "Not yet. I'll try listening at the grill in their fortress.")
+                        }
                     REPORTED -> {
                         chatNpc(neutral, "Get an ordinary cabbage and drop it down the hole above their cauldron. Not a Draynor Manor one.")
                     }
@@ -100,7 +115,7 @@ class BlackKnightsFortress : QuestScript(
     private suspend fun Dialogue.amikReport() {
         chatPlayer(happy, "I've listened in. The witch is making a potion, and it needs a Draynor Manor cabbage.")
         chatNpc(happy, "Excellent work. Then you must sabotage it. Drop an ordinary cabbage down the hole above the cauldron while they meet.")
-        quest.advanceQuestStage(access, REPORTED - LISTENED)
+        quest.advanceQuestStage(access, REPORTED - STARTED)
     }
 
     private suspend fun Dialogue.amikFinish() {
@@ -116,7 +131,7 @@ class BlackKnightsFortress : QuestScript(
         }
         mes("You hear a witch say: 'It's taken me FIVE YEARS, but it's almost ready.'")
         mes("'Only a Draynor Manor cabbage will do for the final ingredient!'")
-        if (quest.getQuestStage(player) == STARTED) quest.advanceQuestStage(this, LISTENED - STARTED)
+        if (quest.getQuestStage(player) == STARTED) player.listened = 1
     }
 
     private suspend fun ProtectedAccess.sabotage() {
@@ -129,6 +144,26 @@ class BlackKnightsFortress : QuestScript(
         quest.advanceQuestStage(this, SABOTAGED - REPORTED)
     }
 
+    private fun ProtectedAccess.guardDoor(door: BoundLocInfo) {
+        if (player.worn.count(HELM) == 0 || player.worn.count(CHAINBODY) == 0) {
+            mes("A fortress guard stops you: only Black Knights in uniform may pass.")
+            return
+        }
+        crossWall(door)
+    }
+
+    private fun ProtectedAccess.crossWall(door: BoundLocInfo) {
+        val at = door.coords
+        val other =
+            when (door.angle.id) {
+                0 -> CoordGrid(at.x - 1, at.z, at.level)
+                1 -> CoordGrid(at.x, at.z + 1, at.level)
+                2 -> CoordGrid(at.x + 1, at.z, at.level)
+                else -> CoordGrid(at.x, at.z - 1, at.level)
+            }
+        teleport(if (coords == at) other else at)
+    }
+
     private fun ProtectedAccess.wrongCabbage() {
         mes("This is the wrong sort of cabbage!")
     }
@@ -138,12 +173,13 @@ class BlackKnightsFortress : QuestScript(
         const val COINS = 2500
         const val QP_REQUIRED = 12
         const val DOSSIER = "obj.bk_dossier"
+        const val HELM = "obj.bronze_med_helm"
+        const val CHAINBODY = "obj.iron_chainbody"
         const val CABBAGE = "obj.cabbage"
-        const val MAGIC_CABBAGE = "obj.draynor_magic_cabbage"
+        const val MAGIC_CABBAGE = "obj.magic_cabbage"
         const val STARTED = 1
-        const val LISTENED = 2
-        const val REPORTED = 3
-        const val SABOTAGED = 4
-        const val COMPLETE_STAGE = 5
+        const val REPORTED = 2
+        const val SABOTAGED = 3
+        const val COMPLETE_STAGE = 4
     }
 }

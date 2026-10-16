@@ -4,3 +4,10 @@ id = "varbit.black_knights_progress"
 varp = "varp.spy"
 startBit = 0
 endBit = 6
+
+[[varbit]]
+isServerOnly = true
+id = "varbit.black_knights_listened"
+varp = "varp.spy"
+startBit = 7
+endBit = 7
