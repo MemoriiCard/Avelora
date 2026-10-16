@@ -23,22 +23,20 @@ internal fun Player.chargeCrusherItemWithEcto(
     crusherSlot: Int,
     tokenSlot: Int,
 ): Int? {
-    val tokenCount = inv.count("obj.ectotoken")
-    val removed = invDel(inv, "obj.ectotoken", count = tokenCount, slot = tokenSlot)
-    if (removed.failure) {
+    val room = (MAX_CHARGES - bonecrusherCharges) / CHARGES_PER_TOKEN
+    val tokens = minOf(inv.count("obj.ectotoken"), room)
+    if (tokens <= 0) {
         return null
     }
-
-    val add = tokenCount * 25
-    val next = (bonecrusherCharges + add).coerceAtMost(60_000)
-    if (next == bonecrusherCharges) {
-        invAdd(inv, "obj.ectotoken", count = tokenCount)
+    if (invDel(inv, "obj.ectotoken", count = tokens, slot = tokenSlot).failure) {
         return null
     }
-    bonecrusherCharges = next
-
+    bonecrusherCharges += tokens * CHARGES_PER_TOKEN
     return bonecrusherCharges
 }
+
+private const val MAX_CHARGES = 60_000
+private const val CHARGES_PER_TOKEN = 25
 
 internal fun Player.tryUnchargeBonecrusher(
     inv: Inventory,
