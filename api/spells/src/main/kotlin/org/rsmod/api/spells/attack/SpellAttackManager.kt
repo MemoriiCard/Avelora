@@ -10,6 +10,7 @@ import org.rsmod.api.combat.manager.MagicRuneManager
 import org.rsmod.api.combat.manager.MagicRuneManager.Companion.consumedRune
 import org.rsmod.api.combat.manager.MagicRuneManager.Companion.isFailure
 import org.rsmod.api.combat.manager.PlayerAttackManager
+import org.rsmod.api.combat.manager.TomeChargeManager
 import org.rsmod.api.config.constants
 import org.rsmod.api.player.protect.ProtectedAccess
 import org.rsmod.api.player.vars.boolVarBit
@@ -19,7 +20,11 @@ import org.rsmod.game.proj.ProjAnim
 
 public class SpellAttackManager
 @Inject
-constructor(private val manager: PlayerAttackManager, private val runes: MagicRuneManager) {
+constructor(
+    private val manager: PlayerAttackManager,
+    private val runes: MagicRuneManager,
+    private val tomes: TomeChargeManager,
+) {
     private val ProtectedAccess.autocastEnabled by boolVarBit("varbit.autocast_set")
 
     /**
@@ -63,6 +68,7 @@ constructor(private val manager: PlayerAttackManager, private val runes: MagicRu
             return castResult
         }
 
+        tomes.consume(source.player, attack.spell)
         giveCastXp(source, attack)
         return castResult
     }

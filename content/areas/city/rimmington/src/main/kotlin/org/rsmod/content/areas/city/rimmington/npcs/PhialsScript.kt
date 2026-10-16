@@ -1,7 +1,13 @@
 package org.rsmod.content.areas.city.rimmington.npcs
 
+import dev.openrune.rscm.RSCM.asRSCM
+import dev.openrune.rscm.RSCMType
 import dev.openrune.types.ItemServerType
 import kotlin.math.min
+import org.rsmod.api.invtx.add
+import org.rsmod.api.invtx.delete
+import org.rsmod.api.invtx.invTransaction
+import org.rsmod.api.invtx.select
 import org.rsmod.api.player.dialogue.Dialogue
 import org.rsmod.api.player.protect.ProtectedAccess
 import org.rsmod.api.script.onOpNpc1
@@ -86,18 +92,31 @@ class PhialsScript : PluginScript() {
             mes("You don't have enough coins to pay for that.")
             return null
         }
-        val space = inv.freeSpace() + if (inv.count("obj.coins") == affordable * FEE) 1 else 0
-        val amount = minOf(count, affordable, space)
-        if (amount == 0) {
+        val item = ocUncert(noteType)
+        val upperBound = minOf(count, affordable, inv.freeSpace() + 2)
+        val amount = (upperBound downTo 1).firstOrNull { tryExchange(invSlot, noteType, item, it) }
+        if (amount == null) {
             mes("You don't have enough inventory space.")
             return null
         }
-        invDel(inv, "obj.coins", amount * FEE)
-        val item = ocUncert(noteType)
-        invDel(inv, noteType.internalName, amount, slot = invSlot)
-        invAdd(inv, item.internalName, amount)
         soundSynth("synth.phials_exchange")
         return item.internalName
+    }
+
+    private fun ProtectedAccess.tryExchange(
+        invSlot: Int,
+        noteType: ItemServerType,
+        item: ItemServerType,
+        amount: Int,
+    ): Boolean {
+        val result =
+            player.invTransaction(inv) {
+                val from = select(inv)
+                delete(from, "obj.coins".asRSCM(RSCMType.OBJ), amount * FEE)
+                delete(from, noteType.id, amount, slot = invSlot)
+                add(from, item.id, amount)
+            }
+        return result.success
     }
 
     private companion object {

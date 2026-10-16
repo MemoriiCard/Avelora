@@ -1,0 +1,99 @@
+package org.rsmod.content.raids.toa
+
+import dev.openrune.ServerCacheManager
+import dev.openrune.rscm.RSCM.asRSCM
+import dev.openrune.rscm.RSCMType
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.parallel.ResourceLock
+import org.rsmod.content.raids.toa.reward.ToaLoot
+
+@ResourceLock("server-cache")
+class ToaGamevalTest {
+    @Test
+    fun `every symbol the raid uses resolves`() {
+        val cache = ServerCacheManager.init(240)
+        try {
+            for (name in LOCS) name.asRSCM(RSCMType.LOC)
+            for (name in NPCS) name.asRSCM(RSCMType.NPC)
+            val objs =
+                ToaLoot.UNIQUE_OBJS + ToaLoot.COMMONS.map { it.obj } + ToaLoot.SHROUDS.map { it.second } +
+                    ToaLoot.JEWELS + ToaLoot.PETS +
+                    listOf(ToaLoot.DUNG, ToaLoot.THREAD, ToaLoot.JEWEL_FINAL, "obj.icthlarins_hood")
+            for (name in objs) name.asRSCM(RSCMType.OBJ)
+            for (name in listOf("varp.total_completed_tombsofamascut", "varp.total_completed_tombsofamascut_entry", "varp.total_completed_tombsofamascut_expert")) {
+                name.asRSCM(RSCMType.VARP)
+            }
+        } finally {
+            cache.close()
+        }
+    }
+
+    private companion object {
+        val LOCS =
+            listOf(
+                "loc.toa_invocation_board",
+                "loc.toa_lobby_raid_entry",
+                "loc.toa_lobby_exit",
+                "loc.toa_nexus_crondis_door",
+                "loc.toa_nexus_het_door",
+                "loc.toa_nexus_scabaras_door",
+                "loc.toa_nexus_apmeken_door",
+                "loc.toa_nexus_wardens_door",
+                "loc.toa_path_crondis_continue",
+                "loc.toa_scabaras_continue",
+                "loc.toa_zebak_exit",
+                "loc.toa_entrance_kephri_main",
+                "loc.toa_crondis_exit",
+                "loc.toa_door_exit",
+                "loc.toa_crondis_water_source",
+                "loc.toa_vault_chest_mine_standard",
+                "loc.toa_vault_sarcophagus_closed_rare",
+                "loc.toa_lobby_cape_chest",
+                "loc.toa_rewards_chest_lobby_closed",
+                "loc.toa_rewards_chest_lobby_open",
+                "loc.toa_lobby_gravestone_chest",
+                "loc.toa_het_statue_parent",
+                "loc.toa_door_continue",
+                "loc.toa_path_apmeken_continue",
+                "loc.toa_path_apmeken_pillar",
+                "loc.toa_path_apmeken_hammers",
+                "loc.toa_path_apmeken_potions",
+                "loc.toa_entrance_akkha01",
+                "loc.toa_entrance_baba02",
+            )
+
+        val NPCS =
+            listOf(
+                "npc.toa_zebak",
+                "npc.toa_zebak_enraged",
+                "npc.toa_zebak_safespot",
+                "npc.toa_kephri_boss_shielded",
+                "npc.toa_kephri_boss_enrage",
+                "npc.toa_kephri_shield_scarab",
+                "npc.toa_kephri_guardian_melee",
+                "npc.toa_kephri_guardian_ranged",
+                "npc.toa_kephri_guardian_mage",
+                "npc.toa_scabaras_scarab",
+                "npc.toa_crondis_crocodile",
+                "npc.toa_crondis_tree_1",
+                "npc.toa_crondis_tree_2",
+                "npc.toa_crondis_tree_3",
+                "npc.toa_crondis_tree_4",
+                "npc.akkha_melee",
+                "npc.akkha_enrage",
+                "npc.toa_baba",
+                "npc.toa_baba_baboon",
+                "npc.toa_het_goal",
+                "npc.toa_het_goal_vulnerable",
+                "npc.toa_wardens_p1_obelisk_npc",
+                "npc.toa_warden_elidinis_phase1_inactive",
+                "npc.toa_warden_tumeken_phase1_inactive",
+                "npc.toa_warden_elidinis_phase2_mage",
+                "npc.toa_warden_elidinis_phase2_range",
+                "npc.toa_warden_elidinis_core",
+                "npc.toa_warden_elidinis_phase3",
+                "npc.toa_warden_tumeken_phase3_inactive",
+                "npc.toa_kephri_scarab_rangekite",
+            )
+    }
+}

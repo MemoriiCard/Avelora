@@ -28,6 +28,16 @@ public object MagicSpellChecks {
     public fun isBindSpell(spell: ItemServerType): Boolean =
         spell.isAnyType("obj.20_bind", "obj.50_snare", "obj.79_entangle")
 
+    public fun isCurseSpell(spell: ItemServerType): Boolean =
+        spell.isAnyType(
+            "obj.03_confuse",
+            "obj.11_weaken",
+            "obj.19_curse",
+            "obj.66_vulnerability",
+            "obj.73_enfeeble",
+            "obj.80_stun",
+        )
+
     public fun isWindSpell(spell: ItemServerType): Boolean =
         spell.isAnyType(
             "obj.01_wind_strike",

@@ -118,3 +118,11 @@ coords = "0_27_180_28_18"
 [[spawn]]
 npc = "npc.callisto"
 coords = "0_52_161_31_24"
+
+[[spawn]]
+npc = "npc.vetion_single"
+coords = "1_29_180_29_26"
+
+[[spawn]]
+npc = "npc.vetion"
+coords = "1_51_159_29_26"

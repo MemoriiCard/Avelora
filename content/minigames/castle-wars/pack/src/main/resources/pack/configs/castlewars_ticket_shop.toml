@@ -1,0 +1,63 @@
+[[inventory]]
+id = "inv.castlewars_ticket_shop"
+name = "Castle Wars Ticket Exchange"
+
+scope = "Shared"
+stack = "Always"
+
+sellMultiplier = 1000
+buyMultiplier = 800
+delta = 0
+
+size = 9
+
+protect = false
+runWeight = false
+restock = true
+allStock = false
+placeholders = false
+
+[[inventory.stock]]
+obj = "obj.castlewars_sword"
+count = 100
+restockCycles = 1
+
+[[inventory.stock]]
+obj = "obj.castlewars_med_helm"
+count = 100
+restockCycles = 1
+
+[[inventory.stock]]
+obj = "obj.castlewars_armour_legs"
+count = 100
+restockCycles = 1
+
+[[inventory.stock]]
+obj = "obj.castlewars_armour_body"
+count = 100
+restockCycles = 1
+
+[[inventory.stock]]
+obj = "obj.castlewars_shield"
+count = 100
+restockCycles = 1
+
+[[inventory.stock]]
+obj = "obj.castlewars_hood_saradomin_prize"
+count = 100
+restockCycles = 1
+
+[[inventory.stock]]
+obj = "obj.castlewars_cloak_saradomin_prize"
+count = 100
+restockCycles = 1
+
+[[inventory.stock]]
+obj = "obj.castlewars_hood_zamorak_prize"
+count = 100
+restockCycles = 1
+
+[[inventory.stock]]
+obj = "obj.castlewars_cloak_zamorak_prize"
+count = 100
+restockCycles = 1

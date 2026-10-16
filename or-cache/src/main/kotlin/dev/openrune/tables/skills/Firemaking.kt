@@ -206,6 +206,15 @@ object Firemaking {
             column(COL_FORESTER_INITIAL_TICKS, 102)
             column(COL_FORESTER_LOG_TICKS, 3)
         }
+        row("dbrow.firemaking_raids_kindling") {
+            production {
+                input("obj.raids_wood")
+                statReq("stat.firemaking", 1)
+                xp(0)
+            }
+            column(COL_FORESTER_INITIAL_TICKS, 102)
+            column(COL_FORESTER_LOG_TICKS, 3)
+        }
     }
 
     const val COL_LOG_ITEM = 0
@@ -261,7 +270,6 @@ object Firemaking {
             columnRSCM(COL_CAMPFIRE_OBJECT, "loc.forestry_fire_white")
             column(COL_INDEX, 4)
         }
-
     }
 
     const val COL_UNLIT = 0
@@ -328,5 +336,4 @@ object Firemaking {
                 column(COL_LEVEL_LIGHT, 65)
             }
         }
-
 }

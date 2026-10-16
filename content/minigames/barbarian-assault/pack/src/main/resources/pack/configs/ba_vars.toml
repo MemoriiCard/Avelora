@@ -1,0 +1,35 @@
+[[varp]]
+isServerOnly = true
+id = "varp.ba_points_attacker"
+scope = "Perm"
+transmit = "Never"
+
+[[varp]]
+isServerOnly = true
+id = "varp.ba_points_defender"
+scope = "Perm"
+transmit = "Never"
+
+[[varp]]
+isServerOnly = true
+id = "varp.ba_points_healer"
+scope = "Perm"
+transmit = "Never"
+
+[[varp]]
+isServerOnly = true
+id = "varp.ba_points_collector"
+scope = "Perm"
+transmit = "Never"
+
+[[varp]]
+isServerOnly = true
+id = "varp.ba_gamble_progress"
+scope = "Perm"
+transmit = "Never"
+
+[[varp]]
+isServerOnly = true
+id = "varp.ba_queen_kills"
+scope = "Perm"
+transmit = "Never"

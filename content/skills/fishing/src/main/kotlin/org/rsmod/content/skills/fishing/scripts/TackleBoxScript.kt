@@ -220,17 +220,17 @@ class TackleBoxScript @Inject constructor() : PluginScript() {
 
     private fun ProtectedAccess.fillBox() {
         val box = player.tackleBox
-        var moved = 0
-        for (name in storable) {
-            val count = invTotal(inv, name)
-            if (count == 0 || !box.hasRoomFor(name.asRSCM(RSCMType.OBJ))) {
+        var moved = false
+        for (slot in inv.indices) {
+            val obj = inv[slot] ?: continue
+            val type = getInvObj(obj)
+            if (type.isCert || type.internalName !in storable || !box.hasRoomFor(obj.id)) {
                 continue
             }
-            invDel(inv, name, count)
-            invAdd(box, name, count)
-            moved += count
+            val result = invMoveFromSlot(from = inv, into = box, fromSlot = slot, count = obj.count, strict = false)
+            moved = moved || result[0].isOk()
         }
-        mes(if (moved > 0) "You fill the tackle box with your fishing equipment." else "You have no fishing equipment to store.")
+        mes(if (moved) "You fill the tackle box with your fishing equipment." else "You have no fishing equipment to store.")
         UpdateInventory.updateInvFull(player, box)
     }
 
@@ -244,17 +244,18 @@ class TackleBoxScript @Inject constructor() : PluginScript() {
     }
 
     private fun ProtectedAccess.emptyBox() {
-        var emptied = false
         val box = player.tackleBox
-        for (name in storable) {
-            val count = invTotal(box, name)
-            if (count > 0) {
-                invDel(box, name, count)
-                invAdd(inv, name, count)
-                emptied = true
-            }
+        if (box.isEmpty()) {
+            mes("The tackle box is already empty.")
+            return
         }
-        mes(if (emptied) "You empty the tackle box." else "The tackle box is already empty.")
+        var full = false
+        for (slot in box.indices) {
+            val obj = box[slot] ?: continue
+            val result = invMoveFromSlot(from = box, into = inv, fromSlot = slot, count = obj.count, strict = false)
+            full = full || !result[0].isOk() || box[slot] != null
+        }
+        mes(if (full) "Your inventory is too full to empty the tackle box." else "You empty the tackle box.")
         UpdateInventory.updateInvFull(player, box)
     }
 

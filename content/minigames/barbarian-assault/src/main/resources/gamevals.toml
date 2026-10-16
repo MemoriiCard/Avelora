@@ -1,0 +1,7 @@
+[gamevals.varp]
+ba_points_attacker = 64880
+ba_points_defender = 64881
+ba_points_healer = 64882
+ba_points_collector = 64883
+ba_gamble_progress = 64872
+ba_queen_kills = 64873

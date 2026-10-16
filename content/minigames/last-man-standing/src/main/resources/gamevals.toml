@@ -1,0 +1,7 @@
+[gamevals.timer]
+lms = 65533
+
+[gamevals.varp]
+lms_points = 64823
+lms_wins = 64870
+lms_rating_offset = 64871

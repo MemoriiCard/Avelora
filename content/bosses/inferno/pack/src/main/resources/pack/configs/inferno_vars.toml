@@ -1,0 +1,11 @@
+[[varp]]
+isServerOnly = true
+id = "varp.inferno_wave"
+scope = "Perm"
+transmit = "Never"
+
+[[varp]]
+isServerOnly = true
+id = "varp.inferno_unlocked"
+scope = "Perm"
+transmit = "Never"

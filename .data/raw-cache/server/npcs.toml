@@ -3708,6 +3708,9 @@ inherit = "npc.smoke_devil"
 "param.elemental_weakness_percent"=30
 "param.killcount_varp"="varp.kc_smoke_devil"
 "param.killcount_notify"=false
+"param.attack_anim"="seq.lore_dust_devil_attack"
+"param.defend_anim"="seq.lore_dust_devil_defend"
+"param.death_anim"="seq.lore_dust_devil_death"
 
 [[npc]]
 id = "npc.smoke_devil_boss"
@@ -3716,6 +3719,9 @@ inherit = "npc.smoke_devil_boss"
 "param.elemental_weakness_type"=0
 "param.elemental_weakness_percent"=20
 "param.killcount_varp"="varp.kc_thermonuclear_smoke_devil"
+"param.attack_anim"="seq.lore_dust_devil_attack"
+"param.defend_anim"="seq.lore_dust_devil_defend"
+"param.death_anim"="seq.lore_dust_devil_death"
 
 [[npc]]
 id = "npc.sulphur_lizard"
@@ -3998,6 +4004,9 @@ inherit = "npc.superior_smoke_devil"
 "param.elemental_weakness_percent"=20
 "param.killcount_varp"="varp.kc_superior_monster"
 "param.killcount_notify"=false
+"param.attack_anim"="seq.lore_dust_devil_attack"
+"param.defend_anim"="seq.lore_dust_devil_defend"
+"param.death_anim"="seq.lore_dust_devil_death"
 
 [[npc]]
 id = "npc.superior_turoth"
@@ -6462,6 +6471,15 @@ inherit = "npc.corp_beast"
 [npc.params]
 "param.elemental_weakness_type"=2
 "param.elemental_weakness_percent"=10
+"param.attack_anim"="seq.corpbeast_swiping_attack"
+"param.defend_anim"="seq.corpbeast_defend"
+"param.death_anim"="seq.corpbeast_death"
+
+[[npc]]
+id = "npc.dark_core"
+inherit = "npc.dark_core"
+[npc.params]
+"param.death_anim"="seq.darkcore_idle"
 
 [[npc]]
 id = "npc.slayer_basilisk_baby"
@@ -11604,13 +11622,31 @@ inherit = "npc.vetion_hellhound_jnr"
 [npc.params]
 "param.elemental_weakness_type"=2
 "param.elemental_weakness_percent"=35
+"param.attack_anim"="seq.dog_update_skeleton_hellhound_attack"
+"param.defend_anim"="seq.dog_update_skeleton_hellhound_defend"
+"param.death_anim"="seq.wbr_vention_hellhound_death"
 
 [[npc]]
 id = "npc.scorpia"
 inherit = "npc.scorpia"
+respawnRate = 14
 [npc.params]
 "param.elemental_weakness_type"=3
 "param.elemental_weakness_percent"=35
+"param.attack_anim"="seq.scorpion_update_attack_tail"
+"param.defend_anim"="seq.scorpion_update_defend"
+"param.death_anim"="seq.scorpion_update_death"
+"param.killcount_varp"="varp.total_scorpia_kills"
+"param.boss_hp_bar_mode"=1
+
+[[npc]]
+id = "npc.scorpia_minion"
+inherit = "npc.scorpia_minion"
+respawnRate = 5
+[npc.params]
+"param.attack_anim"="seq.small_scorpion_update_attack"
+"param.defend_anim"="seq.small_scorpion_update_defend"
+"param.death_anim"="seq.small_scorpion_update_death"
 
 [[npc]]
 id = "npc.scorpia_guardian"
@@ -11618,6 +11654,9 @@ inherit = "npc.scorpia_guardian"
 [npc.params]
 "param.elemental_weakness_type"=3
 "param.elemental_weakness_percent"=35
+"param.attack_anim"="seq.small_scorpion_update_attack"
+"param.defend_anim"="seq.small_scorpion_update_defend"
+"param.death_anim"="seq.small_scorpion_update_death"
 
 [[npc]]
 id = "npc.fairy2_rivertrollguardian_1"
@@ -13194,6 +13233,8 @@ inherit = "npc.nightmare_parasite"
 [npc.params]
 "param.elemental_weakness_type"=3
 "param.elemental_weakness_percent"=50
+"param.attack_anim"="seq.nightmare_parasite_attack_magic"
+"param.death_anim"="seq.nightmare_parasite_death"
 
 [[npc]]
 id = "npc.nightmare_parasite_weak"
@@ -14315,6 +14356,9 @@ inherit = "npc.vetion_hellhound_jnr_singles"
 [npc.params]
 "param.elemental_weakness_type"=2
 "param.elemental_weakness_percent"=35
+"param.attack_anim"="seq.dog_update_skeleton_hellhound_attack"
+"param.defend_anim"="seq.dog_update_skeleton_hellhound_defend"
+"param.death_anim"="seq.wbr_vention_hellhound_death"
 
 [[npc]]
 id = "npc.osb10_toa_warden_tumeken_phase1_cutscene"
@@ -16601,6 +16645,9 @@ id = "npc.nex_prison_blood_reaver_boss"
 inherit = "npc.nex_prison_blood_reaver_boss"
 [npc.params]
 "param.demon"=1
+"param.attack_anim"="seq.blood_reaver_attack"
+"param.defend_anim"="seq.blood_reaver_defend"
+"param.death_anim"="seq.blood_reaver_death"
 
 [[npc]]
 id = "npc.arena_bouncer"
@@ -16706,8 +16753,15 @@ inherit = "npc.deadman_breach_superior_abyssal_demon"
 [[npc]]
 id = "npc.raids_icedemon_combat"
 inherit = "npc.raids_icedemon_combat"
+huntMode = 8
+huntRange = 14
+maxRange = 32
+attackRange = 10
+defaultMode = "None"
 [npc.params]
 "param.demon"=1
+"param.death_anim"="seq.demon_death"
+"param.defend_anim"="seq.demon_block"
 
 [[npc]]
 id = "npc.raids_icedemon_noncombat"
@@ -16792,3 +16846,296 @@ id = "npc.yama_voidflare"
 inherit = "npc.yama_voidflare"
 [npc.params]
 "param.demon"=1
+
+[[npc]]
+id = "npc.chaos_fanatic"
+inherit = "npc.chaos_fanatic"
+attackRange = 8
+respawnRate = 15
+[npc.params]
+"param.attack_anim"="seq.human_casting"
+"param.defend_anim"="seq.human_unarmedblock"
+"param.death_anim"="seq.human_death"
+"param.killcount_varp"="varp.total_chaosfanatic_kills"
+
+[[npc]]
+id = "npc.crazy_archaeologist"
+inherit = "npc.crazy_archaeologist"
+attackRange = 8
+respawnRate = 15
+[npc.params]
+"param.attack_anim"="seq.book_chuck"
+"param.defend_anim"="seq.human_unarmedblock"
+"param.death_anim"="seq.human_death"
+"param.killcount_varp"="varp.total_crazyarchaeologist_kills"
+"param.boss_hp_bar_mode"=1
+
+[[npc]]
+id = "npc.vetion"
+inherit = "npc.vetion"
+huntMode = 1
+huntRange = 30
+maxRange = 30
+respawnRate = 15
+[npc.params]
+"param.attack_anim"="seq.npc_vetion_attack_magic_01"
+"param.defend_anim"="seq.npc_vetion_defend_shield_01"
+"param.death_anim"="seq.npc_vetion_death_01"
+"param.killcount_varp"="varp.total_vetion_kills"
+"param.boss_hp_bar_mode"=1
+
+[[npc]]
+id = "npc.vetion_2"
+inherit = "npc.vetion_2"
+huntMode = 1
+huntRange = 30
+maxRange = 30
+respawnRate = 15
+[npc.params]
+"param.attack_anim"="seq.npc_vetion_attack_magic_02"
+"param.defend_anim"="seq.npc_vetion_defend_shield_02"
+"param.death_anim"="seq.npc_vetion_death_02"
+"param.killcount_varp"="varp.total_vetion_kills"
+"param.boss_hp_bar_mode"=1
+
+[[npc]]
+id = "npc.vetion_single"
+inherit = "npc.vetion_single"
+huntMode = 1
+huntRange = 30
+maxRange = 30
+respawnRate = 15
+[npc.params]
+"param.attack_anim"="seq.npc_vetion_attack_magic_01"
+"param.defend_anim"="seq.npc_vetion_defend_shield_01"
+"param.death_anim"="seq.npc_vetion_death_01"
+"param.killcount_varp"="varp.total_calvarion_kills"
+"param.boss_hp_bar_mode"=1
+
+[[npc]]
+id = "npc.vetion_2_single"
+inherit = "npc.vetion_2_single"
+huntMode = 1
+huntRange = 30
+maxRange = 30
+respawnRate = 15
+[npc.params]
+"param.attack_anim"="seq.npc_vetion_attack_magic_02"
+"param.defend_anim"="seq.npc_vetion_defend_shield_02"
+"param.death_anim"="seq.npc_vetion_death_02"
+"param.killcount_varp"="varp.total_calvarion_kills"
+"param.boss_hp_bar_mode"=1
+
+[[npc]]
+id = "npc.vetion_hellhound_snr"
+inherit = "npc.vetion_hellhound_snr"
+[npc.params]
+"param.attack_anim"="seq.dog_update_skeleton_hellhound_attack"
+"param.defend_anim"="seq.dog_update_skeleton_hellhound_defend"
+"param.death_anim"="seq.wbr_vention_hellhound_death"
+
+[[npc]]
+id = "npc.vetion_hellhound_snr_singles"
+inherit = "npc.vetion_hellhound_snr_singles"
+[npc.params]
+"param.attack_anim"="seq.dog_update_skeleton_hellhound_attack"
+"param.defend_anim"="seq.dog_update_skeleton_hellhound_defend"
+"param.death_anim"="seq.wbr_vention_hellhound_death"
+
+[[npc]]
+id = "npc.nex"
+inherit = "npc.nex"
+attackRange = 10
+maxRange = 30
+[npc.params]
+"param.attack_anim"="seq.nex_attack"
+"param.defend_anim"="seq.nex_defend"
+"param.death_anim"="seq.nex_death"
+"param.killcount_varp"="varp.total_nex_kills"
+"param.boss_hp_bar_mode"=1
+
+[[npc]]
+id = "npc.nex_soulsplit"
+inherit = "npc.nex_soulsplit"
+attackRange = 10
+maxRange = 30
+[npc.params]
+"param.attack_anim"="seq.nex_attack"
+"param.defend_anim"="seq.nex_defend"
+"param.death_anim"="seq.nex_death"
+"param.killcount_varp"="varp.total_nex_kills"
+"param.boss_hp_bar_mode"=1
+
+[[npc]]
+id = "npc.nex_smokemage"
+inherit = "npc.nex_smokemage"
+attackRange = 10
+maxRange = 30
+[npc.params]
+"param.attack_anim"="seq.human_casting"
+
+[[npc]]
+id = "npc.nex_shadowmage"
+inherit = "npc.nex_shadowmage"
+attackRange = 10
+maxRange = 30
+[npc.params]
+"param.attack_anim"="seq.human_casting"
+
+[[npc]]
+id = "npc.nex_bloodmage"
+inherit = "npc.nex_bloodmage"
+attackRange = 10
+maxRange = 30
+[npc.params]
+"param.attack_anim"="seq.human_casting"
+
+[[npc]]
+id = "npc.nex_icemage"
+inherit = "npc.nex_icemage"
+attackRange = 10
+maxRange = 30
+[npc.params]
+"param.attack_anim"="seq.human_casting"
+
+[[npc]]
+id = "npc.nightmare_initial"
+inherit = "npc.nightmare_initial"
+attackRange = 10
+maxRange = 30
+[npc.params]
+"param.attack_anim"="seq.nightmare_attack_melee"
+"param.death_anim"="seq.nightmare_death"
+"param.killcount_varp"="varp.total_nightmare_kills"
+"param.boss_hp_bar_mode"=1
+
+[[npc]]
+id = "npc.nightmare_phase_01"
+inherit = "npc.nightmare_phase_01"
+attackRange = 10
+maxRange = 30
+[npc.params]
+"param.attack_anim"="seq.nightmare_attack_melee"
+"param.death_anim"="seq.nightmare_death"
+"param.killcount_varp"="varp.total_nightmare_kills"
+"param.boss_hp_bar_mode"=1
+
+[[npc]]
+id = "npc.nightmare_phase_02"
+inherit = "npc.nightmare_phase_02"
+attackRange = 10
+maxRange = 30
+[npc.params]
+"param.attack_anim"="seq.nightmare_attack_melee"
+"param.death_anim"="seq.nightmare_death"
+"param.killcount_varp"="varp.total_nightmare_kills"
+"param.boss_hp_bar_mode"=1
+
+[[npc]]
+id = "npc.nightmare_phase_03"
+inherit = "npc.nightmare_phase_03"
+attackRange = 10
+maxRange = 30
+[npc.params]
+"param.attack_anim"="seq.nightmare_attack_melee"
+"param.death_anim"="seq.nightmare_death"
+"param.killcount_varp"="varp.total_nightmare_kills"
+"param.boss_hp_bar_mode"=1
+
+[[npc]]
+id = "npc.nightmare_weak_phase_01"
+inherit = "npc.nightmare_weak_phase_01"
+attackRange = 10
+maxRange = 30
+[npc.params]
+"param.attack_anim"="seq.nightmare_attack_melee"
+"param.death_anim"="seq.nightmare_death"
+"param.killcount_varp"="varp.total_nightmare_kills"
+"param.boss_hp_bar_mode"=1
+
+[[npc]]
+id = "npc.nightmare_weak_phase_02"
+inherit = "npc.nightmare_weak_phase_02"
+attackRange = 10
+maxRange = 30
+[npc.params]
+"param.attack_anim"="seq.nightmare_attack_melee"
+"param.death_anim"="seq.nightmare_death"
+"param.killcount_varp"="varp.total_nightmare_kills"
+"param.boss_hp_bar_mode"=1
+
+[[npc]]
+id = "npc.nightmare_weak_phase_03"
+inherit = "npc.nightmare_weak_phase_03"
+attackRange = 10
+maxRange = 30
+[npc.params]
+"param.attack_anim"="seq.nightmare_attack_melee"
+"param.death_anim"="seq.nightmare_death"
+"param.killcount_varp"="varp.total_nightmare_kills"
+"param.boss_hp_bar_mode"=1
+
+[[npc]]
+id = "npc.nightmare_blast"
+inherit = "npc.nightmare_blast"
+attackRange = 10
+maxRange = 30
+[npc.params]
+"param.attack_anim"="seq.nightmare_attack_melee"
+"param.death_anim"="seq.nightmare_death"
+"param.killcount_varp"="varp.total_nightmare_kills"
+"param.boss_hp_bar_mode"=1
+
+[[npc]]
+id = "npc.nightmare_husk_magic"
+inherit = "npc.nightmare_husk_magic"
+attackRange = 8
+maxRange = 15
+[npc.params]
+"param.attack_anim"="seq.husk_magic_attack"
+"param.death_anim"="seq.husk_death"
+
+[[npc]]
+id = "npc.nightmare_husk_ranged"
+inherit = "npc.nightmare_husk_ranged"
+attackRange = 8
+maxRange = 15
+[npc.params]
+"param.attack_anim"="seq.husk_ranged_attack"
+"param.death_anim"="seq.husk_death"
+
+[[npc]]
+id = "npc.nightmare_sleepwalker_1"
+inherit = "npc.nightmare_sleepwalker_1"
+[npc.params]
+"param.death_anim"="seq.sleepwalker_death"
+
+[[npc]]
+id = "npc.nightmare_sleepwalker_2"
+inherit = "npc.nightmare_sleepwalker_2"
+[npc.params]
+"param.death_anim"="seq.sleepwalker_death"
+
+[[npc]]
+id = "npc.nightmare_sleepwalker_3"
+inherit = "npc.nightmare_sleepwalker_3"
+[npc.params]
+"param.death_anim"="seq.sleepwalker_death"
+
+[[npc]]
+id = "npc.nightmare_sleepwalker_4"
+inherit = "npc.nightmare_sleepwalker_4"
+[npc.params]
+"param.death_anim"="seq.sleepwalker_death"
+
+[[npc]]
+id = "npc.nightmare_sleepwalker_5"
+inherit = "npc.nightmare_sleepwalker_5"
+[npc.params]
+"param.death_anim"="seq.sleepwalker_death"
+
+[[npc]]
+id = "npc.nightmare_sleepwalker_6"
+inherit = "npc.nightmare_sleepwalker_6"
+[npc.params]
+"param.death_anim"="seq.sleepwalker_death"

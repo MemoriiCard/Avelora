@@ -31,6 +31,7 @@ constructor(
     private val handlingResolver: PlayerDeathHandlingResolver,
     private val cleanupHooks: Set<PlayerDeathCleanupHook>,
     private val respawnHooks: Set<PlayerRespawnHook>,
+    private val safeDeathHooks: Set<PlayerSafeDeathHook>,
     private val areaChecker: AreaChecker,
 ) {
     private var Player.specialAttackType by intVarp("varp.sa_attack")
@@ -92,6 +93,11 @@ constructor(
         }
 
         val context = buildContext(player, deathCoords, killer)
+        if (safeDeathHooks.any { it.isSafeDeath(context) }) {
+            player.attr.remove(DEATH_KILLER_ATTR)
+            player.attr.remove(DEATH_CAUSE_ATTR)
+            return
+        }
         val handling = handlingResolver.resolve(context)
 
         val result = drops.selectDrops(player, context, handling)

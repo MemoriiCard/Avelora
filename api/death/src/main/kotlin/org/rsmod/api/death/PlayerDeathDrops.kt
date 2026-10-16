@@ -140,7 +140,9 @@ constructor(
         player.worn.fillNulls()
 
         for (item in result.kept) {
-            addToInvDirect(player, item)
+            if (!addToInvDirect(player, item)) {
+                dropItem(player, item, coords, handling, receiver = player)
+            }
         }
 
         for (item in result.supplyPile) {
@@ -205,11 +207,13 @@ constructor(
         objRepo.add(obj, dropParams.duration, dropParams.reveal)
     }
 
-    private fun addToInvDirect(player: Player, item: InvObj) {
+    private fun addToInvDirect(player: Player, item: InvObj): Boolean {
         val freeSlot = player.inv.objs.indexOfFirst { it == null }
-        if (freeSlot >= 0) {
-            player.inv[freeSlot] = item
+        if (freeSlot < 0) {
+            return false
         }
+        player.inv[freeSlot] = item
+        return true
     }
 
     private fun sortedCarriedObjs(player: Player): List<InvObj> =

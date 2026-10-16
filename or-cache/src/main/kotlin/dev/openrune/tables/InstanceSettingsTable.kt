@@ -274,6 +274,60 @@ object InstanceSettingsTable {
             columnRSCM(EXIT_OBJECT, "loc.dom_entrance_exit")
         }
 
+        row("dbrow.instance_fight_caves") {
+            column(KEY, "fight_caves")
+            columnCoord(EXIT_COORD, CoordGrid(2438, 5168, 0))
+            columnCoord(ENTER_COORD, CoordGrid(2413, 5117, 0))
+            column(FEE, 0)
+            column(MAX_PLAYERS, 1)
+            column(TIME_LIMIT_MINUTES, 0)
+            column(GRACE_MINUTES, 1)
+            columnRSCM(BOSS_NPC, "npc.tzhaar_fightcave_swarm_boss")
+            column(BOSS_NAME, "TzHaar Fight Cave")
+            column(RECOMMENDED_COMBAT, 70, 126)
+            column(TEAM_SIZE, 1)
+            column(LOOT_MULTIPLIER, "x1.0")
+            column(DESCRIPTION, "Sixty-three waves of TzHaar, ending with TzTok-Jad.")
+            columnRSCM(ENTER_OBJECT, "loc.tzhaar_fightcave_wall_entrance")
+            columnRSCM(EXIT_OBJECT, "loc.tzhaar_fightcave_wall_exit")
+        }
+
+        row("dbrow.instance_inferno") {
+            column(KEY, "inferno")
+            columnCoord(EXIT_COORD, CoordGrid(2496, 5122, 0))
+            columnCoord(ENTER_COORD, CoordGrid(2271, 5329, 0))
+            column(FEE, 0)
+            column(MAX_PLAYERS, 1)
+            column(TIME_LIMIT_MINUTES, 0)
+            column(GRACE_MINUTES, 1)
+            columnRSCM(BOSS_NPC, "npc.inferno_jad")
+            column(BOSS_NAME, "The Inferno")
+            column(RECOMMENDED_COMBAT, 100, 126)
+            column(TEAM_SIZE, 1)
+            column(LOOT_MULTIPLIER, "x1.0")
+            column(DESCRIPTION, "Sixty-eight waves of the TzHaar's deadliest creatures.")
+            columnRSCM(ENTER_OBJECT, "loc.inferno_entrance_op")
+            columnRSCM(EXIT_OBJECT, "loc.inferno_exit")
+        }
+
+        row("dbrow.instance_colosseum") {
+            column(KEY, "colosseum")
+            columnCoord(EXIT_COORD, CoordGrid(1808, 9506, 0))
+            columnCoord(ENTER_COORD, CoordGrid(1812, 3106, 0))
+            column(FEE, 0)
+            column(MAX_PLAYERS, 1)
+            column(TIME_LIMIT_MINUTES, 0)
+            column(GRACE_MINUTES, 1)
+            columnRSCM(BOSS_NPC, "npc.colosseum_sol_p1")
+            column(BOSS_NAME, "Fortis Colosseum")
+            column(RECOMMENDED_COMBAT, 90, 126)
+            column(TEAM_SIZE, 1)
+            column(LOOT_MULTIPLIER, "x1.0")
+            column(DESCRIPTION, "Twelve waves of Varlamore's deadliest gladiators, ending with Sol Heredit.")
+            columnRSCM(ENTER_OBJECT, "loc.colosseum_entrance")
+            columnRSCM(EXIT_OBJECT, "loc.colosseum_exit_lobby_noop", "loc.colosseum_exit")
+        }
+
         row("dbrow.instance_leviathan") {
             column(KEY, "leviathan")
             columnCoord(EXIT_COORD, CoordGrid(2064, 6436, 0))
@@ -296,6 +350,24 @@ object InstanceSettingsTable {
             )
         }
 
+        row("dbrow.instance_phosani") {
+            column(KEY, "phosani")
+            columnCoord(EXIT_COORD, CoordGrid(3808, 9778, 1))
+            columnCoord(ENTER_COORD, CoordGrid(3871, 9944, 3))
+            column(FEE, 0)
+            column(MAX_PLAYERS, 1)
+            column(TIME_LIMIT_MINUTES, 0)
+            column(GRACE_MINUTES, 10)
+            columnRSCM(BOSS_NPC, "npc.nightmare_challenge_phase_01")
+            column(BOSS_NAME, "Phosani's Nightmare")
+            column(RECOMMENDED_COMBAT, 110, 126)
+            column(TEAM_SIZE, 1)
+            column(LOOT_MULTIPLIER, "x1.0")
+            column(DESCRIPTION, "The Nightmare of Ashihama, harder and faster, in a dream of your own.")
+            columnRSCM(ENTER_OBJECT, "loc.nightmare_challenge_portal")
+            columnRSCM(EXIT_OBJECT, "loc.nightmare_challenge_portal_enabled")
+        }
+
         row("dbrow.instance_amoxliatl") {
             column(KEY, "amoxliatl")
             columnCoord(EXIT_COORD, CoordGrid(1602, 9631, 0))
@@ -312,6 +384,94 @@ object InstanceSettingsTable {
             column(DESCRIPTION, "A powerful frost nagua dwelling beneath the ruins of Cam Torum.")
             columnRSCM(ENTER_OBJECT, "loc.vmq3_ruins_door_multi")
             columnRSCM(EXIT_OBJECT, "loc.amoxliatl_exit")
+        }
+
+        row("dbrow.instance_zulrah") {
+            column(KEY, "zulrah")
+            columnCoord(EXIT_COORD, CoordGrid(2213, 3056, 0))
+            columnCoord(ENTER_COORD, CoordGrid(2268, 3069, 0))
+            column(FEE, 0)
+            column(MAX_PLAYERS, 1)
+            column(TIME_LIMIT_MINUTES, 0)
+            column(GRACE_MINUTES, 1)
+            columnRSCM(BOSS_NPC, "npc.snakeboss_boss_ranged")
+            column(BOSS_NAME, "Zulrah")
+            column(RECOMMENDED_COMBAT, 90, 126)
+            column(TEAM_SIZE, 1)
+            column(LOOT_MULTIPLIER, "x1.0")
+            column(DESCRIPTION, "The serpent of Zul-Andra, shifting between three forms.")
+            columnRSCM(ENTER_OBJECT, "loc.snakeboss_boat_1op")
+            columnRSCM(EXIT_OBJECT, "loc.snakeboss_exit")
+        }
+
+        row("dbrow.instance_vorkath") {
+            column(KEY, "vorkath")
+            columnCoord(EXIT_COORD, CoordGrid(2272, 4052, 0))
+            columnCoord(ENTER_COORD, CoordGrid(2272, 4054, 0))
+            column(FEE, 0)
+            column(MAX_PLAYERS, 1)
+            column(TIME_LIMIT_MINUTES, 0)
+            column(GRACE_MINUTES, 1)
+            columnRSCM(BOSS_NPC, "npc.vorkath")
+            column(BOSS_NAME, "Vorkath")
+            column(RECOMMENDED_COMBAT, 100, 126)
+            column(TEAM_SIZE, 1)
+            column(LOOT_MULTIPLIER, "x1.0")
+            column(DESCRIPTION, "The undead dragon sleeping in Ungael's crater.")
+            columnRSCM(ENTER_OBJECT, "loc.ungael_crater_entrance")
+        }
+
+        row("dbrow.instance_kraken") {
+            column(KEY, "kraken")
+            columnCoord(EXIT_COORD, CoordGrid(2280, 10016, 0))
+            columnCoord(ENTER_COORD, CoordGrid(2280, 10022, 0))
+            column(FEE, 25000)
+            column(MAX_PLAYERS, 1)
+            column(TIME_LIMIT_MINUTES, 0)
+            column(GRACE_MINUTES, 1)
+            columnRSCM(BOSS_NPC, "npc.slayer_kraken_boss_whirlpool")
+            column(BOSS_NAME, "Kraken")
+            column(RECOMMENDED_COMBAT, 80, 126)
+            column(TEAM_SIZE, 1)
+            column(LOOT_MULTIPLIER, "x1.0")
+            column(DESCRIPTION, "The Kraken and its four tentacles, all to yourself.")
+            columnRSCM(ENTER_OBJECT, "loc.slayer_cave_kraken_boss_entrance")
+            columnRSCM(EXIT_OBJECT, "loc.slayer_cave_kraken_boss_exit")
+        }
+
+        row("dbrow.instance_alchemical_hydra") {
+            column(KEY, "alchemical_hydra")
+            columnCoord(EXIT_COORD, CoordGrid(1354, 10259, 0))
+            columnCoord(ENTER_COORD, CoordGrid(1356, 10259, 0))
+            column(FEE, 0)
+            column(MAX_PLAYERS, 1)
+            column(TIME_LIMIT_MINUTES, 0)
+            column(GRACE_MINUTES, 1)
+            columnRSCM(BOSS_NPC, "npc.hydraboss")
+            column(BOSS_NAME, "Alchemical Hydra")
+            column(RECOMMENDED_COMBAT, 100, 126)
+            column(TEAM_SIZE, 1)
+            column(LOOT_MULTIPLIER, "x1.0")
+            column(DESCRIPTION, "The Alchemical Hydra's private lair beneath Mount Karuulm.")
+            columnRSCM(ENTER_OBJECT, "loc.karuulm_hydra_room_door")
+        }
+
+        row("dbrow.instance_royal_titans") {
+            column(KEY, "royal_titans")
+            columnCoord(EXIT_COORD, CoordGrid(2943, 9573, 0))
+            columnCoord(ENTER_COORD, CoordGrid(2951, 9573, 0))
+            column(FEE, 0)
+            column(MAX_PLAYERS, 1)
+            column(TIME_LIMIT_MINUTES, 0)
+            column(GRACE_MINUTES, 10)
+            columnRSCM(BOSS_NPC, "npc.rt_fire_queen")
+            column(BOSS_NAME, "The Royal Titans")
+            column(RECOMMENDED_COMBAT, 90, 126)
+            column(TEAM_SIZE, 1)
+            column(LOOT_MULTIPLIER, "x1.0")
+            column(DESCRIPTION, "Branda the Fire Queen and Eldric the Ice King hold court beneath the Fremennik Isles.")
+            columnRSCM(ENTER_OBJECT, "loc.royal_titans_entrance")
+            columnRSCM(EXIT_OBJECT, "loc.royal_titans_exit")
         }
     }
 }

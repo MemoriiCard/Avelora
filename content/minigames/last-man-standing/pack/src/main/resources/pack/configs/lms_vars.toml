@@ -1,0 +1,17 @@
+[[varp]]
+isServerOnly = true
+id = "varp.lms_points"
+scope = "Perm"
+transmit = "Never"
+
+[[varp]]
+isServerOnly = true
+id = "varp.lms_wins"
+scope = "Perm"
+transmit = "Never"
+
+[[varp]]
+isServerOnly = true
+id = "varp.lms_rating_offset"
+scope = "Perm"
+transmit = "Never"

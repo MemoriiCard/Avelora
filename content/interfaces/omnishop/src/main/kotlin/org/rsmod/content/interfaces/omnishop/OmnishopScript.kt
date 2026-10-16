@@ -5,6 +5,10 @@ import dev.openrune.rscm.RSCM.asRSCM
 import dev.openrune.rscm.RSCMType
 import dev.openrune.types.ItemServerType
 import dev.openrune.types.aconverted.interf.IfButtonOp
+import org.rsmod.api.invtx.add
+import org.rsmod.api.invtx.delete
+import org.rsmod.api.invtx.invTransaction
+import org.rsmod.api.invtx.select
 import org.rsmod.api.player.protect.ProtectedAccess
 import org.rsmod.api.player.ui.IfScriptArgs
 import org.rsmod.api.script.onIfModalButton
@@ -44,7 +48,7 @@ class OmnishopScript : PluginScript() {
     }
 
     private fun ProtectedAccess.buy(shop: Int, index: Int, option: Int) {
-        if (shop != player.omnishopLastShop) return
+        if (MAIN_INTERFACE !in player.ui || shop != player.omnishopLastShop) return
         val stock = OmnishopStock.find(shop, index) ?: return
         if (!stock.buyable) return
         var quantity = BUY_QUANTITIES.getOrNull(option - 1) ?: return
@@ -67,10 +71,28 @@ class OmnishopScript : PluginScript() {
             mes("You don't have enough inventory space.")
             return
         }
-        for ((currency, price) in costs) {
-            removeCurrency(currency, price * quantity)
+        if (costs.any { (_, price) -> price.toLong() * quantity > Int.MAX_VALUE }) {
+            mes("You can't buy that many at once.")
+            return
         }
-        invAdd(inv, stock.obj.internalName, quantity * stock.multiplier)
+        val result =
+            player.invTransaction(inv) {
+                val from = select(inv)
+                for ((currency, price) in costs) {
+                    var remaining = price * quantity
+                    for (obj in currency.objs) {
+                        val take = minOf(remaining, inv.count(obj.internalName))
+                        if (take > 0) {
+                            delete(from, obj.id, take)
+                            remaining -= take
+                        }
+                    }
+                }
+                add(from, stock.obj.id, quantity * stock.multiplier)
+            }
+        if (result.failure) {
+            mes("You don't have enough inventory space.")
+        }
     }
 
     private fun ProtectedAccess.sell(obj: ItemServerType, requested: Int) {
@@ -82,24 +104,30 @@ class OmnishopScript : PluginScript() {
         }
         val quantity = minOf(requested, inv.count(obj.internalName))
         if (quantity == 0) return
-        if (invDel(inv, obj.internalName, quantity).failure) return
-        for ((currency, price) in stock.sellCosts()) {
-            val currencyObj = currency.objs.firstOrNull() ?: continue
-            if (price > 0) invAdd(inv, currencyObj.internalName, price * quantity)
+        val payouts =
+            stock.sellCosts().mapNotNull { (currency, price) ->
+                val currencyObj = currency.objs.firstOrNull() ?: return@mapNotNull null
+                if (price > 0) currencyObj to price.toLong() * quantity else null
+            }
+        if (payouts.any { (_, total) -> total > Int.MAX_VALUE }) {
+            mes("You can't sell that many at once.")
+            return
+        }
+        val result =
+            player.invTransaction(inv) {
+                val from = select(inv)
+                delete(from, obj.id, quantity)
+                for ((currencyObj, total) in payouts) {
+                    add(from, currencyObj.id, total.toInt())
+                }
+            }
+        if (result.failure) {
+            mes("You don't have enough inventory space.")
         }
     }
 
     private fun ProtectedAccess.currencyCount(currency: OmnishopCurrency): Int =
         currency.objs.sumOf { inv.count(it.internalName) }
-
-    private fun ProtectedAccess.removeCurrency(currency: OmnishopCurrency, amount: Int) {
-        var remaining = amount
-        for (obj in currency.objs) {
-            if (remaining == 0) return
-            val take = minOf(remaining, inv.count(obj.internalName))
-            if (take > 0 && invDel(inv, obj.internalName, take).success) remaining -= take
-        }
-    }
 
     internal data class InfoArgs(val shop: Int, val index: Int) : IfScriptArgs
 
@@ -108,6 +136,7 @@ class OmnishopScript : PluginScript() {
     internal data class ExamineArgs(val obj: Int) : IfScriptArgs
 
     private companion object {
+        const val MAIN_INTERFACE = "interface.omnishop_main"
         const val INFO_UPDATE = "clientscript.omnishop_info_update"
         val BUY_QUANTITIES = listOf(1, 5, 10, 50)
     }
