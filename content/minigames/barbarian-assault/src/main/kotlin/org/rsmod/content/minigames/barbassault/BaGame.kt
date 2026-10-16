@@ -14,6 +14,7 @@ import org.rsmod.api.player.output.mes
 import org.rsmod.api.player.stat.stat
 import org.rsmod.api.player.stat.statBase
 import org.rsmod.api.player.stat.statHeal
+import org.rsmod.content.minigames.framework.HubCrates
 import org.rsmod.content.minigames.framework.MinigameProfile
 import org.rsmod.game.entity.Npc
 import org.rsmod.game.entity.Player
@@ -278,6 +279,7 @@ internal class BaGame(private val ctx: BaContext) {
             if (result.queenKilled) BaPoints.addQueenKill(player)
             BaPoints.recordProgress(player, result.wavesCleared)
             MinigameProfile.addTokens(player, tokens)
+            HubCrates.award(player, ctx.objs, ctx.random, BOT_SHARE, result.cleared)
             player.mes("You receive $tokens Minigame Tokens.")
         }
         release()

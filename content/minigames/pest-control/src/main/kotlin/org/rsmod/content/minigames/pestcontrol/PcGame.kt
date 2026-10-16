@@ -10,6 +10,7 @@ import org.rsmod.api.npc.hit.queueHit as queueNpcHit
 import org.rsmod.api.npc.opPlayer2
 import org.rsmod.api.player.hit.queueHit
 import org.rsmod.api.player.output.mes
+import org.rsmod.content.minigames.framework.HubCrates
 import org.rsmod.content.minigames.framework.MinigameProfile
 import org.rsmod.game.entity.Npc
 import org.rsmod.game.entity.Player
@@ -313,6 +314,7 @@ internal class PcGame(val lander: PcLander, private val ctx: PcContext) {
                 )
             PcPoints.add(player, reward.points)
             MinigameProfile.addTokens(player, reward.tokens)
+            HubCrates.award(player, ctx.objs, ctx.random, BOT_SHARE, result.won)
             if (reward.coins > 0) player.invAddOrDrop(ctx.objs, "obj.coins", reward.coins)
             player.mes("You receive ${reward.points} Pest Control points and ${reward.tokens} Minigame Tokens.")
         }

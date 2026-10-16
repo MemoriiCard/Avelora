@@ -8,8 +8,10 @@ import java.time.ZoneOffset
 import org.rsmod.api.invtx.invAddOrDrop
 import org.rsmod.api.player.output.MiscOutput
 import org.rsmod.api.player.output.mes
+import org.rsmod.api.random.GameRandom
 import org.rsmod.api.repo.obj.ObjRepository
 import org.rsmod.content.minigames.framework.BotPolicy
+import org.rsmod.content.minigames.framework.HubCrates
 import org.rsmod.content.minigames.framework.Minigame
 import org.rsmod.content.minigames.framework.MinigameConfig
 import org.rsmod.content.minigames.framework.MinigameProfile
@@ -32,6 +34,7 @@ constructor(
     private val clock: MapClock,
     private val collision: CollisionFlagMap,
     private val objs: ObjRepository,
+    private val random: GameRandom,
     private val barricades: CastleWarsBarricades,
     private val catapults: CastleWarsCatapults,
     private val tunnels: CastleWarsTunnels,
@@ -246,6 +249,7 @@ constructor(
             if (reward != CwReward.NONE) {
                 player.invAddOrDrop(objs, CastleWarsItems.TICKET, reward.tickets)
                 MinigameProfile.addTokens(player, reward.tokens)
+                HubCrates.award(player, objs, random, result.botShare, won)
                 player.mes("You receive ${reward.tickets} Castle Wars tickets and ${reward.tokens} Minigame Tokens.")
             } else {
                 player.mes("You weren't in the game long enough to earn a reward.")

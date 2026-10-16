@@ -1,5 +1,11 @@
 package org.rsmod.content.minigames.framework
 
+import org.rsmod.api.invtx.invAddOrDrop
+import org.rsmod.api.player.output.mes
+import org.rsmod.api.random.GameRandom
+import org.rsmod.api.repo.obj.ObjRepository
+import org.rsmod.game.entity.Player
+
 class CrateDrop(val obj: String?, val min: Int, val max: Int, val weight: Int, val tokens: Boolean = false)
 
 object HubCrates {
@@ -38,6 +44,12 @@ object HubCrates {
     fun earned(botShare: Double, won: Boolean, nextInt: (Int) -> Int): Int {
         val chance = (if (won) WIN_PERCENT else LOSS_PERCENT) * Payout.botScale(botShare)
         return if (nextInt(100) < chance.toInt()) 1 else 0
+    }
+
+    fun award(player: Player, objs: ObjRepository, random: GameRandom, botShare: Double, won: Boolean) {
+        if (earned(botShare, won) { random.of(it) } == 0) return
+        player.invAddOrDrop(objs, CRATE, 1)
+        player.mes("You receive a Minigame Crate.")
     }
 
     const val WIN_PERCENT = 60
