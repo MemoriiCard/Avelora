@@ -11,7 +11,11 @@ enum class ToaRoom(
     val plane: Int,
     val arrival: CoordGrid,
 ) {
-    Nexus("The Nexus", 55, 80, 0, 0, 0, arrival = CoordGrid(3551, 5159, 0));
+    Nexus("The Nexus", 55, 80, 0, 0, 0, arrival = CoordGrid(3551, 5159, 0)),
+    CrondisPuzzle("Crondis Puzzle", 61, 82, 1, 0, 0, arrival = CoordGrid(3952, 5279, 0)),
+    Zebak("Zebak's Lair", 61, 84, 0, 1, 0, arrival = CoordGrid(3957, 5407, 0)),
+    ScabarasPuzzle("Scabaras Puzzle", 55, 82, 1, 1, 0, arrival = CoordGrid(3525, 5279, 0)),
+    Kephri("Kephri's Lair", 55, 84, 0, 0, 1, arrival = CoordGrid(3537, 5407, 0));
 
     private val originX: Int
         get() = squareX * SQUARE

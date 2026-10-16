@@ -13,6 +13,7 @@ class ToaGamevalTest {
         val cache = ServerCacheManager.init(240)
         try {
             for (name in LOCS) name.asRSCM(RSCMType.LOC)
+            for (name in NPCS) name.asRSCM(RSCMType.NPC)
         } finally {
             cache.close()
         }
@@ -29,6 +30,32 @@ class ToaGamevalTest {
                 "loc.toa_nexus_scabaras_door",
                 "loc.toa_nexus_apmeken_door",
                 "loc.toa_nexus_wardens_door",
+                "loc.toa_path_crondis_continue",
+                "loc.toa_scabaras_continue",
+                "loc.toa_zebak_exit",
+                "loc.toa_entrance_kephri_main",
+                "loc.toa_crondis_exit",
+                "loc.toa_door_exit",
+                "loc.toa_crondis_water_source",
+            )
+
+        val NPCS =
+            listOf(
+                "npc.toa_zebak",
+                "npc.toa_zebak_enraged",
+                "npc.toa_zebak_safespot",
+                "npc.toa_kephri_boss_shielded",
+                "npc.toa_kephri_boss_enrage",
+                "npc.toa_kephri_shield_scarab",
+                "npc.toa_kephri_guardian_melee",
+                "npc.toa_kephri_guardian_ranged",
+                "npc.toa_kephri_guardian_mage",
+                "npc.toa_scabaras_scarab",
+                "npc.toa_crondis_crocodile",
+                "npc.toa_crondis_tree_1",
+                "npc.toa_crondis_tree_2",
+                "npc.toa_crondis_tree_3",
+                "npc.toa_crondis_tree_4",
             )
     }
 }
