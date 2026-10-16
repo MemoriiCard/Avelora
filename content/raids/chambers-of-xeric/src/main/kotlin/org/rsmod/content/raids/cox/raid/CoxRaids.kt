@@ -17,11 +17,19 @@ import org.rsmod.content.raids.cox.party.CoxParty
 import org.rsmod.content.raids.cox.party.CoxPartyScreens
 import org.rsmod.content.raids.cox.party.CoxProgress
 import org.rsmod.content.raids.cox.party.CoxScaling
+import org.rsmod.content.raids.cox.party.coxBestTime
+import org.rsmod.content.raids.cox.party.coxCmBestTime
+import org.rsmod.content.raids.cox.party.coxCmKc
+import org.rsmod.content.raids.cox.party.coxKc
 import org.rsmod.content.raids.cox.party.raidsClientInDungeon
 import org.rsmod.content.raids.cox.party.raidsClientPartyScore
 import org.rsmod.content.raids.cox.party.raidsDied
 import org.rsmod.content.raids.cox.party.raidsPlayerScore
 import org.rsmod.content.raids.cox.party.raidsTimer
+import org.rsmod.content.raids.cox.reward.CoxChest
+import org.rsmod.content.raids.cox.reward.CoxLoot
+import org.rsmod.content.raids.cox.reward.CoxRewardDelivery
+import org.rsmod.content.raids.cox.reward.CoxRewardRoller
 import org.rsmod.content.raids.cox.room.CoxRoomFactory
 import org.rsmod.content.raids.cox.room.CoxRoomServices
 import org.rsmod.content.raids.cox.storage.CoxItems
@@ -48,6 +56,8 @@ constructor(
     private val clock: MapClock,
     private val collision: CollisionFlagMap,
     private val roomServices: CoxRoomServices,
+    private val delivery: CoxRewardDelivery,
+    private val chest: CoxChest,
 ) {
     private val raids = mutableMapOf<Int, CoxRaid>()
     private val generator = CoxLayoutGenerator()
@@ -95,6 +105,7 @@ constructor(
 
     fun exit(player: Player, raid: CoxRaid, message: String? = null) {
         raid.insiders.removeAll { it === player }
+        claimLeftover(player, raid)
         releaseItems(player, raid)
         player.raidsClientInDungeon = false
         player.raidsTimer = 0
@@ -150,6 +161,68 @@ constructor(
         raid.points[player] = (raid.points[player] ?: 0) + amount
         raid.totalPoints += amount
         syncPoints(raid)
+    }
+
+    /** Ends the raid: stops the clock, awards the Challenge Mode bonus, and rolls the chest loot. */
+    fun complete(raid: CoxRaid) {
+        if (!raid.started || raid.completedAt >= 0) return
+        raid.completedAt = clock.cycle
+        val elapsed = raid.completedAt - raid.startedAt
+        val underTarget =
+            raid.challengeMode && elapsed <= CoxLoot.targetTicks(raid.scaling.partySize)
+        if (underTarget) {
+            raid.totalPoints += CoxLoot.UNDER_TARGET_BONUS * raid.insiders.size
+            syncPoints(raid)
+        }
+        val random = roomServices.random
+        val rolled =
+            CoxRewardRoller.roll(
+                points = raid.points,
+                teamPoints = raid.totalPoints,
+                challengeMode = raid.challengeMode,
+                underTarget = underTarget,
+                present = { it in raid.insiders },
+                hasTablet = { delivery.owns(it, CoxLoot.TABLET) },
+                hasJournal = { delivery.owns(it, CoxLoot.JOURNAL) },
+                below = { random.of(it) },
+            )
+        raid.rewards.putAll(rolled.items)
+        chest.reveal(raid)
+        val duration = formatDuration(elapsed)
+        for (member in raid.insiders) {
+            recordCompletion(member, raid, elapsed)
+            member.mes("<col=ef1020>Congratulations - your raid is complete!</col>")
+            member.mes("Team size: ${raid.insiders.size} players. Duration: <col=ef1020>$duration</col>.")
+            if (underTarget) member.mes("You beat the Challenge Mode target time!")
+            member.mes("Open the ancient chest to claim your rewards.")
+        }
+        for ((winner, item) in rolled.uniques) {
+            val line = "<col=ef20ff>${winner.displayName} found something special: ${delivery.displayName(item)}</col>"
+            for (member in raid.insiders) member.mes(line)
+        }
+    }
+
+    /** Pays out whatever [player] left unclaimed in the chest, straight into their bank. */
+    fun claimLeftover(player: Player, raid: CoxRaid) {
+        val loot = raid.rewards.remove(player) ?: return
+        val bank = player.invMap.getOrPut("inv.bank")
+        for (item in loot) delivery.give(player, item, bank)
+        player.mes("Your unclaimed chest rewards have been sent to your bank.")
+    }
+
+    private fun recordCompletion(player: Player, raid: CoxRaid, elapsed: Int) {
+        if (raid.challengeMode) {
+            player.coxCmKc += 1
+            if (player.coxCmBestTime == 0 || elapsed < player.coxCmBestTime) player.coxCmBestTime = elapsed
+        } else {
+            player.coxKc += 1
+            if (player.coxBestTime == 0 || elapsed < player.coxBestTime) player.coxBestTime = elapsed
+        }
+    }
+
+    private fun formatDuration(ticks: Int): String {
+        val seconds = ticks * 6 / 10
+        return "%d:%02d".format(seconds / 60, seconds % 60)
     }
 
     fun onDeath(raid: CoxRaid, player: Player) {
@@ -298,6 +371,7 @@ constructor(
     private fun removeInsider(raid: CoxRaid, member: Player) {
         raid.insiders.removeAll { it === member }
         if (member.isOnline()) {
+            claimLeftover(member, raid)
             releaseItems(member, raid)
             member.raidsClientInDungeon = false
             member.raidsTimer = 0

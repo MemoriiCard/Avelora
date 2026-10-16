@@ -28,3 +28,8 @@ internal var Player.raidsChallengeMode by boolVarBit("varbit.raids_challenge_mod
 internal var Player.raidsTimer by intVarBit("varbit.raids_timer")
 
 internal var Player.coxViewingParty by intVarp("varp.cox_viewing_party")
+
+internal var Player.coxKc by intVarp("varp.total_completed_xericchambers")
+internal var Player.coxCmKc by intVarp("varp.total_completed_xericchambers_challenge")
+internal var Player.coxBestTime by intVarp("varp.cox_best_time")
+internal var Player.coxCmBestTime by intVarp("varp.cox_cm_best_time")
