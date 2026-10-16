@@ -350,6 +350,24 @@ object InstanceSettingsTable {
             )
         }
 
+        row("dbrow.instance_phosani") {
+            column(KEY, "phosani")
+            columnCoord(EXIT_COORD, CoordGrid(3808, 9778, 1))
+            columnCoord(ENTER_COORD, CoordGrid(3871, 9944, 3))
+            column(FEE, 0)
+            column(MAX_PLAYERS, 1)
+            column(TIME_LIMIT_MINUTES, 0)
+            column(GRACE_MINUTES, 10)
+            columnRSCM(BOSS_NPC, "npc.nightmare_challenge_phase_01")
+            column(BOSS_NAME, "Phosani's Nightmare")
+            column(RECOMMENDED_COMBAT, 110, 126)
+            column(TEAM_SIZE, 1)
+            column(LOOT_MULTIPLIER, "x1.0")
+            column(DESCRIPTION, "The Nightmare of Ashihama, harder and faster, in a dream of your own.")
+            columnRSCM(ENTER_OBJECT, "loc.nightmare_challenge_portal")
+            columnRSCM(EXIT_OBJECT, "loc.nightmare_challenge_portal_enabled")
+        }
+
         row("dbrow.instance_amoxliatl") {
             column(KEY, "amoxliatl")
             columnCoord(EXIT_COORD, CoordGrid(1602, 9631, 0))
