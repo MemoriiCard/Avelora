@@ -11,7 +11,9 @@ import org.rsmod.api.player.hit.queueHit
 import org.rsmod.api.player.output.mes
 import org.rsmod.api.player.vars.VarPlayerIntMapSetter
 import org.rsmod.api.random.GameRandom
+import org.rsmod.api.repo.obj.ObjRepository
 import org.rsmod.content.minigames.framework.BotPolicy
+import org.rsmod.content.minigames.framework.HubCrates
 import org.rsmod.content.minigames.framework.Minigame
 import org.rsmod.content.minigames.framework.MinigameConfig
 import org.rsmod.content.minigames.framework.MinigameProfile
@@ -32,6 +34,7 @@ constructor(
     private val clock: MapClock,
     private val collision: CollisionFlagMap,
     private val random: GameRandom,
+    private val objs: ObjRepository,
     private val bots: LmsBots,
 ) {
     private val botPolicy = BotPolicy(MinigameConfig.load())
@@ -196,6 +199,7 @@ constructor(
             }
             if (reward != LmsReward.NONE) {
                 MinigameProfile.addTokens(player, reward.tokens)
+                HubCrates.award(player, objs, random, result.botShare, won)
                 player.mes(
                     if (points > 0) "You receive $points LMS points and ${reward.tokens} Minigame Tokens."
                     else "You receive ${reward.tokens} Minigame Tokens.",
