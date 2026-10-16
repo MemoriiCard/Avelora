@@ -1,0 +1,344 @@
+[[npc]]
+id = "npc.raids_tekton_waiting"
+inherit = "npc.raids_tekton_waiting"
+huntMode = 6
+huntRange = 14
+maxRange = 32
+defaultMode = "None"
+[npc.params]
+"param.death_anim"="seq.tekton_death"
+"param.defend_anim"="seq.tekton_ready_defend"
+
+[[npc]]
+id = "npc.raids_tekton_walking_standard"
+inherit = "npc.raids_tekton_walking_standard"
+huntMode = 6
+huntRange = 14
+maxRange = 32
+defaultMode = "None"
+[npc.params]
+"param.death_anim"="seq.tekton_death"
+"param.defend_anim"="seq.tekton_ready_defend"
+
+[[npc]]
+id = "npc.raids_tekton_fighting_standard"
+inherit = "npc.raids_tekton_fighting_standard"
+huntMode = 6
+huntRange = 14
+maxRange = 32
+defaultMode = "None"
+[npc.params]
+"param.death_anim"="seq.tekton_death"
+"param.defend_anim"="seq.tekton_ready_defend"
+
+[[npc]]
+id = "npc.raids_tekton_walking_enraged"
+inherit = "npc.raids_tekton_walking_enraged"
+huntMode = 6
+huntRange = 14
+maxRange = 32
+defaultMode = "None"
+[npc.params]
+"param.death_anim"="seq.tekton_death"
+"param.defend_anim"="seq.tekton_ready_defend_enraged"
+
+[[npc]]
+id = "npc.raids_tekton_fighting_enraged"
+inherit = "npc.raids_tekton_fighting_enraged"
+huntMode = 6
+huntRange = 14
+maxRange = 32
+defaultMode = "None"
+[npc.params]
+"param.death_anim"="seq.tekton_death"
+"param.defend_anim"="seq.tekton_ready_defend_enraged"
+
+[[npc]]
+id = "npc.raids_tekton_hammering"
+inherit = "npc.raids_tekton_hammering"
+huntMode = 6
+huntRange = 14
+maxRange = 32
+defaultMode = "None"
+[npc.params]
+"param.death_anim"="seq.tekton_death"
+"param.defend_anim"="seq.tekton_ready_defend"
+
+[[npc]]
+id = "npc.raids_vasanistirio_walking"
+inherit = "npc.raids_vasanistirio_walking"
+huntMode = 8
+huntRange = 14
+maxRange = 32
+attackRange = 10
+defaultMode = "None"
+[npc.params]
+"param.death_anim"="seq.vasa_death"
+
+[[npc]]
+id = "npc.raids_vasanistirio_dormant"
+inherit = "npc.raids_vasanistirio_dormant"
+huntMode = 8
+huntRange = 14
+maxRange = 32
+attackRange = 10
+defaultMode = "None"
+[npc.params]
+"param.death_anim"="seq.vasa_death"
+
+[[npc]]
+id = "npc.raids_vasanistirio_healing"
+inherit = "npc.raids_vasanistirio_healing"
+huntMode = 8
+huntRange = 14
+maxRange = 32
+attackRange = 10
+defaultMode = "None"
+[npc.params]
+"param.death_anim"="seq.vasa_death"
+
+[[npc]]
+id = "npc.raids_vasanistirio_crystal"
+inherit = "npc.raids_vasanistirio_crystal"
+defaultMode = "None"
+
+[[npc]]
+id = "npc.raids_vanguard_melee"
+inherit = "npc.raids_vanguard_melee"
+huntMode = 6
+huntRange = 14
+maxRange = 32
+defaultMode = "None"
+[npc.params]
+"param.death_anim"="seq.vanguard_death"
+"param.defend_anim"="seq.vanguard_defend_melee"
+
+[[npc]]
+id = "npc.raids_vanguard_ranged"
+inherit = "npc.raids_vanguard_ranged"
+huntMode = 8
+huntRange = 14
+maxRange = 32
+attackRange = 10
+defaultMode = "None"
+[npc.params]
+"param.death_anim"="seq.vanguard_death"
+"param.defend_anim"="seq.vanguard_defend_ranged"
+
+[[npc]]
+id = "npc.raids_vanguard_magic"
+inherit = "npc.raids_vanguard_magic"
+huntMode = 8
+huntRange = 14
+maxRange = 32
+attackRange = 10
+defaultMode = "None"
+[npc.params]
+"param.death_anim"="seq.vanguard_death"
+"param.defend_anim"="seq.vanguard_defend_magic"
+
+[[npc]]
+id = "npc.raids_vanguard_dormant"
+inherit = "npc.raids_vanguard_dormant"
+defaultMode = "None"
+[npc.params]
+"param.death_anim"="seq.vanguard_death"
+
+[[npc]]
+id = "npc.raids_stoneguardians_left"
+inherit = "npc.raids_stoneguardians_left"
+huntMode = 6
+huntRange = 14
+maxRange = 32
+defaultMode = "None"
+[npc.params]
+"param.defend_anim"="seq.human_staff_block"
+
+[[npc]]
+id = "npc.raids_stoneguardians_left_dead"
+inherit = "npc.raids_stoneguardians_left_dead"
+defaultMode = "None"
+
+[[npc]]
+id = "npc.raids_stoneguardians_right"
+inherit = "npc.raids_stoneguardians_right"
+huntMode = 6
+huntRange = 14
+maxRange = 32
+defaultMode = "None"
+[npc.params]
+"param.defend_anim"="seq.human_staff_block"
+
+[[npc]]
+id = "npc.raids_stoneguardians_right_dead"
+inherit = "npc.raids_stoneguardians_right_dead"
+defaultMode = "None"
+
+[[npc]]
+id = "npc.raids_lizardshaman_a"
+inherit = "npc.raids_lizardshaman_a"
+huntMode = 8
+huntRange = 14
+maxRange = 32
+attackRange = 8
+defaultMode = "None"
+[npc.params]
+"param.death_anim"="seq.shay_lizard_warrior_death"
+"param.defend_anim"="seq.shay_lizard_warrior_defend"
+
+[[npc]]
+id = "npc.raids_lizardshaman_b"
+inherit = "npc.raids_lizardshaman_b"
+huntMode = 8
+huntRange = 14
+maxRange = 32
+attackRange = 8
+defaultMode = "None"
+[npc.params]
+"param.death_anim"="seq.shay_lizard_warrior_death"
+"param.defend_anim"="seq.shay_lizard_warrior_defend"
+
+[[npc]]
+id = "npc.zeah_lizardshaman_spawn"
+inherit = "npc.zeah_lizardshaman_spawn"
+defaultMode = "None"
+
+[[npc]]
+id = "npc.raids_skeletonmystic_a"
+inherit = "npc.raids_skeletonmystic_a"
+huntMode = 8
+huntRange = 14
+maxRange = 32
+attackRange = 10
+defaultMode = "None"
+[npc.params]
+"param.death_anim"="seq.skeleton_update_death"
+"param.defend_anim"="seq.skeleton_update_defend"
+
+[[npc]]
+id = "npc.raids_skeletonmystic_b"
+inherit = "npc.raids_skeletonmystic_b"
+huntMode = 8
+huntRange = 14
+maxRange = 32
+attackRange = 10
+defaultMode = "None"
+[npc.params]
+"param.death_anim"="seq.skeleton_update_death"
+"param.defend_anim"="seq.skeleton_update_defend"
+
+[[npc]]
+id = "npc.raids_skeletonmystic_c"
+inherit = "npc.raids_skeletonmystic_c"
+huntMode = 8
+huntRange = 14
+maxRange = 32
+attackRange = 10
+defaultMode = "None"
+[npc.params]
+"param.death_anim"="seq.skeleton_update_death"
+"param.defend_anim"="seq.skeleton_update_defend"
+
+[[npc]]
+id = "npc.raids_dogodile"
+inherit = "npc.raids_dogodile"
+huntMode = 8
+huntRange = 14
+maxRange = 32
+attackRange = 10
+defaultMode = "None"
+[npc.params]
+"param.death_anim"="seq.dohgadyle_death"
+"param.defend_anim"="seq.dohgadyle_defend"
+
+[[npc]]
+id = "npc.raids_dogodile_submerged"
+inherit = "npc.raids_dogodile_submerged"
+defaultMode = "None"
+[npc.params]
+"param.death_anim"="seq.dohgadyle_death"
+
+[[npc]]
+id = "npc.raids_dogodile_junior"
+inherit = "npc.raids_dogodile_junior"
+huntMode = 8
+huntRange = 14
+maxRange = 32
+attackRange = 8
+defaultMode = "None"
+[npc.params]
+"param.death_anim"="seq.dohgadyle_death"
+"param.defend_anim"="seq.dohgadyle_defend"
+
+[[npc]]
+id = "npc.raids_dogodile_meat_tree"
+inherit = "npc.raids_dogodile_meat_tree"
+defaultMode = "None"
+
+[[npc]]
+id = "npc.raids_vespula_flying"
+inherit = "npc.raids_vespula_flying"
+huntMode = 8
+huntRange = 14
+maxRange = 32
+attackRange = 10
+defaultMode = "None"
+[npc.params]
+"param.death_anim"="seq.vespula_death_flying"
+"param.defend_anim"="seq.vespula_defend_flying"
+
+[[npc]]
+id = "npc.raids_vespula_enraged"
+inherit = "npc.raids_vespula_enraged"
+huntMode = 8
+huntRange = 14
+maxRange = 32
+attackRange = 10
+defaultMode = "None"
+[npc.params]
+"param.death_anim"="seq.vespula_death_flying"
+"param.defend_anim"="seq.vespula_defend_flying"
+
+[[npc]]
+id = "npc.raids_vespula_walking"
+inherit = "npc.raids_vespula_walking"
+huntMode = 8
+huntRange = 14
+maxRange = 32
+attackRange = 10
+defaultMode = "None"
+[npc.params]
+"param.death_anim"="seq.vespula_death_walking"
+"param.defend_anim"="seq.vespula_defend"
+
+[[npc]]
+id = "npc.raids_vespula_portal"
+inherit = "npc.raids_vespula_portal"
+defaultMode = "None"
+
+[[npc]]
+id = "npc.raids_vespula_caterpillar_healthy"
+inherit = "npc.raids_vespula_caterpillar_healthy"
+defaultMode = "None"
+
+[[npc]]
+id = "npc.raids_vespula_caterpillar_sickly"
+inherit = "npc.raids_vespula_caterpillar_sickly"
+defaultMode = "None"
+
+[[npc]]
+id = "npc.raids_vespula_caterpillar_infected"
+inherit = "npc.raids_vespula_caterpillar_infected"
+defaultMode = "None"
+
+[[npc]]
+id = "npc.raids_vespula_caterpillar_dead"
+inherit = "npc.raids_vespula_caterpillar_dead"
+defaultMode = "None"
+
+[[npc]]
+id = "npc.raids_vespula_vespine_flying"
+inherit = "npc.raids_vespula_vespine_flying"
+defaultMode = "None"
+[npc.params]
+"param.death_anim"="seq.vespine_explode"

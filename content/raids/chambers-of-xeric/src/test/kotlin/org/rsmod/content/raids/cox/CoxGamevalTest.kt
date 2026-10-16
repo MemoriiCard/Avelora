@@ -4,7 +4,9 @@ import dev.openrune.ServerCacheManager
 import dev.openrune.rscm.RSCM.asRSCM
 import dev.openrune.rscm.RSCMType
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.parallel.ResourceLock
 
+@ResourceLock("server-cache")
 class CoxGamevalTest {
     @Test
     fun `every symbol the raid uses resolves`() {

@@ -20,6 +20,8 @@ import org.rsmod.content.raids.cox.party.raidsClientPartyScore
 import org.rsmod.content.raids.cox.party.raidsDied
 import org.rsmod.content.raids.cox.party.raidsPlayerScore
 import org.rsmod.content.raids.cox.party.raidsTimer
+import org.rsmod.content.raids.cox.room.CoxRoomFactory
+import org.rsmod.content.raids.cox.room.CoxRoomServices
 import org.rsmod.events.EventBus
 import org.rsmod.game.MapClock
 import org.rsmod.game.entity.Player
@@ -41,6 +43,7 @@ constructor(
     private val players: PlayerList,
     private val clock: MapClock,
     private val collision: CollisionFlagMap,
+    private val roomServices: CoxRoomServices,
 ) {
     private val raids = mutableMapOf<Int, CoxRaid>()
     private val generator = CoxLayoutGenerator()
@@ -102,6 +105,11 @@ constructor(
         raid.scaling = CoxScaling.snapshot(party)
         raid.challengeMode = party.challengeMode
         raid.startedAt = clock.cycle
+        for (room in raid.layout.rooms) {
+            val controller = CoxRoomFactory.create(raid, room, roomServices) ?: continue
+            raid.rooms += controller
+            controller.spawn()
+        }
         party.progress = CoxProgress.Upper
         party.advertisedAt = -1
         for (member in party.members.toList()) {
@@ -219,6 +227,8 @@ constructor(
 
     private fun destroy(raid: CoxRaid) {
         raids.remove(raid.party.id)
+        for (room in raid.rooms) room.destroy()
+        raid.rooms.clear()
         regions.unprotect(raid.region)
         if (regions.isValid(raid.region)) {
             registry.unregister(raid.region)
@@ -247,6 +257,9 @@ constructor(
             if (!member.isOnline() || member.coords !in raid) {
                 removeInsider(raid, member)
             }
+        }
+        if (raid.started) {
+            for (room in raid.rooms) room.tick()
         }
         if (raid.started && raid.completedAt < 0) {
             val elapsed = clock.cycle - raid.startedAt

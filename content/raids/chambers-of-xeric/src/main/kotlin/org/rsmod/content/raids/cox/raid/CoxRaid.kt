@@ -7,6 +7,8 @@ import org.rsmod.content.raids.cox.layout.CoxLayoutGenerator
 import org.rsmod.content.raids.cox.layout.CoxRoom
 import org.rsmod.content.raids.cox.party.CoxParty
 import org.rsmod.content.raids.cox.party.CoxScaling
+import org.rsmod.content.raids.cox.room.CoxRoomController
+import org.rsmod.game.entity.Npc
 import org.rsmod.game.entity.Player
 import org.rsmod.game.region.Region
 import org.rsmod.map.CoordGrid
@@ -22,6 +24,7 @@ class CoxRaid(val party: CoxParty, val layout: CoxLayout, val region: Region) {
     internal var totalPoints: Int = 0
     internal var deepestFloor: Int = 0
     internal var emptyTicks: Int = 0
+    internal val rooms = mutableListOf<CoxRoomController>()
 
     val started: Boolean
         get() = startedAt >= 0
@@ -38,6 +41,16 @@ class CoxRaid(val party: CoxParty, val layout: CoxLayout, val region: Region) {
         val plane = layout.floors.first { room in it.rooms }.plane
         val (rx, rz) = rotate(room.rotation, localX, localZ)
         return cellBase(room.cell, plane).translate(rx, rz)
+    }
+
+    fun controllerOf(npc: Npc): CoxRoomController? = rooms.firstOrNull { it.owns(npc) }
+
+    fun controllerOf(room: CoxRoom): CoxRoomController? = rooms.firstOrNull { it.room === room }
+
+    /** True when [to] lies further along the raid than [from] on the same floor. */
+    fun isForward(from: CoxRoom, to: CoxRoom): Boolean {
+        val floor = layout.floors.firstOrNull { from in it.rooms } ?: return false
+        return floor.rooms.indexOf(to) > floor.rooms.indexOf(from)
     }
 
     fun roomAt(coords: CoordGrid): CoxRoom? {
