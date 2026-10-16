@@ -6,16 +6,24 @@ import dev.openrune.rscm.RSCM
 import dev.openrune.rscm.RSCMType
 import jakarta.inject.Inject
 import net.rsprot.protocol.game.incoming.resumed.ResumePauseButton
+import org.rsmod.annotations.InternalApi
 import org.rsmod.api.net.rsprot.player.InterfaceEvents
 import org.rsmod.api.player.input.ResumePauseButtonInput
+import org.rsmod.api.player.protect.ProtectedAccessLauncher
+import org.rsmod.api.player.ui.IfPauseButton
+import org.rsmod.events.EventBus
 import org.rsmod.game.entity.Player
 import org.rsmod.game.ui.Component
 import org.rsmod.game.ui.UserInterface
 
-class ResumePauseButtonHandler @Inject constructor() : MessageHandler<ResumePauseButton> {
+class ResumePauseButtonHandler
+@Inject
+constructor(private val eventBus: EventBus, private val protectedAccess: ProtectedAccessLauncher) :
+    MessageHandler<ResumePauseButton> {
     private val ResumePauseButton.asComponent: Component
         get() = Component(interfaceId, componentId)
 
+    @OptIn(InternalApi::class)
     override fun handle(player: Player, message: ResumePauseButton) {
         val componentType = ServerCacheManager.fromComponent(message.asComponent.packed)
         val interfaceType = ServerCacheManager.fromInterface(message.asComponent.packed)
@@ -27,7 +35,13 @@ class ResumePauseButtonHandler @Inject constructor() : MessageHandler<ResumePaus
             return
         }
 
-        val input = ResumePauseButtonInput(RSCM.getReverseMapping(RSCMType.COMPONENT,componentType.packed), message.sub)
+        if (eventBus.contains(IfPauseButton::class.java, componentType.packed)) {
+            val event = IfPauseButton(componentType, message.sub)
+            protectedAccess.launchLenient(player) { eventBus.publish(this, event) }
+            return
+        }
+
+        val input = ResumePauseButtonInput(RSCM.getReverseMapping(RSCMType.COMPONENT, componentType.packed), message.sub)
         val modal = player.ui.modals.getComponent(userInterface)
         if (modal != null) {
             player.ui.queueClose(modal)
