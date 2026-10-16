@@ -79,6 +79,19 @@ class InfernoMapTest {
     }
 
     @Test
+    fun `pillars fit in the arena and stay clear of the spawn points`() {
+        val footprint = InfernoPillars.TILES.map { tile -> (0 until InfernoPillars.SIZE).flatMap { dx -> (0 until InfernoPillars.SIZE).map { dz -> tile.translate(dx, dz) } } }
+        for (tiles in footprint) for (tile in tiles) assertTrue(walkable(tile), "Pillar tile $tile is blocked")
+        val taken = footprint.flatten().toSet()
+        for (point in InfernoArena.SPAWN_POINTS) {
+            for (dx in 0 until JAD_SIZE) for (dz in 0 until JAD_SIZE) {
+                assertTrue(point.translate(dx, dz) !in taken, "Spawn $point overlaps a pillar")
+            }
+        }
+        assertTrue(InfernoArena.START !in taken)
+    }
+
+    @Test
     fun `entry and exit tiles sit beside their doors`() {
         assertNear("loc.inferno_entrance", InfernoArena.OUTSIDE, reach = 6)
         assertNear("loc.inferno_exit", InfernoArena.START, reach = 4)
