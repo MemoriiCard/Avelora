@@ -20,6 +20,8 @@ sealed interface PcEvent {
 
     data class PortalDown(val index: Int, val by: Int?) : PcEvent
 
+    data class ShieldDropped(val index: Int) : PcEvent
+
     data class KnightHurt(val hitpoints: Int) : PcEvent
 
     data class GameEnded(val result: PcResult) : PcEvent
@@ -52,6 +54,7 @@ class PcMatch(
     private val portalKills = HashMap<Int, Int>()
     private val outAt = HashMap<Int, Int>()
     private val portals = BooleanArray(PORTALS) { true }
+    private val shields = BooleanArray(PORTALS) { true }
     private var startedAt = 0
     private var phaseStart = 0
 
@@ -65,6 +68,8 @@ class PcMatch(
         get() = portals.count { it }
 
     fun isPortalAlive(index: Int): Boolean = portals[index]
+
+    fun isShielded(index: Int): Boolean = shields[index]
 
     fun isPlaying(id: Int): Boolean = id in active
 
@@ -109,7 +114,9 @@ class PcMatch(
 
     fun portalKilled(index: Int, by: Int?, cycle: Int): List<PcEvent> {
         if (phase != PcPhase.Playing || !portals[index]) return emptyList()
+        if (shields[index]) return emptyList()
         portals[index] = false
+        knightHp = (knightHp + PORTAL_KNIGHT_HEAL).coerceAtMost(knightHitpoints)
         if (by != null && by in active) portalKills.merge(by, 1, Int::plus)
         val events = mutableListOf<PcEvent>(PcEvent.PortalDown(index, by))
         if (portalsAlive == 0) events += end(cycle, true, PcEnding.PortalsDestroyed)
@@ -131,6 +138,7 @@ class PcMatch(
         portalKills.clear()
         outAt.clear()
         portals.fill(true)
+        shields.fill(true)
         knightHp = knightHitpoints
         active += lobby
         everyone += lobby
@@ -143,12 +151,25 @@ class PcMatch(
     private fun updatePlaying(cycle: Int, pestsAlive: Int): List<PcEvent> {
         if (cycle - startedAt >= gameTicks) return listOf(end(cycle, false, PcEnding.Timeout))
         val elapsed = cycle - startedAt
-        if (elapsed == 0 || elapsed % KNIGHT_INTERVAL != 0) return emptyList()
+        val events = mutableListOf<PcEvent>()
+        shieldIndexAt(elapsed)?.takeIf { shields[it] }?.let {
+            shields[it] = false
+            events += PcEvent.ShieldDropped(it)
+        }
+        if (elapsed == 0 || elapsed % KNIGHT_INTERVAL != 0) return events
         val damage = pestsAlive / PESTS_PER_KNIGHT_DAMAGE
-        if (damage <= 0) return emptyList()
+        if (damage <= 0) return events
         knightHp = (knightHp - damage).coerceAtLeast(0)
-        val hurt = PcEvent.KnightHurt(knightHp)
-        return if (knightHp == 0) listOf(hurt, end(cycle, false, PcEnding.KnightFell)) else listOf(hurt)
+        events += PcEvent.KnightHurt(knightHp)
+        if (knightHp == 0) events += end(cycle, false, PcEnding.KnightFell)
+        return events
+    }
+
+    private fun shieldIndexAt(elapsed: Int): Int? {
+        if (elapsed < SHIELD_FIRST_TICKS) return null
+        val since = elapsed - SHIELD_FIRST_TICKS
+        if (since % SHIELD_GAP_TICKS != 0) return null
+        return (since / SHIELD_GAP_TICKS).takeIf { it < PORTALS }
     }
 
     private fun end(cycle: Int, won: Boolean, ending: PcEnding): PcEvent {
@@ -168,7 +189,14 @@ class PcMatch(
         const val KNIGHT_HITPOINTS = 250
         const val KNIGHT_INTERVAL = 10
         const val PESTS_PER_KNIGHT_DAMAGE = 6
+        const val SHIELD_FIRST_TICKS = 25
+        const val SHIELD_GAP_TICKS = 50
+        const val PORTAL_KNIGHT_HEAL = 50
+        const val NOVICE_PORTAL_HITPOINTS = 200
+        const val PORTAL_HITPOINTS = 250
+        const val NOVICE_MAX_COMBAT = 69
 
-        fun portalHitpoints(players: Int): Int = 100 + 20 * players.coerceAtMost(MAX_PLAYERS)
+        fun portalHitpoints(averageCombat: Int): Int =
+            if (averageCombat <= NOVICE_MAX_COMBAT) NOVICE_PORTAL_HITPOINTS else PORTAL_HITPOINTS
     }
 }

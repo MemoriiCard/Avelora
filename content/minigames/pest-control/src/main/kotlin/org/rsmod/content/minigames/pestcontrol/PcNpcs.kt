@@ -3,6 +3,7 @@ package org.rsmod.content.minigames.pestcontrol
 internal object PcNpcs {
     private val KINDS = listOf("brawler", "ravager", "spinner", "splatter")
     const val TIERS = 5
+    val PORTAL_NAMES = listOf("purple", "blue", "yellow", "red")
 
     fun portal(index: Int): String = "npc.pest_portal_${index + 1}_active"
 
