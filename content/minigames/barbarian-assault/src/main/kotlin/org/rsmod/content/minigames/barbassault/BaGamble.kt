@@ -134,9 +134,9 @@ internal object BaGamble {
             GambleTier.High -> HIGH
         }
 
-    fun available(tier: GambleTier, honour: Int, wavesProgress: Int, queenKills: Int): String? =
+    fun available(tier: GambleTier, points: Int, wavesProgress: Int, queenKills: Int): String? =
         when {
-            honour < tier.cost -> "You need ${tier.cost} honour points."
+            points < tier.cost -> "You need ${tier.cost} points in that role."
             wavesProgress < tier.minWaves -> "You need to have reached wave ${tier.minWaves} first."
             tier.needsQueen && queenKills < 1 -> "You need to have killed a Penance Queen first."
             else -> null
