@@ -875,6 +875,9 @@ isServerOnly = true
 id = "varp.fight_cave_rotation"
 scope = "Perm"
 transmit = "Never"
+
+[[varp]]
+isServerOnly = true
 id = "varp.cox_viewing_party"
 scope = "Temp"
 transmit = "Never"

@@ -16857,6 +16857,8 @@ respawnRate = 15
 "param.defend_anim"="seq.human_unarmedblock"
 "param.death_anim"="seq.human_death"
 "param.killcount_varp"="varp.total_chaosfanatic_kills"
+
+[[npc]]
 id = "npc.crazy_archaeologist"
 inherit = "npc.crazy_archaeologist"
 attackRange = 8
@@ -16867,6 +16869,8 @@ respawnRate = 15
 "param.death_anim"="seq.human_death"
 "param.killcount_varp"="varp.total_crazyarchaeologist_kills"
 "param.boss_hp_bar_mode"=1
+
+[[npc]]
 id = "npc.vetion"
 inherit = "npc.vetion"
 huntMode = 1
@@ -16937,6 +16941,8 @@ inherit = "npc.vetion_hellhound_snr_singles"
 "param.attack_anim"="seq.dog_update_skeleton_hellhound_attack"
 "param.defend_anim"="seq.dog_update_skeleton_hellhound_defend"
 "param.death_anim"="seq.wbr_vention_hellhound_death"
+
+[[npc]]
 id = "npc.nex"
 inherit = "npc.nex"
 attackRange = 10
@@ -16991,6 +16997,8 @@ attackRange = 10
 maxRange = 30
 [npc.params]
 "param.attack_anim"="seq.human_casting"
+
+[[npc]]
 id = "npc.nightmare_initial"
 inherit = "npc.nightmare_initial"
 attackRange = 10
