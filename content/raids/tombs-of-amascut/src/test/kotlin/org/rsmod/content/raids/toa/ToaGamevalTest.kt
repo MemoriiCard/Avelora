@@ -37,6 +37,14 @@ class ToaGamevalTest {
                 "loc.toa_crondis_exit",
                 "loc.toa_door_exit",
                 "loc.toa_crondis_water_source",
+                "loc.toa_het_statue_parent",
+                "loc.toa_door_continue",
+                "loc.toa_path_apmeken_continue",
+                "loc.toa_path_apmeken_pillar",
+                "loc.toa_path_apmeken_hammers",
+                "loc.toa_path_apmeken_potions",
+                "loc.toa_entrance_akkha01",
+                "loc.toa_entrance_baba02",
             )
 
         val NPCS =
@@ -56,6 +64,12 @@ class ToaGamevalTest {
                 "npc.toa_crondis_tree_2",
                 "npc.toa_crondis_tree_3",
                 "npc.toa_crondis_tree_4",
+                "npc.akkha_melee",
+                "npc.akkha_enrage",
+                "npc.toa_baba",
+                "npc.toa_baba_baboon",
+                "npc.toa_het_goal",
+                "npc.toa_het_goal_vulnerable",
             )
     }
 }

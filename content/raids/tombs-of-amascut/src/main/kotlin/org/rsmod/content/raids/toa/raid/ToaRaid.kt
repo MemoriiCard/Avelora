@@ -67,7 +67,7 @@ class ToaRaid(
                 for (room in ToaRoom.entries) {
                     for (zx in 0 until ToaRoom.ZONES) {
                         for (zz in 0 until ToaRoom.ZONES) {
-                            val source = ZoneKey(room.zoneSourceX + zx, room.zoneSourceZ + zz, 0)
+                            val source = ZoneKey(room.zoneSourceX + zx, room.zoneSourceZ + zz, room.level)
                             val x = room.slotColumn * ToaRoom.ZONES + zx
                             val z = room.slotRow * ToaRoom.ZONES + zz
                             this[x, z, room.plane] = source
