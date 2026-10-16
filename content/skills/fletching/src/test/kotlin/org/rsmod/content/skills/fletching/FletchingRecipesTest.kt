@@ -91,11 +91,9 @@ class FletchingRecipesTest {
     }
 
     @Test
-    fun `broad ammo needs the slayer unlock and amethyst cuts at the wiki levels`() {
+    fun `broad ammo needs the slayer unlock`() {
         assertEquals(3, ExtraRecipes.broad.size)
         assertEquals(true, ExtraRecipes.broad.all { it.requiresBroader })
-        assertEquals(listOf(82, 83, 84, 85), ExtraRecipes.amethystCutting.map { it.level })
-        assertEquals(false, ExtraRecipes.amethystCutting.any { it.requiresBroader })
     }
 
     @Test

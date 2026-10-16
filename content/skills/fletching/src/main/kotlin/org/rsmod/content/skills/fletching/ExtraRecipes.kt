@@ -55,27 +55,6 @@ object ExtraRecipes {
             ),
         )
 
-    private fun amethyst(output: String, count: Int, level: Int, xp: Double) =
-        FletchRecipe(
-            output = output,
-            level = level,
-            xp = xp,
-            inputs = listOf(FletchInput("obj.amethyst")),
-            outputCount = count,
-            ticks = CUT_TICKS,
-            anim = "seq.human_emeraldcutting",
-            tool = AmmoRecipes.CHISEL,
-            message = "You cut the amethyst into $count pieces.",
-        )
-
-    val amethystCutting: List<FletchRecipe> =
-        listOf(
-            amethyst("obj.amethyst_arrowheads", 15, 82, 4.0),
-            amethyst("obj.xbows_bolt_tips_amethyst", 15, 83, 4.0),
-            amethyst("obj.amethyst_javelin_head", 5, 84, 6.0),
-            amethyst("obj.amethyst_dart_tip", 8, 85, 7.5),
-        )
-
     private fun ballista(inputA: String, inputB: String, output: String, level: Int, xp: Double) =
         FletchRecipe(
             output = output,
@@ -99,5 +78,5 @@ object ExtraRecipes {
         )
 
     val all: List<FletchRecipe>
-        get() = broad + amethystCutting + ballistae
+        get() = broad + ballistae
 }
