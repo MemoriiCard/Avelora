@@ -4,6 +4,7 @@ import org.rsmod.api.player.dialogue.Dialogue
 import org.rsmod.api.player.vars.intVarBit
 import org.rsmod.api.script.onOpNpc1
 import org.rsmod.api.script.onOpNpc3
+import org.rsmod.content.quest.area.varrock.DemonSlayerTraiborn
 import org.rsmod.content.quest.manager.menu
 import org.rsmod.game.entity.Player
 import org.rsmod.plugin.scripts.PluginScript
@@ -22,6 +23,7 @@ class WizardsTowerNpcs : PluginScript() {
     }
 
     private suspend fun Dialogue.traiborn() {
+        if (with(DemonSlayerTraiborn) { talk() }) return
         chatNpc(confused, "Ello young thingummywut.")
         val topic =
             menu(
