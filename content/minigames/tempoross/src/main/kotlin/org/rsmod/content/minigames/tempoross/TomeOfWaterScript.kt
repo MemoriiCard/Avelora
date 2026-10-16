@@ -3,18 +3,43 @@ package org.rsmod.content.minigames.tempoross
 import jakarta.inject.Inject
 import kotlin.math.min
 import org.rsmod.api.combat.manager.TomeChargeManager
+import org.rsmod.api.invtx.invAddOrDrop
 import org.rsmod.api.obj.charges.ObjChargeManager
 import org.rsmod.api.player.output.mes
 import org.rsmod.api.player.protect.ProtectedAccess
+import org.rsmod.api.repo.obj.ObjRepository
+import org.rsmod.api.script.onOpHeld3
+import org.rsmod.api.script.onOpHeld4
 import org.rsmod.api.script.onOpHeldU
 import org.rsmod.plugin.scripts.PluginScript
 import org.rsmod.plugin.scripts.ScriptContext
 
-class TomeOfWaterScript @Inject constructor(private val charges: ObjChargeManager) : PluginScript() {
+class TomeOfWaterScript
+@Inject
+constructor(private val charges: ObjChargeManager, private val objs: ObjRepository) : PluginScript() {
     override fun ScriptContext.startup() {
         for (tome in listOf(EMPTY, CHARGED)) {
             onOpHeldU(PAGE, tome) { charge(it.secondSlot) }
+            onOpHeld4(tome) { unload(it.slot) }
         }
+        onOpHeld3(CHARGED) { check(it.slot) }
+    }
+
+    private fun ProtectedAccess.check(slot: Int) {
+        val current = charges.getCharges(inv[slot], TomeChargeManager.VAROBJ)
+        mes("Your tome has $current charges.")
+    }
+
+    private fun ProtectedAccess.unload(slot: Int) {
+        val current = charges.getCharges(inv[slot], TomeChargeManager.VAROBJ)
+        val pages = current / CHARGES_PER_PAGE
+        if (pages <= 0) {
+            mes("Your tome has no pages to remove.")
+            return
+        }
+        charges.removeAllCharges(inv, slot, TomeChargeManager.VAROBJ)
+        player.invAddOrDrop(objs, PAGE, pages)
+        mes("You remove $pages soaked pages from your tome.")
     }
 
     private fun ProtectedAccess.charge(slot: Int) {

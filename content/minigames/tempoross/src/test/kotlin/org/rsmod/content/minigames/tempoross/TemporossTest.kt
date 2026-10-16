@@ -191,6 +191,9 @@ class TomeOfWaterSymbolsTest {
             val full = checkNotNull(ServerCacheManager.getItem(TomeOfWaterScript.CHARGED.asRSCM(RSCMType.OBJ)))
             assertEquals(full.id, empty.paramsRaw?.get(charged))
             assertEquals(empty.id, full.paramsRaw?.get(uncharged))
+            assertEquals("Check", full.interfaceOptions[2])
+            assertEquals("Pages", full.interfaceOptions[3])
+            assertEquals("Pages", empty.interfaceOptions[3])
             assertNotNull(
                 ServerCacheManager.getVarObj(
                     org.rsmod.api.combat.manager.TomeChargeManager.VAROBJ.asRSCM(RSCMType.VAROBJ)
