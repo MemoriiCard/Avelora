@@ -181,3 +181,10 @@ class GotrSymbolTest {
         assertTrue(GotrService.OVERLAY.asRSCM(RSCMType.INTERFACE) > 0)
     }
 }
+
+class GotrPetTest {
+    @Test
+    fun `the abyssal protector pet is a registered pet`() {
+        assertNotNull(org.rsmod.content.other.pets.Pets.forObj(GotrLoot.PET))
+    }
+}

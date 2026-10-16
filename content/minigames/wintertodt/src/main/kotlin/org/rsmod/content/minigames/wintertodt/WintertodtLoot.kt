@@ -13,6 +13,8 @@ class Drop(val obj: String, val count: Int)
 object WintertodtLoot {
     const val UNIQUE_ODDS = 45
     const val MAX_ROLLS = 8000
+    const val PET_ODDS = 5000
+    const val PET = "obj.phoenixpet"
 
     val ladders =
         listOf(
