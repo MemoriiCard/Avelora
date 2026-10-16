@@ -12,6 +12,7 @@ import org.rsmod.api.script.onOpNpc3
 import org.rsmod.api.shops.Shops
 import org.rsmod.content.areas.city.draynor.npcs.DiangoHolidayItems.Companion.openHolidayItems
 import org.rsmod.content.interfaces.omnishop.openOmnishop
+import org.rsmod.content.quest.area.alkharid.PrinceAliLeela
 import org.rsmod.content.quest.manager.QuestRequirements
 import org.rsmod.content.quest.manager.menu
 import org.rsmod.game.entity.Player
@@ -436,6 +437,7 @@ class DraynorVillageNpcs @Inject constructor(private val shops: Shops) : PluginS
     }
 
     private suspend fun Dialogue.leela() {
+        if (with(PrinceAliLeela) { talk() }) return
         if (!QuestRequirements.hasCompleted(player, PRINCE_ALI_RESCUE)) {
             chatPlayer(quiz, "What are you waiting here for?")
             chatNpc(neutral, "That is no concern of yours, adventurer.")

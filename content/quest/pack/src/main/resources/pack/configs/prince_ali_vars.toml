@@ -1,0 +1,27 @@
+[[varbit]]
+isServerOnly = true
+id = "varbit.prince_ali_progress"
+varp = "varp.princequest"
+startBit = 0
+endBit = 6
+
+[[varbit]]
+isServerOnly = true
+id = "varbit.prince_ali_imprint"
+varp = "varp.princequest"
+startBit = 7
+endBit = 7
+
+[[varbit]]
+isServerOnly = true
+id = "varbit.prince_ali_beers"
+varp = "varp.princequest"
+startBit = 8
+endBit = 9
+
+[[varbit]]
+isServerOnly = true
+id = "varbit.prince_ali_keli_tied"
+varp = "varp.princequest"
+startBit = 10
+endBit = 10
