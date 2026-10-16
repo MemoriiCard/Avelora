@@ -7,6 +7,7 @@ dependencies {
     implementation(projects.api.areaChecker)
     implementation(projects.api.bosses)
     implementation(projects.api.dropTable)
+    implementation(projects.api.dig)
     implementation(projects.api.dropTablePlugin)
     implementation(projects.content.drops)
     implementation(projects.content.interfaces.collectionLog)
