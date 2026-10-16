@@ -155,6 +155,10 @@ class PiratesTreasure @Inject constructor(private val digSites: DigSites) : Ques
             return
         }
         mes("You dig a hole in the ground and find a little chest.")
+        player.bananas = 0
+        player.rumHidden = 0
+        player.rumShipped = 0
+        player.hired = 0
         quest.advanceQuestStage(this, COMPLETE_STAGE - MESSAGE_STAGE)
     }
 
