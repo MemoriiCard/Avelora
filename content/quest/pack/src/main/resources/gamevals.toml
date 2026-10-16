@@ -73,6 +73,11 @@ misthalin_gem_row_slot = 63701
 cooks_assistant_progress = 63704
 cooks_assistant_milk = 63705
 cooks_assistant_egg = 63706
+pirates_treasure_progress = 63722
+pirates_treasure_bananas = 63723
+pirates_treasure_rum_hidden = 63724
+pirates_treasure_rum_shipped = 63725
+pirates_treasure_hired = 63726
 cooks_assistant_flour = 63707
 
 [gamevals.models]

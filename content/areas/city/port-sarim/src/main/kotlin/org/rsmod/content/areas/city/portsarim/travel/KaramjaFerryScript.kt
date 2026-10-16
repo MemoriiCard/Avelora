@@ -4,6 +4,7 @@ import org.rsmod.api.player.dialogue.Dialogue
 import org.rsmod.api.player.protect.ProtectedAccess
 import org.rsmod.api.script.onOpNpc1
 import org.rsmod.api.script.onOpNpc3
+import org.rsmod.content.quest.area.portsarim.PiratesTreasureHooks
 import org.rsmod.map.CoordGrid
 import org.rsmod.plugin.scripts.PluginScript
 import org.rsmod.plugin.scripts.ScriptContext
@@ -67,6 +68,7 @@ class KaramjaFerryScript : PluginScript() {
     }
 
     private suspend fun Dialogue.board(dest: CoordGrid, destName: String) {
+        if (dest == PORT_SARIM) with(PiratesTreasureHooks) { access.confiscateRum() }
         if (!access.payFare(FARE)) {
             chatPlayer(sad, "Oh dear, I don't seem to have enough money.")
             return
@@ -75,6 +77,7 @@ class KaramjaFerryScript : PluginScript() {
     }
 
     private suspend fun ProtectedAccess.payAndSail(dest: CoordGrid, destName: String) {
+        if (dest == PORT_SARIM) with(PiratesTreasureHooks) { confiscateRum() }
         if (!payFare(FARE)) {
             mes("You do not have enough coins to pay passage, you need $FARE.")
             return
