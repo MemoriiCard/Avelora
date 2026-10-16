@@ -21,6 +21,27 @@ class WintertodtRoundTest {
     }
 
     @Test
+    fun `a knockout takes down a standing pyromancer and a revive awards points once`() {
+        val roll = WintertodtRound { bound -> if (bound == 100) WintertodtRound.COLD_PERCENT + WintertodtRound.SNOW_PERCENT else 1 }
+        roll.join(1)
+        roll.tick(0)
+        val events = (1..60).flatMap { roll.tick(it) }
+        val knock = events.filterIsInstance<WintertodtEvent.Attack>().first { it.kind == AttackKind.Knockout }
+        val index = checkNotNull(knock.brazier)
+        assertTrue(roll.pyromancerDown(index))
+        assertTrue(roll.revive(index, 1))
+        assertFalse(roll.revive(index, 1))
+        assertFalse(roll.pyromancerDown(index))
+        assertEquals(WintertodtRound.REVIVE_POINTS, roll.pointsOf(1))
+    }
+
+    @Test
+    fun `outsiders cannot revive`() {
+        val round = started()
+        assertFalse(round.revive(0, 1))
+    }
+
+    @Test
     fun `a round only starts once someone has joined`() {
         val round = round()
         assertTrue(round.tick(0).isEmpty())
@@ -183,6 +204,9 @@ class WintertodtSymbolsTest {
             assertNotNull(ServerCacheManager.getVarp(WintertodtService.KILLS.asRSCM(RSCMType.VARP)))
             assertTrue(WintertodtService.TIMER.asRSCM(RSCMType.TIMER) > 0)
             WintertodtService.OVERLAY.asRSCM(RSCMType.INTERFACE)
+            for (npc in listOf(WintertodtService.PYROMANCER, WintertodtService.PYROMANCER_DOWN)) {
+                assertNotNull(ServerCacheManager.getNpc(npc.asRSCM(RSCMType.NPC)), npc)
+            }
             "clientscript.[clientscript,wint_update]".asRSCM(RSCMType.CLIENTSCRIPT)
         } finally {
             cache.close()
