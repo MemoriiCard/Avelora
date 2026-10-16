@@ -221,8 +221,16 @@ constructor(
         }
 
     private fun addPoints(player: Player, amount: Int) {
-        val total = (player.vars[POINTS].toLong() + amount).coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
+        val total = (player.vars[POINTS].toLong() + amount).coerceAtMost(PcShop.POINT_CAP.toLong()).toInt()
         VarPlayerIntMapSetter.set(player, POINTS, total)
+    }
+
+    fun points(player: Player): Int = player.vars[POINTS]
+
+    fun spendPoints(player: Player, amount: Int): Boolean {
+        if (amount <= 0 || points(player) < amount) return false
+        VarPlayerIntMapSetter.set(player, POINTS, points(player) - amount)
+        return true
     }
 
     private fun notify(ids: Collection<Int>, message: String) {
