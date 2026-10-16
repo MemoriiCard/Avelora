@@ -13,11 +13,15 @@ import org.rsmod.content.raids.toa.puzzle.ScabarasPuzzleRoom
 import org.rsmod.content.raids.toa.raid.ToaRaid
 import org.rsmod.content.raids.toa.raid.ToaRoomController
 import org.rsmod.content.raids.toa.raid.ToaRoomFactory
+import org.rsmod.content.raids.toa.reward.ToaRewards
+import org.rsmod.content.raids.toa.reward.ToaVaultRoom
 import org.rsmod.content.raids.toa.wardens.WardensOneRoom
 import org.rsmod.content.raids.toa.wardens.WardensTwoRoom
 import org.rsmod.content.raids.toa.zebak.ZebakRoom
 
-class ToaBossFactory @Inject constructor(private val services: CoxRoomServices) : ToaRoomFactory {
+class ToaBossFactory
+@Inject
+constructor(private val services: CoxRoomServices, private val rewards: ToaRewards) : ToaRoomFactory {
     override fun create(raid: ToaRaid, room: ToaRoom, onCleared: () -> Unit): ToaRoomController? =
         when (room) {
             ToaRoom.CrondisPuzzle -> CrondisPuzzleRoom(raid, services, onCleared)
@@ -30,6 +34,7 @@ class ToaBossFactory @Inject constructor(private val services: CoxRoomServices) 
             ToaRoom.Baba -> BabaRoom(raid, services, onCleared)
             ToaRoom.WardensOne -> WardensOneRoom(raid, services, onCleared)
             ToaRoom.WardensTwo -> WardensTwoRoom(raid, services, onCleared)
+            ToaRoom.Vault -> ToaVaultRoom(raid, services, rewards, onCleared)
             ToaRoom.Nexus -> null
         }
 }

@@ -5,6 +5,7 @@ import dev.openrune.rscm.RSCM.asRSCM
 import dev.openrune.rscm.RSCMType
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.parallel.ResourceLock
+import org.rsmod.content.raids.toa.reward.ToaLoot
 
 @ResourceLock("server-cache")
 class ToaGamevalTest {
@@ -14,6 +15,14 @@ class ToaGamevalTest {
         try {
             for (name in LOCS) name.asRSCM(RSCMType.LOC)
             for (name in NPCS) name.asRSCM(RSCMType.NPC)
+            val objs =
+                ToaLoot.UNIQUE_OBJS + ToaLoot.COMMONS.map { it.obj } + ToaLoot.SHROUDS.map { it.second } +
+                    ToaLoot.JEWELS + ToaLoot.PETS +
+                    listOf(ToaLoot.DUNG, ToaLoot.THREAD, ToaLoot.JEWEL_FINAL, "obj.icthlarins_hood")
+            for (name in objs) name.asRSCM(RSCMType.OBJ)
+            for (name in listOf("varp.total_completed_tombsofamascut", "varp.total_completed_tombsofamascut_entry", "varp.total_completed_tombsofamascut_expert")) {
+                name.asRSCM(RSCMType.VARP)
+            }
         } finally {
             cache.close()
         }
@@ -37,6 +46,12 @@ class ToaGamevalTest {
                 "loc.toa_crondis_exit",
                 "loc.toa_door_exit",
                 "loc.toa_crondis_water_source",
+                "loc.toa_vault_chest_mine_standard",
+                "loc.toa_vault_sarcophagus_closed_rare",
+                "loc.toa_lobby_cape_chest",
+                "loc.toa_rewards_chest_lobby_closed",
+                "loc.toa_rewards_chest_lobby_open",
+                "loc.toa_lobby_gravestone_chest",
                 "loc.toa_het_statue_parent",
                 "loc.toa_door_continue",
                 "loc.toa_path_apmeken_continue",

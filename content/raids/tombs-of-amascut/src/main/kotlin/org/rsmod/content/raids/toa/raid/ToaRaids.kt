@@ -11,6 +11,8 @@ import org.rsmod.content.raids.toa.layout.ToaPath
 import org.rsmod.content.raids.toa.layout.ToaRoom
 import org.rsmod.content.raids.toa.party.ToaParties
 import org.rsmod.content.raids.toa.party.ToaParty
+import org.rsmod.content.raids.toa.reward.ToaLoot
+import org.rsmod.content.raids.toa.reward.ToaRewards
 import org.rsmod.game.MapClock
 import org.rsmod.game.entity.Player
 import org.rsmod.game.entity.PlayerList
@@ -31,6 +33,7 @@ constructor(
     private val clock: MapClock,
     private val collision: CollisionFlagMap,
     private val factories: Set<ToaRoomFactory>,
+    private val rewards: ToaRewards,
 ) {
     private val raids = mutableMapOf<Int, ToaRaid>()
     private var ticking = false
@@ -67,6 +70,7 @@ constructor(
     }
 
     fun leave(player: Player, raid: ToaRaid, message: String? = null) {
+        rewards.claimLeftover(player, raid)
         raid.insiders.removeAll { it === player }
         raid.downed.remove(player)
         parties.leave(player)
@@ -110,7 +114,17 @@ constructor(
     fun clearRoom(raid: ToaRaid, room: ToaRoom) {
         if (raid.room != room || raid.roomCleared) return
         raid.roomCleared = true
+        val points = ToaLoot.pointsFor(room, raid.raidLevel)
+        for (member in raid.alive) raid.award(member, points)
+        for (member in raid.downed) raid.award(member, points / 2)
         for (player in raid.downed.toList()) revive(raid, player)
+        if (room == ToaRoom.Vault) {
+            worldQueues.add(VAULT_EXIT_DELAY) {
+                for (member in raid.insiders.toList()) leave(member, raid)
+                destroy(raid)
+            }
+            return
+        }
         if (room == ToaRoom.WardensOne) {
             for (member in raid.insiders) member.mes("<col=ef1020>The first Warden has fallen. The throne awaits.</col>")
             worldQueues.add(RETURN_DELAY) {
@@ -142,10 +156,11 @@ constructor(
             member.mes("<col=ef1020>Congratulations! You have conquered the Tombs of Amascut.</col>")
         }
         worldQueues.add(RETURN_DELAY) {
+            if (raid.room != ToaRoom.WardensTwo) return@add
             raid.controller?.destroy()
             raid.controller = null
-            for (member in raid.insiders.toList()) leave(member, raid)
-            destroy(raid)
+            moveTo(raid, ToaRoom.Vault)
+            beginRoom(raid)
         }
     }
 
@@ -297,5 +312,6 @@ constructor(
         const val TICKS_PER_MINUTE = 100
         const val BOSS_DELAY = 8
         const val RETURN_DELAY = 10
+        const val VAULT_EXIT_DELAY = 3
     }
 }
