@@ -3,6 +3,7 @@ package org.rsmod.content.areas.city.portsarim.npcs
 import org.rsmod.api.player.dialogue.Dialogue
 import org.rsmod.api.player.stat.baseSmithingLvl
 import org.rsmod.api.script.onOpNpc1
+import org.rsmod.content.quest.area.falador.KnightsSwordThurgo
 import org.rsmod.content.quest.manager.QuestRequirements
 import org.rsmod.plugin.scripts.PluginScript
 import org.rsmod.plugin.scripts.ScriptContext
@@ -15,6 +16,7 @@ class PortSarimTownsfolkScript : PluginScript() {
     }
 
     private suspend fun Dialogue.thurgo() {
+        if (with(KnightsSwordThurgo) { talk() }) return
         if (!QuestRequirements.hasCompleted(player, KNIGHTS_SWORD)) {
             if (player.baseSmithingLvl >= MAX_LEVEL) thurgoSkillcape() else thurgoCape()
             return
