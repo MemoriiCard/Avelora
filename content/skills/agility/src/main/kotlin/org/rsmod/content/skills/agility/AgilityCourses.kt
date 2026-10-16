@@ -1,6 +1,7 @@
 package org.rsmod.content.skills.agility
 
 import org.rsmod.content.skills.agility.courses.AlKharidRooftopCourse
+import org.rsmod.content.skills.agility.courses.ArdougneRooftopCourse
 import org.rsmod.content.skills.agility.courses.BarbarianOutpostCourse
 import org.rsmod.content.skills.agility.courses.CanifisRooftopCourse
 import org.rsmod.content.skills.agility.courses.DraynorRooftopCourse
@@ -24,5 +25,6 @@ object AgilityCourses {
             SeersRooftopCourse.course,
             FaladorRooftopCourse.course,
             CanifisRooftopCourse.course,
+            ArdougneRooftopCourse.course,
         )
 }
