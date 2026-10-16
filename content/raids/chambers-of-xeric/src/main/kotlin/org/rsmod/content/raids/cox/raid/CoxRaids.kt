@@ -107,6 +107,7 @@ constructor(
         raid.startedAt = clock.cycle
         for (room in raid.layout.rooms) {
             val controller = CoxRoomFactory.create(raid, room, roomServices) ?: continue
+            controller.pointSink = { player, amount -> addPoints(raid, player, amount) }
             raid.rooms += controller
             controller.spawn()
         }

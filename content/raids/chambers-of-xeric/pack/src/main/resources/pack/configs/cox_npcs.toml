@@ -342,3 +342,110 @@ inherit = "npc.raids_vespula_vespine_flying"
 defaultMode = "None"
 [npc.params]
 "param.death_anim"="seq.vespine_explode"
+
+[[npc]]
+id = "npc.raids_scavenger_beast_a"
+inherit = "npc.raids_scavenger_beast_a"
+huntMode = 6
+huntRange = 14
+maxRange = 32
+defaultMode = "None"
+[npc.params]
+"param.death_anim"="seq.skavid_death"
+"param.defend_anim"="seq.skavid_block"
+
+[[npc]]
+id = "npc.raids_scavenger_beast_b"
+inherit = "npc.raids_scavenger_beast_b"
+huntMode = 6
+huntRange = 14
+maxRange = 32
+defaultMode = "None"
+[npc.params]
+"param.death_anim"="seq.skavid_death"
+"param.defend_anim"="seq.skavid_block"
+
+[[npc]]
+id = "npc.raids_icefiend"
+inherit = "npc.raids_icefiend"
+defaultMode = "None"
+
+[[npc]]
+id = "npc.raids_lasercrabs_crab_grey"
+inherit = "npc.raids_lasercrabs_crab_grey"
+huntMode = 6
+huntRange = 4
+maxRange = 8
+defaultMode = "None"
+
+[[npc]]
+id = "npc.raids_lasercrabs_crab_red"
+inherit = "npc.raids_lasercrabs_crab_red"
+huntMode = 6
+huntRange = 4
+maxRange = 8
+defaultMode = "None"
+
+[[npc]]
+id = "npc.raids_lasercrabs_crab_green"
+inherit = "npc.raids_lasercrabs_crab_green"
+huntMode = 6
+huntRange = 4
+maxRange = 8
+defaultMode = "None"
+
+[[npc]]
+id = "npc.raids_lasercrabs_crab_blue"
+inherit = "npc.raids_lasercrabs_crab_blue"
+huntMode = 6
+huntRange = 4
+maxRange = 8
+defaultMode = "None"
+
+[[npc]]
+id = "npc.raids_lasercrabs_energy_white"
+inherit = "npc.raids_lasercrabs_energy_white"
+defaultMode = "None"
+
+[[npc]]
+id = "npc.raids_lasercrabs_energy_red"
+inherit = "npc.raids_lasercrabs_energy_red"
+defaultMode = "None"
+
+[[npc]]
+id = "npc.raids_lasercrabs_energy_green"
+inherit = "npc.raids_lasercrabs_energy_green"
+defaultMode = "None"
+
+[[npc]]
+id = "npc.raids_lasercrabs_energy_blue"
+inherit = "npc.raids_lasercrabs_energy_blue"
+defaultMode = "None"
+
+[[npc]]
+id = "npc.raids_tightrope_ranger"
+inherit = "npc.raids_tightrope_ranger"
+huntMode = 8
+huntRange = 14
+maxRange = 32
+attackRange = 10
+defaultMode = "None"
+
+[[npc]]
+id = "npc.raids_tightrope_mage"
+inherit = "npc.raids_tightrope_mage"
+huntMode = 8
+huntRange = 14
+maxRange = 32
+attackRange = 10
+defaultMode = "None"
+
+[[npc]]
+id = "npc.raids_thievingchest_beast_active"
+inherit = "npc.raids_thievingchest_beast_active"
+defaultMode = "None"
+
+[[npc]]
+id = "npc.raids_thievingchest_beast_sleeping"
+inherit = "npc.raids_thievingchest_beast_sleeping"
+defaultMode = "None"

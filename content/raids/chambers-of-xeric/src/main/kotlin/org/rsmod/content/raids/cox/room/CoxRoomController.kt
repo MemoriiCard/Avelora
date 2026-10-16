@@ -3,6 +3,7 @@ package org.rsmod.content.raids.cox.room
 import dev.openrune.ServerCacheManager
 import dev.openrune.rscm.RSCM.asRSCM
 import dev.openrune.rscm.RSCMType
+import org.rsmod.api.invtx.invAddOrDrop
 import org.rsmod.api.npc.apPlayer2
 import org.rsmod.api.npc.isInCombat
 import org.rsmod.api.npc.isValidTarget
@@ -48,6 +49,8 @@ abstract class CoxRoomController(
 
     open val pointsPerDamage: Int = DEFAULT_POINTS_PER_DAMAGE
 
+    var pointSink: (Player, Int) -> Unit = { _, _ -> }
+
     abstract fun spawn()
 
     protected open fun onEngage(first: Player) {}
@@ -57,6 +60,8 @@ abstract class CoxRoomController(
     protected open fun onNpcRemoved(npc: Npc) {}
 
     protected open fun onCleared() {}
+
+    protected open fun onKilled(npc: Npc, hero: Player, dropCoords: CoordGrid) {}
 
     fun tick() {
         if (cleared) return
@@ -80,6 +85,13 @@ abstract class CoxRoomController(
         if (wasRequired && required.isEmpty()) clear()
     }
 
+    /** Called when [player] tries the blocked exit; return true once the room has been cleared. */
+    open fun tryUnblock(player: Player): Boolean = false
+
+    fun killed(npc: Npc, hero: Player, dropCoords: CoordGrid) {
+        if (!destroying && owns(npc)) onKilled(npc, hero, dropCoords)
+    }
+
     fun clear() {
         if (cleared) return
         cleared = true
@@ -100,6 +112,18 @@ abstract class CoxRoomController(
 
     fun playersInRoom(): List<Player> =
         raid.insiders.filter { it.hitpoints > 0 && raid.roomAt(it.coords) === room }
+
+    protected fun award(player: Player, amount: Int) {
+        pointSink(player, amount)
+    }
+
+    /** Gives every raider in the dungeon [count] of [obj], dropping it at their feet if full. */
+    protected fun rewardAll(obj: String, count: Int) {
+        if (count <= 0) return
+        for (player in raid.insiders) {
+            if (player.hitpoints > 0) player.invAddOrDrop(services.objRepo, obj, count)
+        }
+    }
 
     protected fun <T> pick(left: T, straight: T, right: T): T =
         when (variant) {

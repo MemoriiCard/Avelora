@@ -11,6 +11,7 @@ import org.rsmod.api.combat.commons.types.MeleeAttackType
 import org.rsmod.api.npc.hit.modifier.NpcHitModifier
 import org.rsmod.api.npc.interact.AiPlayerInteractions
 import org.rsmod.api.player.hit.queueHit
+import org.rsmod.api.repo.obj.ObjRepository
 import org.rsmod.api.route.RouteFactory
 import org.rsmod.game.entity.Npc
 import org.rsmod.game.entity.Player
@@ -25,6 +26,7 @@ constructor(
     val routes: RouteFactory,
     val ai: AiPlayerInteractions,
     val npcHitModifier: NpcHitModifier,
+    val objRepo: ObjRepository,
 ) {
     val npcRepo
         get() = boss.npcRepo
