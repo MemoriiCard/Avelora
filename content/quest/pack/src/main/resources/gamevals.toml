@@ -68,6 +68,10 @@ cooks_assistant_ingredients = 63705
 [gamevals.varbit]
 restless_ghost_progress = 63702
 imp_catcher_progress = 63703
+prince_ali_progress = 63716
+prince_ali_imprint = 63717
+prince_ali_beers = 63718
+prince_ali_keli_tied = 63719
 misthalin_reflections = 63700
 misthalin_gem_row_slot = 63701
 cooks_assistant_progress = 63704
