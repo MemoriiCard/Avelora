@@ -114,6 +114,9 @@ class PrinceAliRescue : QuestScript(
     private suspend fun Dialogue.hassanFinish() {
         chatPlayer(happy, "The Prince is safe!")
         chatNpc(happy, "The Emir is very grateful. Please accept this payment for your efforts.")
+        player.keyImprint = 0
+        player.beers = 0
+        player.keliTied = 0
         quest.advanceQuestStage(access, COMPLETE_STAGE - FREED)
     }
 
